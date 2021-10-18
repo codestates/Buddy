@@ -11,8 +11,18 @@ assignees: ''
 
 ## 1. 시스템 아키텍처
 
-- [ ] JWT를 이용한 로그인 구현 | 필수 | ★
-- [ ] OAuth 2.0을 이용한 소셜 로그인 | 권장 | ★
+- [ ] JWT를 이용한 로그인 구현 | 필수 | FE, BE | ★
+- [ ] 권한 부여(Authorization)에 따른 기능의 접근 제한 구현 (예- 일반 사용자, 관리자 권한) | 필수 | FE, BE | ★
+- [ ] OAuth 2.0을 이용한 소셜 로그인 | 권장 | FE, BE | ★
+- [ ] TypeScript 언어 사용 | 도전 | FE | ★★★
+- [ ] next.js를 사용한 Server Side Rendering 적용 | 도전 | FE | ★★★
+- [ ] AWS lambda를 사용한 Serverless 아키텍처 도입 | 도전 | BE | ★★★
+- [ ] React custom hook 만들어서 쓰기 | 도전 | FE | ★★★
+- [ ] socket.io를 이용한 실시간 통신 | 신중 | FE, BE | ★★★★
+- [ ] redis를 이용한 캐싱 | 신중 | BE | ★★★★
+- [ ] Create React App을 사용하지 않고 빌드 과정 직접 구성 | 신중 | FE | ★★★★
+- [ ] 카프카를 사용한 메세지 기능 구현 | 신중 | BE | ★★★★
+- [ ] Spring Boot가 아닌 Spring5를 사용한 프로젝트 구성 | 신중 | BE | ★★★★
 
 ## 2. UI/UX
 
