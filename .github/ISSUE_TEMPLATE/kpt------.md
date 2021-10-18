@@ -1,7 +1,7 @@
 ---
 name: KPT 회고 양식
 about: Keep, Problem, Try 방식으로 기록하는 프로젝트 회고 템플릿
-title: ''
+title: "[KPT] N주차 0요일"
 labels: ''
 assignees: ''
 
