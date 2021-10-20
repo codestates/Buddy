@@ -1,15 +1,15 @@
-.body_wrapper {
+.body__wrapper {
   min-height: 100%;
   position: relative;
 }
 
-.body_content {
+.body__content {
   margin-top: 50px;
   padding-bottom: 80px;
 }
 
 .footer {
-  font-family: "Noto Sans KR";
+  font-family: 'Noto Sans KR';
   font-weight: 400;
   font-size: 11px;
   width: 100%;
@@ -21,9 +21,10 @@
   align-items: center;
   background-color: white;
   border-top: 1px solid rgb(219, 219, 219);
+  border-top: 1px solid rgb(219, 219, 219);
 }
 
-.footer_wrapper {
+.footer__wrapper {
   display: flex;
   background-color: white;
   margin-left: 20px;
@@ -33,7 +34,7 @@
   margin-left: -1px;
 }
 
-.github_link {
+.github__link {
   display: flex;
   flex-direction: row;
   align-items: center;
