@@ -12,22 +12,22 @@ export default function Header() {
         <nav id={styles.nav}>
           <ul id={styles.ul}>
             <li>
-              <Link href="/chat">
+              <Link href="/chat" as="/chat.html">
                 <a>채팅</a>
               </Link>
             </li>
             <li>
-              <Link href="/chatbot">
+              <Link href="/chatbot" as="/chatbot.html">
                 <a>챗봇</a>
               </Link>
             </li>
             <li>
-              <Link href="/demo">
+              <Link href="/demo" as="/demo.html">
                 <a>체험하기</a>
               </Link>
             </li>
             <li>
-              <Link href="/login">
+              <Link href="/login" as="/login.html">
                 <a>로그인</a>
               </Link>
             </li>
