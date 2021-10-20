@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping("/renewal-token")
     ResponseEntity renewalToke(){
-        return null
+        return null;
     }
 
     @GetMapping("/profile/{id}")
