@@ -3,11 +3,6 @@
   position: relative;
 }
 
-.body__content {
-  margin-top: 50px;
-  padding-bottom: 80px;
-}
-
 .footer {
   font-family: 'Noto Sans KR';
   font-weight: 400;
@@ -44,7 +39,7 @@
   color: black;
 }
 
-.github_link > img {
+.github__link > img {
   width: 20px;
   height: 20px;
 }

@@ -1,21 +1,28 @@
+#header__wrapper {
+  background: linear-gradient(to left, salmon, lightsalmon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #header {
+  font-size: 17px;
   font-family: 'Noto Sans KR';
-  font-weight: 600;
-  font-size: 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: white;
-  border-bottom: 1px solid rgb(219, 219, 219);
   position: sticky;
   top: 0;
   height: 80px;
   z-index: 10;
+  width: 1200px;
 }
+
 #header > img {
   margin-top: -2px;
   margin-left: 20px;
   width: 210px;
+  cursor: pointer;
 }
 
 #nav > #ul {
@@ -29,10 +36,11 @@
   text-decoration: none;
   cursor: pointer;
   transition: all 0.3s;
+  color: white;
 }
 
 #ul > li:hover {
-  color: teal;
+  color: gray;
 }
 
 .text__link {

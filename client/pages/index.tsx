@@ -1,17 +1,13 @@
 import type { NextPage } from 'next';
-import Head from 'next/head';
+import React from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import styles from '../styles/Home.module.css';
 
-const Home: NextPage = () => {
+export default function Home() {
   return (
-    <>
-      <Header />
+    <div>
       <div className={styles.container}>Hello World!</div>
-      <Footer />
-    </>
+    </div>
   );
-};
-
-export default Home;
+}
