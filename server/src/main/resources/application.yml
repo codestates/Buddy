@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    url: jdbc:mysql://buddy-db.cy5zk59ytuuj.ap-northeast-2.rds.amazonaws.com:13306/buddy?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    username: admin
+    password: buddy1357
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  config:
+    domain: https://yana-buddy.com/
+
+jwt:
+  secret: buddykey
