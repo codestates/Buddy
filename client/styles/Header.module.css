@@ -1,0 +1,51 @@
+#header {
+  font-family: 'Noto Sans KR';
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  border-bottom: 1px solid rgb(219, 219, 219);
+  position: sticky;
+  top: 0;
+  height: 80px;
+  z-index: 10;
+}
+#header > img {
+  margin-top: -2px;
+  margin-left: 20px;
+  width: 210px;
+}
+
+#nav > #ul {
+  display: flex;
+  list-style: none;
+}
+
+#ul > li {
+  margin-left: 10px;
+  margin-right: 40px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#ul > li:hover {
+  color: teal;
+}
+
+.text__link {
+  color: inherit;
+  cursor: pointer;
+  all: unset;
+  transition: all 0.3s;
+}
+
+.text__link:hover {
+  color: teal;
+}
+
+.nav-btn {
+  all: unset;
+}
