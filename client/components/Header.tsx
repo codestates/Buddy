@@ -1,4 +1,4 @@
-import Link from 'next/Link';
+import Link from 'next/link';
 import React from 'react';
 import styles from '../styles/Header.module.css';
 
