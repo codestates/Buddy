@@ -24,7 +24,7 @@ function Footer() {
         <div className={styles.body__content}>
           <footer className={styles.footer}>
             <div className={styles.footer__wrapper}>{githubLink}</div>
-            <span>©️2021. Buddy. All rights reserved.</span>
+            <span>©️2021. Buddy. All rights reserved..</span>
           </footer>
         </div>
       </div>
