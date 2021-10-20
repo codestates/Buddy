@@ -1,23 +1,39 @@
+import Link from 'next/Link';
+import React from 'react';
 import styles from '../styles/Header.module.css';
-import Image from 'next/image';
 
-const Header = () => {
+export default function Header() {
   return (
-    <header id={styles.header}>
-      <img src="/images/projecttt_logo.png" alt="Project_TT LOGO" />
-      <nav id={styles.nav}>
-        <ul id={styles.ul}>
-          <li>테마별 여행</li>
-          <li>여행지 리뷰</li>
-          <li>마이 페이지</li>
-          <li>
-            <button className={styles.text__link}>로그아웃</button>
-          </li>
-          <li>회원가입</li>
-        </ul>
-      </nav>
-    </header>
+    <div id={styles.header__wrapper}>
+      <header id={styles.header}>
+        <Link href="/">
+          <img src="/images/logo.png" alt="Project_TT LOGO" />
+        </Link>
+        <nav id={styles.nav}>
+          <ul id={styles.ul}>
+            <li>
+              <Link href="/chat">
+                <a>채팅</a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/chatbot">
+                <a>챗봇</a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/demo">
+                <a>체험하기</a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/login">
+                <a>로그인</a>
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+    </div>
   );
-};
-
-export default Header;
+}
