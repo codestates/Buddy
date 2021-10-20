@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import styles from '../styles/Footer.module.css';
 
 function Footer() {
@@ -11,7 +10,7 @@ function Footer() {
   const githubLink = teamName.map((el) => {
     return (
       <div className={styles.github} key={el.name}>
-        <a className={styles.github_link} href={el.src}>
+        <a className={styles.github__link} href={el.src}>
           <img src="/images/github_icon.png" alt="github icon" />
           <span>{el.name}</span>
         </a>
@@ -21,10 +20,10 @@ function Footer() {
 
   return (
     <>
-      <div className={styles.body_wrapper}>
-        <div className={styles.body_content}>
-          <footer>
-            <div className={styles.footer_wrapper}>{githubLink}</div>
+      <div className={styles.body__wrapper}>
+        <div className={styles.body__content}>
+          <footer className={styles.footer}>
+            <div className={styles.footer__wrapper}>{githubLink}</div>
             <span>©️2021. Buddy. All rights reserved.</span>
           </footer>
         </div>
