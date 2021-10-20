@@ -1,7 +1,7 @@
 ---
 name: "[DEV LOG] 2021.00.00 Name"
 about: "[DEV LOG] Template"
-title: ''
+title: "[DEV LOG] 2021.00.00 Name"
 labels: ''
 assignees: ''
 
