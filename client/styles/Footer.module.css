@@ -1,0 +1,55 @@
+.body_wrapper {
+  min-height: 100%;
+  position: relative;
+}
+
+.body_content {
+  margin-top: 50px;
+  padding-bottom: 80px;
+}
+
+.footer {
+  font-family: "Noto Sans KR";
+  font-weight: 400;
+  font-size: 11px;
+  width: 100%;
+  height: 120px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-top: 1px solid rgb(219, 219, 219);
+}
+
+.footer_wrapper {
+  display: flex;
+  background-color: white;
+  margin-left: 20px;
+}
+
+.github {
+  margin-left: -1px;
+}
+
+.github_link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 25px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.github_link > img {
+  width: 20px;
+  height: 20px;
+}
+
+.footer > img {
+  width: 150px;
+  margin-bottom: 3px;
+  margin-left: -8px;
+}
