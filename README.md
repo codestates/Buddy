@@ -12,7 +12,7 @@
 
 일상의 무료함을 달래고 싶을 땐 저 버디(Buddy)를 찾아주세요!
 
-[Buddy Website](https://yana-buddy.com/) 
+[Buddy Website](http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com/) 
 
 [Buddy Repository](https://github.com/codestates/Buddy) 
 
