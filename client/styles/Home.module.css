@@ -1,13 +1,14 @@
 .landing__wrapper {
   background: linear-gradient(to right, salmon 20%, lightsalmon 80%);
-  height: 3000px;
+
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 #landing__introduce {
-  width: 1200px;
-  height: 900px;
+  width: 60%;
+  height: 500px;
 }
 
 #introduce__wrapper {
