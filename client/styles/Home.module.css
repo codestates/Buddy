@@ -1,7 +1,28 @@
-.container {
+.landing__wrapper {
   background: linear-gradient(to right, salmon 20%, lightsalmon 80%);
-  height: 1000px;
+  height: 3000px;
   display: flex;
   justify-content: center;
+}
+
+#landing__introduce {
+  width: 1200px;
+  height: 900px;
+}
+
+#introduce__wrapper {
+  display: flex;
   align-items: center;
+}
+
+#introduce__image > img {
+  margin: 60px;
+  width: 60%;
+}
+
+#introduce__text {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Noto Sans KR';
+  color: white;
 }
