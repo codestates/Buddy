@@ -1,8 +1,13 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import styles from '../styles/Header.module.css';
 
-export default function Header() {
+export default function Header(modalOn: Boolean, setModalOn: Function) {
+  const loginModalOn = () => {
+    setModalOn(true);
+    console.log(modalOn)
+  }
+
   return (
     <div id={styles.header__wrapper}>
       <header id={styles.header}>
@@ -27,9 +32,9 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <Link href="/login" as="/login.html">
+              <button className="text_link" onClick={loginModalOn}>
                 <a>로그인</a>
-              </Link>
+              </button>
             </li>
           </ul>
         </nav>
