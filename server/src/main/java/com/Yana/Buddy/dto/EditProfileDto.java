@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class EditProfileDto {
 
-    String nickname;
-    String password;
-    String stateMessage;
+    private String nickname;
+    private String password;
+    private String stateMessage;
 
 }
