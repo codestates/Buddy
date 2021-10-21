@@ -3,6 +3,7 @@ package com.Yana.Buddy.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +12,7 @@ import static javax.persistence.EnumType.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User extends BaseEntity {
@@ -26,7 +28,6 @@ public class User extends BaseEntity {
 
     private String nickname;
 
-    @NotEmpty
     private String stateMessage;
 
     @Enumerated(STRING)
