@@ -28,10 +28,12 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody LoginDto dto, HttpServletResponse response) {
         try {
             User user = userService.findUserByEmail(dto.getEmail());
+            System.out.println("User: "+user);
             if (userService.passwordCheck(user, dto.getPassword())) {
                 String accessToken = tokenService.createJwtToken(user, 1L);
                 String refreshToken = tokenService.createJwtToken(user, 2L);
                 Cookie cookie = new Cookie("refreshToken", refreshToken);
+                cookie.setPath("/");
                 response.addCookie(cookie);
 
                 return ResponseEntity.status(200).body(new HashMap<>() {
@@ -50,6 +52,7 @@ public class UserController {
                 });
             }
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.status(400).body(new HashMap<>() {
                 {
                     put("message", "Email이나 비밀번호 입력이 올바르지 않습니다.");
@@ -71,6 +74,7 @@ public class UserController {
                 }
             });
         } catch (Exception e) {
+            System.out.println("11111" + e);
             return ResponseEntity.status(400).body(new HashMap<>() {
                 {
                     put("message", "회원가입에 실패했습니다.");
