@@ -11,7 +11,7 @@ export function LandingPage() {
   });
 
   return (
-    <div className="landing__wrapper">
+    <div className="landing__page">
       <Introduce />
       <ChatIntro />
       <DemoIntro />
