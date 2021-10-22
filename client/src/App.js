@@ -7,7 +7,6 @@ import { LandingPage } from './pages/LandingPage';
 import { TermPage } from './pages/TermPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { LoginModal } from './components/modals/LoginModal';
-import { SignupPage } from './pages/SignupPage';
 import { ChatingPage } from './pages/ChatingPage';
 import { DemoPage } from './pages/DemoPage';
 
@@ -50,9 +49,6 @@ function App() {
           </Route>
           <Route exact path="/privacy">
             <PrivacyPage />
-          </Route>
-          <Route exact path="/signup">
-            <SignupPage />
           </Route>
         </Switch>
         <Footer />
