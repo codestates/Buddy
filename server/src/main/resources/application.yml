@@ -13,7 +13,7 @@ spring:
   datasource:
     url: jdbc:mysql://13.209.97.150:3306/buddy?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
     username: admin
-    password: buddy1357
+    password: buddy857356
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   config:
