@@ -4,6 +4,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import GlobalStyles from './styles/globalStyles';
 import { LandingPage } from './pages/LandingPage';
+import { TermPage } from './pages/TermPage';
+import { PrivacyPage } from './pages/PrivacyPage';
 
 function App() {
   return (
@@ -15,9 +17,15 @@ function App() {
           <Route exact path="/">
             <LandingPage />
           </Route>
+          <Route exact path="/"></Route>
           <Route exact path="/chat"></Route>
           <Route exact path="/demo"></Route>
-          <Route exact path="/"></Route>
+          <Route exact path="/term">
+            <TermPage />
+          </Route>
+          <Route exact path="/privacy">
+            <PrivacyPage />
+          </Route>
         </Switch>
         <Footer />
       </div>
