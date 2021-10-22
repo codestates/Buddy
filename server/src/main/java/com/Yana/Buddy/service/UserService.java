@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,7 +28,7 @@ public class UserService {
     public User join(RegisterDto dto) {
         User user = User.builder()
                 .email(dto.getEmail())
-                .nickname("임의의 랜덤 닉네임!")
+                .nickname(dto.getNickname())
                 .password(dto.getPassword())
                 .gender(Gender.valueOf(dto.getGender()))
                 .authority(Role.GENERAL)
