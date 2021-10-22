@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "https://yana-buddy.com", allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(origins = "https://yana-buddy.com, http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com", allowedHeaders = "*", allowCredentials = "true")
 public class UserController {
 
     private final UserService userService;
@@ -28,12 +28,10 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody LoginDto dto, HttpServletResponse response) {
         try {
             User user = userService.findUserByEmail(dto.getEmail());
-            System.out.println("User: "+user);
             if (userService.passwordCheck(user, dto.getPassword())) {
                 String accessToken = tokenService.createJwtToken(user, 1L);
                 String refreshToken = tokenService.createJwtToken(user, 2L);
                 Cookie cookie = new Cookie("refreshToken", refreshToken);
-                cookie.setPath("/");
                 response.addCookie(cookie);
 
                 return ResponseEntity.status(200).body(new HashMap<>() {
@@ -52,7 +50,6 @@ public class UserController {
                 });
             }
         } catch (Exception e) {
-            System.out.println(e);
             return ResponseEntity.status(400).body(new HashMap<>() {
                 {
                     put("message", "Email이나 비밀번호 입력이 올바르지 않습니다.");
@@ -69,12 +66,12 @@ public class UserController {
                 {
                     put("id", user.getId());
                     put("email", user.getEmail());
+                    put("nickname", user.getNickname());
                     put("gender", user.getGender());
                     put("message", "회원가입에 성공했습니다.");
                 }
             });
         } catch (Exception e) {
-            System.out.println("11111" + e);
             return ResponseEntity.status(400).body(new HashMap<>() {
                 {
                     put("message", "회원가입에 실패했습니다.");
@@ -83,8 +80,8 @@ public class UserController {
         }
     }
 
-    @GetMapping("/email-duplication-check/{email}")
-    public ResponseEntity<?> emailCheck(@PathVariable("email") String email) {
+    @GetMapping("/email_check")
+    public ResponseEntity<?> emailCheck(@RequestBody String email) {
         if (userService.existEmail(email)) {
             return ResponseEntity.status(400).body(new HashMap<>() {
                 {
@@ -100,8 +97,8 @@ public class UserController {
         }
     }
 
-    @GetMapping("/nickname-duplication-check/{nickname}")
-    public ResponseEntity<?> nicknameCheck(@PathVariable("nickname") String nickname) {
+    @GetMapping("/nickname_check")
+    public ResponseEntity<?> nicknameCheck(@RequestBody String nickname) {
         if (userService.existNickname(nickname)) {
             return ResponseEntity.status(400).body(new HashMap<>() {
                 {
@@ -117,7 +114,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/token-valid-check")
+    @GetMapping("/token_check")
     public ResponseEntity<?> tokenValidCheck(@RequestHeader Map<String, String> header) {
         tokenService.isValidAuthHeader(header.get("authorization"));
         String key = tokenService.extractToken(header.get("authorization"));
@@ -142,7 +139,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/renewal-token")
+    @GetMapping("/renewal_token")
     public ResponseEntity<?> renewalToken(HttpServletRequest request) {
         String cookieResult = "";
         Cookie[] cookies = request.getCookies();
@@ -195,6 +192,7 @@ public class UserController {
                     put("id", user.getId());
                     put("email", user.getEmail());
                     put("nickname", user.getNickname());
+                    put("gender", user.getGender());
                 }
             });
         } catch (Exception e) {
