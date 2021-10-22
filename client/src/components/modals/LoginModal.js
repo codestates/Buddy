@@ -3,6 +3,8 @@ import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/modal/LoginModal.css';
 import dotenv from 'dotenv';
+import { SignupModal } from './SignupModal';
+import { EMAIL_REGEXP } from '../../constants/constants';
 
 axios.defaults.withCredentials = true;
 
@@ -14,6 +16,9 @@ export function LoginModal(props) {
   const [userPassword, setUserPassword] = useState('');
   const [userLoginError, setUserLoginError] = useState('');
   const [userInfo, setUserInfo] = useState({});
+
+  const [loginOn, setLoginOn] = useState(false); // 로그인 여부 (test : true로 바꾸고 개발)
+  const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
 
   const history = useHistory();
 
@@ -121,30 +126,29 @@ export function LoginModal(props) {
     console.log(userPassword);
   };
 
-  // 모달 창 끄고 회원가입으로 이동
-  const moveSignup = () => {
+  // 로그인 모달창 끄고 회원가입 모달창 열기
+  const signupModalOpen = () => {
     props.setModalOn(false);
-    setUserEmail('');
-    setUserPassword('');
-    setUserLoginError('');
+    setSignupModalOn(true);
   };
 
   return (
     <div>
+      <SignupModal signupModalOn={signupModalOn} setSignupModalOn={setSignupModalOn} />
       {props.modalOn ? (
         <div className="popup">
-          <div className="popup_inner">
-            <div id="signin-close-btn">
+          <div className="popup__inner">
+            <div id="signin__close__btn">
               <button className="close" onClick={togglePopup}>
                 <img src="images/close_btn.png" alt="닫기 버튼" />
               </button>
             </div>
-            <div id="signin-contents">
-              <img src="images/logo.png" alt="project_tt_logo" />
-              <span id="signin-title">로그인</span>
+            <div id="signin__contents">
+              <img src="images/logo.png" alt="buddy_logo" />
+              <span id="signin__title">로그인</span>
               <fieldset>
                 <input
-                  className="signin-input"
+                  className="signin__input"
                   onChange={handleChangeEmail}
                   type="email"
                   id="username"
@@ -155,7 +159,7 @@ export function LoginModal(props) {
               </fieldset>
               <fieldset>
                 <input
-                  className="signin-input"
+                  className="signin__input"
                   onChange={handleChangePassword}
                   type="password"
                   id="password"
@@ -164,22 +168,22 @@ export function LoginModal(props) {
                   value={userPassword}
                 ></input>
               </fieldset>
-              <span id="login-error">{userLoginError}</span>
-              <div id="signin-btn">
-                <button className="signin-btn-contents" onClick={onLogin}>
+              <span id="login__error">{userLoginError}</span>
+              <div id="signin__btn">
+                <button className="signin__btn__contents" onClick={onLogin}>
                   로그인
                 </button>
                 <span id="not__user">
                   아직 회원이 아니신가요?
-                  <Link id="signup__link" to="/signup" onClick={moveSignup}>
+                  <button id="signup__link" onClick={signupModalOpen}>
                     회원가입
-                  </Link>
+                  </button>
                 </span>
                 <div id="social__login">
-                  <Link id="google__link" to="/signup">
+                  <Link id="google__link">
                     <img src="images/google_login.png" alt="구글 로그인" />
                   </Link>
-                  <Link id="kakao__link" to="/signup">
+                  <Link id="kakao__link">
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </Link>
                 </div>
