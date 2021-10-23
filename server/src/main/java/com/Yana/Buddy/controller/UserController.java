@@ -1,8 +1,6 @@
 package com.Yana.Buddy.controller;
 
-import com.Yana.Buddy.dto.EditProfileDto;
-import com.Yana.Buddy.dto.LoginDto;
-import com.Yana.Buddy.dto.RegisterDto;
+import com.Yana.Buddy.dto.*;
 import com.Yana.Buddy.entity.User;
 import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
@@ -81,8 +79,8 @@ public class UserController {
     }
 
     @GetMapping("/email_check")
-    public ResponseEntity<?> emailCheck(@RequestBody String email) {
-        if (userService.existEmail(email)) {
+    public ResponseEntity<?> emailCheck(@RequestBody EmailDto dto) {
+        if (userService.existEmail(dto.getEmail())) {
             return ResponseEntity.status(400).body(new HashMap<>() {
                 {
                     put("message", "이미 존재하는 이메일입니다!");
@@ -98,8 +96,8 @@ public class UserController {
     }
 
     @GetMapping("/nickname_check")
-    public ResponseEntity<?> nicknameCheck(@RequestBody String nickname) {
-        if (userService.existNickname(nickname)) {
+    public ResponseEntity<?> nicknameCheck(@RequestBody NicknameDto dto) {
+        if (userService.existNickname(dto.getNickname())) {
             return ResponseEntity.status(400).body(new HashMap<>() {
                 {
                     put("message", "이미 존재하는 닉네임입니다.");

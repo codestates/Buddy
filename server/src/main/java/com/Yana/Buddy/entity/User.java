@@ -30,10 +30,18 @@ public class User extends BaseEntity {
 
     private String stateMessage;
 
+    private String profileImage;
+
     @Enumerated(STRING)
     private Gender gender;
 
     @Enumerated(STRING)
     private Role authority;
+
+    public User update(String email, String picture) {
+        this.email = email;
+        this.profileImage = picture;
+        return this;
+    }
 
 }
