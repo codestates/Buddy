@@ -78,7 +78,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/email_check")
+    @PostMapping("/email_check")
     public ResponseEntity<?> emailCheck(@RequestBody EmailDto dto) {
         if (userService.existEmail(dto.getEmail())) {
             return ResponseEntity.status(400).body(new HashMap<>() {
@@ -95,7 +95,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/nickname_check")
+    @PostMapping("/nickname_check")
     public ResponseEntity<?> nicknameCheck(@RequestBody NicknameDto dto) {
         if (userService.existNickname(dto.getNickname())) {
             return ResponseEntity.status(400).body(new HashMap<>() {
