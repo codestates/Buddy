@@ -1,30 +1,70 @@
-.body__wrapper {
-  min-height: 100%;
-  position: relative;
-}
-
-.footer {
+#footers {
   font-family: 'Noto Sans KR';
-  font-weight: 400;
-  font-size: 11px;
-  width: 100%;
-  height: 120px;
-  position: absolute;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: white;
-  border-top: 1px solid rgb(219, 219, 219);
-  border-top: 1px solid rgb(219, 219, 219);
+  background-color: #f1f1f2;
 }
 
-.footer__wrapper {
+#footer__container {
+  font-weight: 400;
+  font-size: 11px;
+  width: 60%;
+  height: 250px;
+
   display: flex;
-  background-color: white;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#footer__wrapper {
+  display: flex;
+  flex-direction: row;
   margin-left: 20px;
 }
 
+#footer__menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}
+
+#footer__menu > #footer__ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 13px;
+  margin-left: -26px;
+  list-style: none;
+}
+
+.footer__li {
+  margin-right: 20px;
+}
+
+.footer__link {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+#footer__description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#footer__description > span {
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 10px;
+}
+
+#github__container {
+  display: flex;
+}
 .github {
   margin-left: -1px;
 }
@@ -48,4 +88,8 @@
   width: 150px;
   margin-bottom: 3px;
   margin-left: -8px;
+}
+
+#footer__copyright {
+  margin-left: -15px;
 }

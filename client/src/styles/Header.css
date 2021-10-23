@@ -1,8 +1,12 @@
 #header__wrapper {
-  background: linear-gradient(to left, salmon, lightsalmon);
   display: flex;
   align-items: center;
   justify-content: center;
+  position: sticky;
+  top: 0;
+  height: 80px;
+  background-color: white;
+  z-index: 9999;
 }
 
 #headers {
@@ -11,18 +15,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  height: 80px;
-  z-index: 10;
   width: 60%;
 }
 
 .header__link > img {
   margin-top: -2px;
   margin-left: 20px;
-  width: 210px;
+  width: 90px;
+  height: auto;
   cursor: pointer;
+  z-index: 10;
 }
 
 #nav > #ul {
@@ -36,11 +38,11 @@
   text-decoration: none;
   cursor: pointer;
   transition: all 0.3s;
-  color: white;
+  color: black;
 }
 
 #ul > li:hover {
-  color: gray;
+  color: #151f38;
 }
 
 .header__link {
@@ -51,7 +53,7 @@
 }
 
 .header__link:hover {
-  color: teal;
+  color: #22cc88;
 }
 
 .nav-btn {
