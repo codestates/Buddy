@@ -1,19 +1,19 @@
-sever:
-  port: 8080
 spring:
+  profiles:
+    include: oauth
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
 
   datasource:
-    url: jdbc:mysql://13.209.97.150:3306/buddy?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://buddy-db.cy5zk59ytuuj.ap-northeast-2.rds.amazonaws.com:13306/buddy?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
     username: admin
-    password: buddy857356
+    password: buddy1357
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   config:
