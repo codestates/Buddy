@@ -1,8 +1,23 @@
-import { Link } from 'react-router-dom';
 import React from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import '../styles/Header.css';
 
-export default function Header() {
+export default function Header(props) {
+  const history = useHistory();
+
+  const loginModalOpen = () => {
+    props.setModalOn(true);
+    console.log(props.modalOn);
+  };
+
+  const handleSignOut = () => {
+    // 로컬스토리지 accessToken 지우기
+    localStorage.setItem('accessToken', '');
+    history.push('/');
+    props.setLoginOn(false);
+    props.setUserInfo({});
+  };
+
   return (
     <div id="header__wrapper">
       <header id="headers">
@@ -22,9 +37,9 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <Link className="header__link" to="/login">
+              <button className="header__link" onClick={loginModalOpen}>
                 로그인
-              </Link>
+              </button>
             </li>
           </ul>
         </nav>
