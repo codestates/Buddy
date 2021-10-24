@@ -154,6 +154,11 @@
   opacity: 0.5;
 }
 
+#login__error {
+  margin-top: -23px;
+  color: red;
+}
+
 /* 모달 창 페이드 인 애니메이션 */
 @keyframes fadein {
   from {
