@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import '../styles/Header.css';
+import { Cookies } from 'react-cookie';
 
 export default function Header(props) {
   const history = useHistory();
+
+  const cookies = new Cookies();
 
   const loginModalOpen = () => {
     props.setModalOn(true);
@@ -12,7 +15,7 @@ export default function Header(props) {
 
   const handleSignOut = () => {
     // 로컬스토리지 accessToken 지우기
-    localStorage.setItem('accessToken', '');
+    cookies.remove('refreshToken');
     history.push('/');
     props.setLoginOn(false);
     props.setUserInfo({});
@@ -37,9 +40,22 @@ export default function Header(props) {
               </Link>
             </li>
             <li>
-              <button className="header__link" onClick={loginModalOpen}>
-                로그인
-              </button>
+              {props.loginOn === true ? (
+                <button className="header__link" onClick={handleSignOut}>
+                  로그아웃
+                </button>
+              ) : (
+                <button className="header__link" onClick={loginModalOpen}>
+                  로그인
+                </button>
+              )}
+            </li>
+            <li>
+              {props.loginOn === true ? (
+                <Link className="header__link" to="/mypage">
+                  마이페이지
+                </Link>
+              ) : null}
             </li>
           </ul>
         </nav>

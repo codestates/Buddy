@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/modal/LoginModal.css';
 import dotenv from 'dotenv';
 import { SignupModal } from './SignupModal';
-import { EMAIL_REGEXP } from '../../constants/constants';
+import { Cookies } from 'react-cookie';
 
 axios.defaults.withCredentials = true;
 
@@ -16,11 +16,16 @@ export function LoginModal(props) {
   const [userPassword, setUserPassword] = useState('');
   const [userLoginError, setUserLoginError] = useState('');
   const [userInfo, setUserInfo] = useState({});
-
-  const [loginOn, setLoginOn] = useState(false); // 로그인 여부 (test : true로 바꾸고 개발)
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
 
+  // 새로고침해도 로그인 유지
+  useEffect(() => {
+    accessTokenCheck(); //마운트 될 때만 실행된다.
+  }, []);
+
   const history = useHistory();
+
+  const cookies = new Cookies();
 
   const onLogin = async () => {
     const userData = {
@@ -47,45 +52,11 @@ export function LoginModal(props) {
       withCredentials: true,
     })
       .then((res) => {
-        const { accessToken } = res.data;
-
-        // 로컬스토리지 accessToken 담기
-        localStorage.setItem('accessToken', accessToken);
-
-        // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
-        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        console.log(res.data);
-
-        // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
-        // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
-        axios(`${process.env.REACT_APP_API_URL}/token-valid-check`, {
-          method: 'GET',
-          headers: {
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET',
-            'Access-Control-Allow-Credentials': 'true',
-          },
-          withCredentials: true,
-        })
-          .then((res) => {
-            // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
-
-            props.setUserInfo(res.data);
-            setUserInfo(props.userInfo);
-            console.log(userInfo);
-
-            // useHistory를 사용하여 로그인 성공시 모달창을 끄고 mypage로 이동
-            props.setModalOn(false);
-            setUserEmail('');
-            setUserPassword('');
-            setUserLoginError('');
-            history.push('/mypage');
-            props.setLoginOn(true);
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+        console.log(res.data); // accessToken (클라이언트에 따로 저장)
+        console.log(cookies.get('refreshToken'));
+        cookies.set('refreshToken', res.data.refreshToken);
+        props.setLoginOn(true);
+        accessTokenCheck();
       })
       .catch((err) => {
         console.error(err);
@@ -100,6 +71,42 @@ export function LoginModal(props) {
           // 에러에 response가 있으면 해당 data를 출력
           console.log(err.response.data);
         }
+      });
+  };
+
+  const accessTokenCheck = () => {
+    // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
+    axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get('refreshToken')}`;
+
+    // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
+    // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
+    axios(`${process.env.REACT_APP_API_URL}/token_check`, {
+      method: 'GET',
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
+        console.log(res.data);
+        props.setUserInfo(res.data);
+        setUserInfo(props.userInfo);
+        console.log(userInfo);
+
+        // useHistory를 사용하여 로그인 성공시 모달창을 끄고 mypage로 이동
+        props.setModalOn(false);
+        setUserEmail('');
+        setUserPassword('');
+        setUserLoginError('');
+        history.push('/mypage');
+        props.setLoginOn(true);
+      })
+      .catch((err) => {
+        console.error(err);
       });
   };
 
