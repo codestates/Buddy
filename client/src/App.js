@@ -9,6 +9,7 @@ import { PrivacyPage } from './pages/PrivacyPage';
 import { LoginModal } from './components/modals/LoginModal';
 import { ChatingPage } from './pages/ChatingPage';
 import { DemoPage } from './pages/DemoPage';
+import ScrollToTop from './utils/ScrollToTop';
 
 function App() {
   const [loginOn, setLoginOn] = useState(false); // 로그인 여부 (test : true로 바꾸고 개발)
@@ -17,6 +18,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="App">
         <GlobalStyles />
         <LoginModal
