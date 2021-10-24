@@ -10,6 +10,7 @@ import { LoginModal } from './components/modals/LoginModal';
 import { ChatingPage } from './pages/ChatingPage';
 import { DemoPage } from './pages/DemoPage';
 import ScrollToTop from './utils/ScrollToTop';
+import { MyPage } from './pages/MyPage';
 
 function App() {
   const [loginOn, setLoginOn] = useState(false); // 로그인 여부 (test : true로 바꾸고 개발)
@@ -51,6 +52,9 @@ function App() {
           </Route>
           <Route exact path="/privacy">
             <PrivacyPage />
+          </Route>
+          <Route exact path="/mypage">
+            <MyPage />
           </Route>
         </Switch>
         <Footer />
