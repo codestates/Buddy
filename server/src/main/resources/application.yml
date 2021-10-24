@@ -21,3 +21,5 @@ spring:
 
 jwt:
   secret: buddykey
+
+
