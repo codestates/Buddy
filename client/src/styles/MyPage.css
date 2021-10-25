@@ -1,0 +1,134 @@
+.my__page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Noto Sans KR';
+}
+
+.mypage__wrapper {
+  display: flex;
+  flex-direction: low;
+  justify-content: center;
+  width: 60%;
+  background-color: rgb(247, 247, 247);
+  margin: 30px;
+}
+
+.mypage__container {
+  width: 60%;
+  /* background-color: aquamarine; */
+}
+
+.mypage__basicinfo {
+  display: flex;
+  flex-direction: column;
+  /* background-color: rgb(201, 157, 241); */
+  margin: 50px;
+}
+
+.mypage__nickname {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.mypage__email {
+  font-size: 15x;
+  margin-bottom: 10px;
+}
+
+.mypage__modifyinfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* background-color: rgb(233, 243, 138); */
+  margin: 50px;
+}
+
+.mypage__modifyinfo__container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px;
+}
+
+.mypage__modifyinfo__container > input {
+  width: 250px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid gray;
+}
+
+.mypage__modifyinfo__container > button {
+  width: 100px;
+  height: 40px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #22cc88;
+  cursor: pointer;
+  margin-left: 30px;
+}
+
+.mypage__modifyinfo__container > button:hover {
+  background-color: #27e99b;
+}
+
+.mypage__image__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+}
+
+.mypage__image__container > img {
+  width: 150px;
+  height: auto;
+}
+
+.mypage__image__container > button {
+  width: 100px;
+  height: 40px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #22cc88;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.mypage__image__container > button:hover {
+  background-color: #27e99b;
+}
+
+.mypage__unregister__wrapper {
+  display: flex;
+  flex-direction: low;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 200px;
+  /* background-color: rgb(223, 95, 235); */
+}
+
+.mypage__unregister__container > button {
+  width: 100px;
+  height: 40px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #eb1515;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.mypage__unregister__container > button:hover {
+  background-color: #ff3737;
+}

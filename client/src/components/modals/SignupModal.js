@@ -185,6 +185,7 @@ export function SignupModal(props) {
                     placeholder="이메일"
                     maxLength="30"
                     value={signupUserEmail}
+                    autocomplete="false"
                   ></input>
                 </fieldset>
                 <button className="signup__input__btn" onClick={handleEmailValidCheck}>
@@ -211,6 +212,7 @@ export function SignupModal(props) {
                     placeholder="비밀번호"
                     maxLength="15"
                     value={signupUserPassword}
+                    autocomplete="new-password"
                   ></input>
                 </fieldset>
               </div>
@@ -270,7 +272,7 @@ export function SignupModal(props) {
                   <span className="signup__error__message"></span>
                 )}
               </div>
-              <div className="signup__input__wrappers">
+              <div className="signup__input__wrappers__gender">
                 <fieldset className="signup__input__container">
                   <input
                     type="radio"
