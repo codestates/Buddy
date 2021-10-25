@@ -33,7 +33,7 @@ public class OAuthService {
     private String CLIENT_ID;
     @Value("${oauth.google.client-secret}")
     private String CLIENT_SECRET;
-    private static final String REDIRECT_URI = "http://localhost:8080/oauth/google/callback";
+    private static final String REDIRECT_URI = "http://ec2-3-34-149-228.ap-northeast-2.compute.amazonaws.com:8080/oauth/google/callback";
     private static final String GRANT_TYPE = "authorization_code";
 
     public ResponseEntity<String> createPostRequest(String code) {
