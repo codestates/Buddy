@@ -136,6 +136,9 @@ export function LoginModal(props) {
   // 로그인 모달창 끄고 회원가입 모달창 열기
   const signupModalOpen = () => {
     props.setModalOn(false);
+    setUserEmail('');
+    setUserPassword('');
+    setUserLoginError('');
     setSignupModalOn(true);
   };
 
