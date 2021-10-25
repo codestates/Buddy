@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
 import '../styles/MyPage.css';
 
-export function MyPage() {
+export function MyPage(props) {
   return (
     <div className="my__page">
       <section className="mypage__wrapper">
         <div className="mypage__container">
           <div className="mypage__basicinfo">
-            <span className="mypage__nickname">김코딩</span>
-            <span className="mypage__email">kimcoding@codestates.com</span>
+            <span className="mypage__nickname">{props.userInfo.nickname}</span>
+            <span className="mypage__email">{props.userInfo.email}</span>
+            <span className="mypage__role">{props.userInfo.authority}</span>
+            <span className="mypage__gender">{props.userInfo.gender}</span>
           </div>
           <div className="mypage__modifyinfo">
             <div className="mypage__modifyinfo__container">
