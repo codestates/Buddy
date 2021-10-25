@@ -44,6 +44,7 @@ export function LoginModal(props) {
         .then((data) => {
           console.log(data);
           setData(data);
+          props.setLoginOn(true);
         })
         .catch((e) => console.log('oAuth token expired'));
     }
