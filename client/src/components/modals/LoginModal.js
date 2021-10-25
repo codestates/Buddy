@@ -102,7 +102,6 @@ export function LoginModal(props) {
         setUserEmail('');
         setUserPassword('');
         setUserLoginError('');
-        history.push('/mypage');
         props.setLoginOn(true);
       })
       .catch((err) => {
