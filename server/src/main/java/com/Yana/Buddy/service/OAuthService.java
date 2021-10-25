@@ -1,11 +1,13 @@
 package com.Yana.Buddy.service;
 
+import com.Yana.Buddy.dto.GoogleUser;
 import com.Yana.Buddy.dto.OAuthToken;
 import com.Yana.Buddy.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,10 +30,10 @@ public class OAuthService {
     private final RestTemplate restTemplate;
 
     @Value("${oauth.google.client-id}")
-    private static String CLIENT_ID;
+    private String CLIENT_ID;
     @Value("${oauth.google.client-secret}")
-    private static String CLIENT_SECRET;
-    private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
+    private String CLIENT_SECRET;
+    private static final String REDIRECT_URI = "http://ec2-3-34-149-228.ap-northeast-2.compute.amazonaws.com:8080/oauth/google/callback";
     private static final String GRANT_TYPE = "authorization_code";
 
     public ResponseEntity<String> createPostRequest(String code) {
@@ -56,11 +59,12 @@ public class OAuthService {
         try {
             oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            log.error("get access token Exception : " + e);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("get access token Exception : " + e);
         }
 
+        log.info("get access token 반환값 확인 : " + oAuthToken.getAccess_token());
         return oAuthToken;
     }
 
@@ -68,17 +72,17 @@ public class OAuthService {
         String url = "https://www.googleapis.com/oauth2/v1/userinfo";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + oAuthToken.getAccessToken());
+        headers.add("Authorization", "Bearer " + oAuthToken.getAccess_token());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
         return restTemplate.exchange(url, HttpMethod.GET, request, String.class);
     }
 
-    public User getUserInfo(ResponseEntity<String> response) {
-        User user = null;
+    public GoogleUser getUserInfo(ResponseEntity<String> response) {
+        GoogleUser user = null;
         try {
-            user = objectMapper.readValue(response.getBody(), User.class);
+            user = objectMapper.readValue(response.getBody(), GoogleUser.class);
         } catch (JsonMappingException e) {
             e.printStackTrace();
         } catch (JsonProcessingException e) {

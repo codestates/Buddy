@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OAuthToken {
 
-    private String accessToken;
-    private String expiresIn;
-    private String idToken;
-    private String refreshToken;
+    private String access_token;
+    private String expires_in;
+    private String id_token;
+    private String refresh_token;
     private String scope;
-    private String tokenType;
+    private String token_type;
 
 }
