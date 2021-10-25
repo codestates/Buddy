@@ -41,6 +41,7 @@ export function LoginModal(props) {
     })
       .then((res) => {
         console.log(res);
+        history.push('/');
       })
       .catch((err) => {});
   };
@@ -207,9 +208,9 @@ export function LoginModal(props) {
                   </button>
                 </span>
                 <div id="social__login">
-                  <a id="google__link" href={`${process.env.REACT_APP_API_URL}/login_google`}>
+                  <Link id="google__link" onClick={oAuthHandler}>
                     <img src="images/google_login.png" alt="구글 로그인" />
-                  </a>
+                  </Link>
                   <Link id="kakao__link">
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </Link>
