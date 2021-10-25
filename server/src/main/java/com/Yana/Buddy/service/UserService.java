@@ -118,6 +118,7 @@ public class UserService {
         User signUpUser = User.builder()
                 .email(user.getEmail())
                 .profileImage(user.getPicture())
+                .authority(Role.GENERAL)
                 .build();
 
         userRepository.save(signUpUser);
