@@ -17,6 +17,7 @@ export function LoginModal(props) {
   const [userLoginError, setUserLoginError] = useState('');
   const [userInfo, setUserInfo] = useState({});
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
+  const [data, setData] = useState({});
 
   // 새로고침해도 로그인 유지
   useEffect(() => {
@@ -26,6 +27,23 @@ export function LoginModal(props) {
   const history = useHistory();
 
   const cookies = new Cookies();
+
+  const oAuthHandler = () => {
+    axios(`${process.env.REACT_APP_API_URL}/login_google`, {
+      method: 'GET',
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {});
+  };
 
   const onLogin = async () => {
     const userData = {
@@ -189,9 +207,9 @@ export function LoginModal(props) {
                   </button>
                 </span>
                 <div id="social__login">
-                  <Link id="google__link">
+                  <a id="google__link" href={`${process.env.REACT_APP_API_URL}/login_google`}>
                     <img src="images/google_login.png" alt="구글 로그인" />
-                  </Link>
+                  </a>
                   <Link id="kakao__link">
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </Link>
