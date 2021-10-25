@@ -30,21 +30,12 @@ export function LoginModal(props) {
     if (hash) {
       const accessToken = hash.split('=')[1].split('&')[0];
       axios
-        .get(
-          'https://cors-anywhere.herokuapp.com/https://www.googleapis.com/oauth2/v2/userinfo?access_token=' +
-            accessToken,
-          {
-            headers: {
-              authorization: `token ${accessToken}`,
-              accept: 'application/json',
-              'Access-Control-Allow-Headers': 'Content-Type',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'POST',
-              'Access-Control-Allow-Credentials': 'true',
-            },
-            withCredentials: true,
-          }
-        )
+        .get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken, {
+          headers: {
+            authorization: `token ${accessToken}`,
+            accept: 'application/json',
+          },
+        })
         .then((data) => {
           console.log(data);
           setData(data);
