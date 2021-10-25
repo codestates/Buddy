@@ -76,6 +76,19 @@ export function LoginModal(props) {
       });
   };
 
+  const handleOauth = () => {
+    axios(`${process.env.REACT_APP_API_URL}/login_google`, {
+      method: 'GET',
+    })
+      .then((res) => {
+        // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   const accessTokenCheck = () => {
     // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
     axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get('refreshToken')}`;
@@ -191,12 +204,9 @@ export function LoginModal(props) {
                   </button>
                 </span>
                 <div id="social__login">
-                  <a
-                    id="google__link"
-                    href={'http://ec2-3-34-149-228.ap-northeast-2.compute.amazonaws.com:8080/login_google'}
-                  >
+                  <button id="google__link" onClick={handleOauth}>
                     <img src="images/google_login.png" alt="구글 로그인" />
-                  </a>
+                  </button>
                   <Link id="kakao__link">
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </Link>
