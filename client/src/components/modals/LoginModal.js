@@ -34,7 +34,12 @@ export function LoginModal(props) {
           headers: {
             authorization: `token ${accessToken}`,
             accept: 'application/json',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Credentials': 'true',
           },
+          withCredentials: true,
         })
         .then((data) => {
           console.log(data);
