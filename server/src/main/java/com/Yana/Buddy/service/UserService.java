@@ -1,6 +1,7 @@
 package com.Yana.Buddy.service;
 
 import com.Yana.Buddy.dto.EditProfileDto;
+import com.Yana.Buddy.dto.GoogleUser;
 import com.Yana.Buddy.dto.OAuthToken;
 import com.Yana.Buddy.dto.RegisterDto;
 import com.Yana.Buddy.entity.Gender;
@@ -8,6 +9,7 @@ import com.Yana.Buddy.entity.Role;
 import com.Yana.Buddy.entity.User;
 import com.Yana.Buddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -89,10 +92,13 @@ public class UserService {
 
     public String oauthLogin(String code) {
         ResponseEntity<String> accessTokenResponse = oAuthService.createPostRequest(code);
+        log.info("token response 확인 : " + accessTokenResponse.toString());
         OAuthToken oAuthToken = oAuthService.getAccessToken(accessTokenResponse);
 
+        log.info("access token 확인 : " + oAuthToken.getAccess_token());
+
         ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(oAuthToken);
-        User googleUser = oAuthService.getUserInfo(userInfoResponse);
+        GoogleUser googleUser = oAuthService.getUserInfo(userInfoResponse);
 
         if (!isJoinedUser(googleUser)) {
             googleSignUp(googleUser, oAuthToken);
@@ -103,15 +109,15 @@ public class UserService {
         return tokenService.createJwtToken(user, 1L);
     }
 
-    private boolean isJoinedUser(User user) {
-        Optional<User> searchUser = userRepository.findByEmail(user.getEmail());
+    private boolean isJoinedUser(GoogleUser googleUser) {
+        Optional<User> searchUser = userRepository.findByEmail(googleUser.getEmail());
         return searchUser.isPresent();
     }
 
-    private void googleSignUp(User user, OAuthToken oAuthToken) {
+    private void googleSignUp(GoogleUser user, OAuthToken oAuthToken) {
         User signUpUser = User.builder()
                 .email(user.getEmail())
-                .profileImage(user.getProfileImage())
+                .profileImage(user.getPicture())
                 .build();
 
         userRepository.save(signUpUser);
