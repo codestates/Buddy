@@ -27,10 +27,6 @@ export function LoginModal(props) {
     accessTokenCheck(); //마운트 될 때만 실행된다.
   }, []);
 
-  useEffect(() => {
-    googleAuthSaveData(); //구글 토큰 값을 받아오면 실행하는 함수
-  }, [googleAccessToken]);
-
   const history = useHistory();
 
   const cookies = new Cookies();
@@ -80,35 +76,6 @@ export function LoginModal(props) {
           console.log(err.response.data);
         }
       });
-  };
-
-  const handleOauth = () => {
-    axios(`${process.env.REACT_APP_API_URL}/login_google`, {
-      method: 'GET',
-    })
-      .then((res) => {
-        // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
-        console.log(res.data);
-        setGoogleAccessToken(res.data.data.accessToken);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const googleAuthSaveData = () => {
-    axios
-      .get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + googleAccessToken, {
-        headers: {
-          authorization: `token ${googleAccessToken}`,
-          accept: 'application/json',
-        },
-      })
-      .then((data) => {
-        console.log(data);
-        setData(data);
-      })
-      .catch((e) => console.log('oAuth token expired'));
   };
 
   const accessTokenCheck = () => {
@@ -226,9 +193,9 @@ export function LoginModal(props) {
                   </button>
                 </span>
                 <div id="social__login">
-                  <button id="google__link" onClick={handleOauth}>
+                  <a id="google__link" href={`${process.env.REACT_APP_API_URL}/login_google`}>
                     <img src="images/google_login.png" alt="구글 로그인" />
-                  </button>
+                  </a>
                   <Link id="kakao__link">
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </Link>
