@@ -12,7 +12,8 @@ public class WebSecurity implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com",
-                        "https://yana-buddy.com")
+                        "https://yana-buddy.com",
+                        "https://accounts.google.com")
                 .exposedHeaders("typ", "JWT");
     }
 
