@@ -17,6 +17,8 @@ export function LoginModal(props) {
   const [userLoginError, setUserLoginError] = useState('');
   const [userInfo, setUserInfo] = useState({});
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
+  const [googleAccessToken, setGoogleAccessToken] = useState('');
+  const [data, setData] = useState(null);
 
   const googleAuthURL = process.env.REACT_APP_GOOGLE_AUTH_URL;
 
@@ -24,6 +26,10 @@ export function LoginModal(props) {
   useEffect(() => {
     accessTokenCheck(); //마운트 될 때만 실행된다.
   }, []);
+
+  useEffect(() => {
+    googleAuthSaveData(); //구글 토큰 값을 받아오면 실행하는 함수
+  }, [googleAccessToken]);
 
   const history = useHistory();
 
@@ -83,10 +89,26 @@ export function LoginModal(props) {
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
         console.log(res.data);
+        setGoogleAccessToken(res.data.data.accessToken);
       })
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  const googleAuthSaveData = () => {
+    axios
+      .get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + googleAccessToken, {
+        headers: {
+          authorization: `token ${googleAccessToken}`,
+          accept: 'application/json',
+        },
+      })
+      .then((data) => {
+        console.log(data);
+        setData(data);
+      })
+      .catch((e) => console.log('oAuth token expired'));
   };
 
   const accessTokenCheck = () => {
