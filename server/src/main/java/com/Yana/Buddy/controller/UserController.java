@@ -5,6 +5,8 @@ import com.Yana.Buddy.entity.User;
 import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,13 @@ public class UserController {
 
     private final UserService userService;
     private final TokenService tokenService;
+
+    private static final String ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
+    @Value("${oauth.google.client-id}")
+    private String CLIENT_ID;
+    private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
+    private static final String RESPONSE_TYPE = "code";
+    private static final String SCOPE = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto dto, HttpServletResponse response) {
@@ -126,6 +135,9 @@ public class UserController {
                     put("message", checkResult.get("message"));
                     put("id", user.getId());
                     put("email", user.getEmail());
+                    put("nickname", user.getNickname());
+                    put("gender", user.getGender());
+                    put("authority", user.getAuthority());
                 }
             });
         } else {
@@ -241,6 +253,18 @@ public class UserController {
                 }
             });
         }
+    }
+
+    @GetMapping("/login_google")
+    public String GoogleLogin() {
+        return "redirect:" + ENDPOINT + "?client_id=" + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
+                + "&response_type=" + RESPONSE_TYPE + "&scope=" + SCOPE;
+    }
+
+    @GetMapping("/oauth/google/callback")
+    public ResponseEntity<TokenResponse> oauthLogin(String code) {
+        String token = userService.oauthLogin(code);
+        return new ResponseEntity(new TokenResponse(token, "bearer"), HttpStatus.OK);
     }
 
 }

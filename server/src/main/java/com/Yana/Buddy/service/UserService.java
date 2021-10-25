@@ -1,15 +1,18 @@
 package com.Yana.Buddy.service;
 
 import com.Yana.Buddy.dto.EditProfileDto;
+import com.Yana.Buddy.dto.OAuthToken;
 import com.Yana.Buddy.dto.RegisterDto;
 import com.Yana.Buddy.entity.Gender;
 import com.Yana.Buddy.entity.Role;
 import com.Yana.Buddy.entity.User;
 import com.Yana.Buddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +22,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final OAuthService oAuthService;
+    private final TokenService tokenService;
 
     public boolean passwordCheck(User user, String password) {
         if (user.getPassword().equals(password)) return true;
@@ -80,6 +85,36 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public String oauthLogin(String code) {
+        ResponseEntity<String> accessTokenResponse = oAuthService.createPostRequest(code);
+        OAuthToken oAuthToken = oAuthService.getAccessToken(accessTokenResponse);
+
+        ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(oAuthToken);
+        User googleUser = oAuthService.getUserInfo(userInfoResponse);
+
+        if (!isJoinedUser(googleUser)) {
+            googleSignUp(googleUser, oAuthToken);
+        }
+
+        User user = userRepository.findByEmail(googleUser.getEmail()).orElseThrow();
+
+        return tokenService.createJwtToken(user, 1L);
+    }
+
+    private boolean isJoinedUser(User user) {
+        Optional<User> searchUser = userRepository.findByEmail(user.getEmail());
+        return searchUser.isPresent();
+    }
+
+    private void googleSignUp(User user, OAuthToken oAuthToken) {
+        User signUpUser = User.builder()
+                .email(user.getEmail())
+                .profileImage(user.getProfileImage())
+                .build();
+
+        userRepository.save(signUpUser);
     }
 
 }
