@@ -17,11 +17,31 @@ export function LoginModal(props) {
   const [userLoginError, setUserLoginError] = useState('');
   const [userInfo, setUserInfo] = useState({});
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
+
+  const googleAuthURL = process.env.REACT_APP_GOOGLE_AUTH_URL;
 
   // 새로고침해도 로그인 유지
   useEffect(() => {
     accessTokenCheck(); //마운트 될 때만 실행된다.
+
+    const url = new URL(window.location.href);
+    const hash = url.hash;
+    if (hash) {
+      const accessToken = hash.split('=')[1].split('&')[0];
+      axios
+        .get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken, {
+          headers: {
+            authorization: `token ${accessToken}`,
+            accept: 'application/json',
+          },
+        })
+        .then((data) => {
+          console.log(data);
+          setData(data);
+        })
+        .catch((e) => console.log('oAuth token expired'));
+    }
   }, []);
 
   const history = useHistory();
@@ -29,21 +49,7 @@ export function LoginModal(props) {
   const cookies = new Cookies();
 
   const oAuthHandler = () => {
-    axios(`${process.env.REACT_APP_API_URL}/login_google`, {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
-    })
-      .then((res) => {
-        console.log(res);
-        history.push('/');
-      })
-      .catch((err) => {});
+    window.location.assign(googleAuthURL);
   };
 
   const onLogin = async () => {
@@ -208,9 +214,9 @@ export function LoginModal(props) {
                   </button>
                 </span>
                 <div id="social__login">
-                  <Link id="google__link" onClick={oAuthHandler}>
+                  <button id="google__link" onClick={oAuthHandler}>
                     <img src="images/google_login.png" alt="구글 로그인" />
-                  </Link>
+                  </button>
                   <Link id="kakao__link">
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </Link>
