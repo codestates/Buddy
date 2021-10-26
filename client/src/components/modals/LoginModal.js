@@ -68,7 +68,7 @@ export function LoginModal(props) {
         headers: {
           'Access-Control-Allow-Headers': 'application/x-www-form-urlencoded',
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST',
+          'Access-Control-Allow-Methods': 'GET',
           'Access-Control-Allow-Credentials': 'true',
         },
       })
