@@ -124,10 +124,12 @@ export function LoginModal(props) {
                   // 회원정보 넣기
                   const signupInfo = {
                     email: copyUserInfo.email,
-                    password: null,
+                    password: '',
                     nickname: copyUserInfo.nickname,
                     gender: copyUserInfo.gender,
                   };
+
+                  console.log(signupInfo);
 
                   axios(`${process.env.REACT_APP_API_URL}/signup`, {
                     method: 'POST',
