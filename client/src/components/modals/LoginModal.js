@@ -104,6 +104,55 @@ export function LoginModal(props) {
               console.log(cookies.get('kakaoAccessToken'));
               props.setLoginOn(true); // 로그인 true
               history.push('/');
+
+              // 이메일 체크
+              axios(`${process.env.REACT_APP_API_URL}/email_check`, {
+                method: 'POST',
+                data: { email: res.data.kakao_account.email },
+                headers: {
+                  'Access-Control-Allow-Headers': 'Content-Type',
+                  'Access-Control-Allow-Origin': '*',
+                  'Access-Control-Allow-Methods': 'POST',
+                  'Access-Control-Allow-Credentials': 'true',
+                },
+                withCredentials: true,
+              })
+                // 이메일 일치하지 않을 때 회원가입
+                .then((res) => {
+                  // 이메일 체크
+                  axios(`${process.env.REACT_APP_API_URL}/email_check`, {
+                    method: 'POST',
+                    data: { email: res.data.kakao_account.email },
+                    headers: {
+                      'Access-Control-Allow-Headers': 'Content-Type',
+                      'Access-Control-Allow-Origin': '*',
+                      'Access-Control-Allow-Methods': 'POST',
+                      'Access-Control-Allow-Credentials': 'true',
+                    },
+                    withCredentials: true,
+                  })
+                    // 이메일 일치하지 않을 때 회원가입
+                    .then((res) => {
+                      axios(`${process.env.REACT_APP_API_URL}/signup`, {
+                        method: 'POST',
+                        data: copyUserInfo,
+                        headers: {
+                          'Access-Control-Allow-Headers': 'Content-Type',
+                          'Access-Control-Allow-Origin': '*',
+                          'Access-Control-Allow-Methods': 'POST',
+                          'Access-Control-Allow-Credentials': 'true',
+                        },
+                        withCredentials: true,
+                      })
+                        .then((res) => {})
+                        .catch((err) => {});
+                    })
+
+                    .catch((err) => {});
+                })
+
+                .catch((err) => {});
+
               kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
             })
             .catch((err) => {});
