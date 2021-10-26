@@ -2,11 +2,10 @@ package com.Yana.Buddy.controller;
 
 import com.Yana.Buddy.dto.*;
 import com.Yana.Buddy.entity.User;
+import com.Yana.Buddy.service.OAuthService;
 import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,10 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(
-        origins = "https://yana-buddy.com, http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, https://accounts.google.com https://www.googleapis.com",
+        origins = "https://yana-buddy.com, " +
+                "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, " +
+                "https://accounts.google.com, https://www.googleapis.com, " +
+                "https://kauth.kakao.com",
         allowedHeaders = "*",
         allowCredentials = "true"
 )
@@ -27,6 +29,7 @@ public class UserController {
 
     private final UserService userService;
     private final TokenService tokenService;
+    private final OAuthService oAuthService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto dto, HttpServletResponse response) {
@@ -253,18 +256,24 @@ public class UserController {
     }
 
     @GetMapping("/oauth/google/callback")
-    public ResponseEntity<?> oauthLogin(String code, HttpServletResponse response) {
-        GoogleLoginDto googleLoginUser = userService.oauthLogin(code);
+    public ResponseEntity<?> googleOAuthLogin(String code, HttpServletResponse response) {
+        OAuthLoginDto googleLoginUser = userService.googleOAuthLogin(code);
         response.addCookie(googleLoginUser.getCookie());
         return ResponseEntity.status(200).body(new HashMap<>() {
             {
                 put("id", googleLoginUser.getUser().getId());
                 put("email", googleLoginUser.getUser().getEmail());
+                put("nickname", googleLoginUser.getUser().getNickname());
                 put("accessToken", googleLoginUser.getAccessToken());
                 put("refreshToken", googleLoginUser.getRefreshToken());
                 put("message", "Google Login 에 성공했습니다!");
             }
         });
+    }
+
+    @GetMapping("/oauth/kakao/token")
+    public ResponseEntity<KakaoToken> getKakaoToken(String code) {
+        return oAuthService.getKakaoToken(code);
     }
 
 }
