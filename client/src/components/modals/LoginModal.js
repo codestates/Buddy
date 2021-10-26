@@ -65,12 +65,6 @@ export function LoginModal(props) {
 
       axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/token?code=${kakaoCode}`, {
         method: 'GET',
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'GET',
-          'Access-Control-Allow-Credentials': 'true',
-        },
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data);
