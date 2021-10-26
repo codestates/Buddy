@@ -25,6 +25,7 @@ export function LoginModal(props) {
   // 새로고침해도 로그인 유지
   useEffect(() => {
     accessTokenCheck();
+    kakaoAccessTokenCheck();
     googleCodeOauth(); // 구글 인가코드 및 로그인 함수
     kakaoCodeOauth(); // 카카오 소셜 로그인 데이터 저장 함수
   }, []);
@@ -195,7 +196,6 @@ export function LoginModal(props) {
 
   // 카카오 : 쿠키에 저장된 kakaoAccessToken 확인으로 새로고침 시 로그인 유지
   const kakaoAccessTokenCheck = () => {
-    // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
     axios(`https://kapi.kakao.com/v1/user/access_token_info`, {
       method: 'GET',
