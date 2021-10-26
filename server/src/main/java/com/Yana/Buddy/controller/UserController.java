@@ -271,7 +271,7 @@ public class UserController {
         });
     }
 
-    @PostMapping("/siginup_kakao")
+    @PostMapping("/signup_kakao")
     public ResponseEntity<?> kakaoSignUp(@RequestBody KakaoRegisterDto dto) {
         try {
             User user = userService.kakaoSignUp(dto);
