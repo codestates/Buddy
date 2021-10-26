@@ -117,12 +117,13 @@ export function LoginModal(props) {
                 },
                 withCredentials: true,
               })
-                // 이메일 일치하지 않을 때 회원가입
+                // 중복된 이메일이 아니면 회원가입
                 .then((res) => {
-                  // 이메일 체크
-                  axios(`${process.env.REACT_APP_API_URL}/email_check`, {
+                  console.log(res.data);
+
+                  axios(`${process.env.REACT_APP_API_URL}/signup`, {
                     method: 'POST',
-                    data: { email: res.data.kakao_account.email },
+                    data: copyUserInfo,
                     headers: {
                       'Access-Control-Allow-Headers': 'Content-Type',
                       'Access-Control-Allow-Origin': '*',
@@ -131,26 +132,11 @@ export function LoginModal(props) {
                     },
                     withCredentials: true,
                   })
-                    // 이메일 일치하지 않을 때 회원가입
                     .then((res) => {
-                      axios(`${process.env.REACT_APP_API_URL}/signup`, {
-                        method: 'POST',
-                        data: copyUserInfo,
-                        headers: {
-                          'Access-Control-Allow-Headers': 'Content-Type',
-                          'Access-Control-Allow-Origin': '*',
-                          'Access-Control-Allow-Methods': 'POST',
-                          'Access-Control-Allow-Credentials': 'true',
-                        },
-                        withCredentials: true,
-                      })
-                        .then((res) => {})
-                        .catch((err) => {});
+                      console.log(res.data);
                     })
-
                     .catch((err) => {});
                 })
-
                 .catch((err) => {});
 
               kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
