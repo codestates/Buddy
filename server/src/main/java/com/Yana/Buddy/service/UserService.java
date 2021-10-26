@@ -1,24 +1,32 @@
 package com.Yana.Buddy.service;
 
-import com.Yana.Buddy.dto.EditProfileDto;
-import com.Yana.Buddy.dto.RegisterDto;
+import com.Yana.Buddy.controller.UserController;
+import com.Yana.Buddy.dto.*;
 import com.Yana.Buddy.entity.Gender;
 import com.Yana.Buddy.entity.Role;
 import com.Yana.Buddy.entity.User;
 import com.Yana.Buddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final OAuthService oAuthService;
+    private final TokenService tokenService;
 
     public boolean passwordCheck(User user, String password) {
         if (user.getPassword().equals(password)) return true;
@@ -80,6 +88,40 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public GoogleLoginDto oauthLogin(String code) {
+        ResponseEntity<String> accessTokenResponse = oAuthService.createPostRequest(code);
+        OAuthToken oAuthToken = oAuthService.getAccessToken(accessTokenResponse);
+
+        ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(oAuthToken);
+        GoogleUser googleUser = oAuthService.getUserInfo(userInfoResponse);
+
+        if (!isJoinedUser(googleUser)) {
+            googleSignUp(googleUser, oAuthToken);
+        }
+
+        User user = userRepository.findByEmail(googleUser.getEmail()).orElseThrow();
+        String accessToken = tokenService.createJwtToken(user, 1L);
+        String refreshToken = tokenService.createJwtToken(user, 2L);
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+
+        return new GoogleLoginDto(user, accessToken, refreshToken, cookie);
+    }
+
+    private boolean isJoinedUser(GoogleUser googleUser) {
+        Optional<User> searchUser = userRepository.findByEmail(googleUser.getEmail());
+        return searchUser.isPresent();
+    }
+
+    private void googleSignUp(GoogleUser user, OAuthToken oAuthToken) {
+        User signUpUser = User.builder()
+                .email(user.getEmail())
+                .profileImage(user.getPicture())
+                .authority(Role.GENERAL)
+                .build();
+
+        userRepository.save(signUpUser);
     }
 
 }
