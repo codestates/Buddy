@@ -1,9 +1,7 @@
 package com.Yana.Buddy.service;
 
-import com.Yana.Buddy.dto.EditProfileDto;
-import com.Yana.Buddy.dto.GoogleUser;
-import com.Yana.Buddy.dto.OAuthToken;
-import com.Yana.Buddy.dto.RegisterDto;
+import com.Yana.Buddy.controller.UserController;
+import com.Yana.Buddy.dto.*;
 import com.Yana.Buddy.entity.Gender;
 import com.Yana.Buddy.entity.Role;
 import com.Yana.Buddy.entity.User;
@@ -13,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
