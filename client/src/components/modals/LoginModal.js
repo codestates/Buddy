@@ -25,8 +25,8 @@ export function LoginModal(props) {
   // 새로고침해도 로그인 유지
   useEffect(() => {
     accessTokenCheck();
-    googleCodeOauth();
-    kakaoCodeOauth();
+    googleCodeOauth(); // 구글 인가코드 함수
+    kakaoCodeOauth(); // 카카오 인가코드 함수
   }, []);
 
   // google oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
@@ -59,7 +59,7 @@ export function LoginModal(props) {
     const kakaoSearch = kakaoUrl.search; // 쿼리 스크링 가져오기
 
     if (kakaoSearch) {
-      const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
+      const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // kakao code 값만 추출
 
       console.log(kakaoCode);
 
@@ -67,6 +67,7 @@ export function LoginModal(props) {
         method: 'GET',
         headers: {
           'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': 'http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com',
           'Access-Control-Allow-Methods': 'GET',
           'Access-Control-Allow-Credentials': 'true',
         },
@@ -74,6 +75,25 @@ export function LoginModal(props) {
       })
         .then((res) => {
           console.log(res.data);
+
+          const kakaoAccessToken = res.data.access_token;
+
+          axios(`https://kapi.kakao.com/v2/user/me`, {
+            method: 'GET',
+            headers: {
+              'Access-Control-Allow-Headers': 'Content-Type',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'GET',
+              'Access-Control-Allow-Credentials': 'true',
+              Authorization: `Bearer ${kakaoAccessToken}`,
+            },
+
+            withCredentials: true,
+          })
+            .then((res) => {
+              console.log(res.data);
+            })
+            .catch((err) => {});
         })
         .catch((err) => {});
     }
