@@ -93,13 +93,14 @@ export function LoginModal(props) {
           })
             .then((res) => {
               console.log(res.data.access_token);
-              let copyUserInfo = { ...userInfo };
-              copyUserInfo.email = res.data.kakao_account.email;
-              copyUserInfo.gender = res.data.kakao_account.gender;
-              copyUserInfo.nickname = res.data.properties.nickname;
-              copyUserInfo.authority = 'GENERAL';
+
               console.log(cookies.get('kakaoAccessToken'));
-              setUserInfo(copyUserInfo);
+              setUserInfo({
+                email: res.data.kakao_account.email,
+                gender: res.data.kakao_account.gender,
+                nickname: res.data.properties.nickname,
+                authority: 'GENERAL',
+              });
               props.setLoginOn(true); // 로그인 true
               history.push('/');
               kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
@@ -223,14 +224,15 @@ export function LoginModal(props) {
         })
           .then((res) => {
             console.log(res.data);
-            let copyUserInfo = { ...userInfo };
-            copyUserInfo.email = res.data.kakao_account.email;
-            copyUserInfo.gender = res.data.kakao_account.gender;
-            copyUserInfo.nickname = res.data.properties.nickname;
-            copyUserInfo.authority = 'GENERAL';
-            setUserInfo(copyUserInfo);
+
+            setUserInfo({
+              email: res.data.kakao_account.email,
+              gender: res.data.kakao_account.gender,
+              nickname: res.data.properties.nickname,
+              authority: 'GENERAL',
+            });
             console.log(setUserInfo);
-            console.log(copyUserInfo);
+
             props.setLoginOn(true); // 로그인 true
           })
           .catch((err) => {});
