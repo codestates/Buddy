@@ -193,7 +193,7 @@ export function LoginModal(props) {
       });
   };
 
-  // 쿠키에 저장된 refreshToken 확인으로 새로고침 시 로그인 유지
+  // 카카오 : 쿠키에 저장된 kakaoAccessToken 확인으로 새로고침 시 로그인 유지
   const kakaoAccessTokenCheck = () => {
     // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
@@ -218,7 +218,7 @@ export function LoginModal(props) {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET',
             'Access-Control-Allow-Credentials': 'true',
-            Authorization: `Bearer ${kakaoAccessToken}`,
+            Authorization: `Bearer ${cookies.get('kakaoAccessToken')}`,
           },
 
           withCredentials: true,
