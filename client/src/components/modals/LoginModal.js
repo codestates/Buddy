@@ -17,7 +17,6 @@ export function LoginModal(props) {
   const [userLoginError, setUserLoginError] = useState('');
   const [userInfo, setUserInfo] = useState({});
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
-  const [googleAccessToken, setGoogleAccessToken] = useState('');
   const [data, setData] = useState(null);
 
   const googleAuthURL = process.env.REACT_APP_GOOGLE_AUTH_URL;
@@ -51,7 +50,7 @@ export function LoginModal(props) {
           axios
             .get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken, {
               headers: {
-                authorization: `${accessToken}`,
+                authorization: `Bearer ${accessToken}`,
                 accept: 'application/json',
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Allow-Origin': '*',
