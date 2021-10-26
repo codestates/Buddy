@@ -229,8 +229,9 @@ export function LoginModal(props) {
             copyUserInfo.nickname = res.data.properties.nickname;
             copyUserInfo.authority = 'GENERAL';
             setUserInfo(copyUserInfo);
+            console.log(setUserInfo);
+            console.log(copyUserInfo);
             props.setLoginOn(true); // 로그인 true
-            history.push('/');
           })
           .catch((err) => {});
       })
