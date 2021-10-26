@@ -59,6 +59,7 @@ public class OAuthService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/x-www-form-urlencoded");
+        headers.add("Access-Control-Allow-Origin", "");
 
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
