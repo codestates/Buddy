@@ -22,29 +22,48 @@ export function LoginModal(props) {
 
   const googleAuthURL = process.env.REACT_APP_GOOGLE_AUTH_URL;
 
+  const history = useHistory();
+
+  const cookies = new Cookies();
+
   // 새로고침해도 로그인 유지
   useEffect(() => {
-    accessTokenCheck(); //마운트 될 때만 실행된다.
+    accessTokenCheck(); // 마운트 될 때만 실행된다.
+    googleCodeOauth();
+  }, []);
+
+  const googleCodeOauth = () => {
     const url = new URL(window.location.href); // 주소창 값 가져오기
-    const search = url.search;
+    const search = url.search; // 쿼리 스크링 가져오기
+
+    console.log(url.search);
 
     if (search) {
-      const googleCode = search.split('=')[1].split('&')[0];
+      const googleCode = search.split('=')[1].split('&')[0]; // google code 값만 추출
 
       axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${googleCode}`, {
         method: 'GET',
       })
         .then((res) => {
           console.log(res.data);
+          const accessToken = res.data.accessToken;
+
+          axios
+            .get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken, {
+              headers: {
+                authorization: `token ${accessToken}`,
+                accept: 'application/json',
+              },
+            })
+            .then((data) => {
+              console.log(data);
+              setData(data);
+            })
+            .catch((e) => console.log('oAuth token expired'));
         })
         .catch((err) => {});
     }
-    console.log(url.search);
-  }, []);
-
-  const history = useHistory();
-
-  const cookies = new Cookies();
+  };
 
   const onLogin = async () => {
     const userData = {
