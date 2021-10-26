@@ -67,7 +67,6 @@ export function LoginModal(props) {
         method: 'GET',
         headers: {
           'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET',
           'Access-Control-Allow-Credentials': 'true',
         },
