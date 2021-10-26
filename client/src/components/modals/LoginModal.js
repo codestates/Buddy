@@ -97,9 +97,11 @@ export function LoginModal(props) {
               copyUserInfo.gender = res.data.kakao_account.gender;
               copyUserInfo.nickname = res.data.properties.nickname;
               copyUserInfo.authority = 'GENERAL';
-
-              setUserInfo(copyUserInfo);
+              console.log(cookies.get('refreshToken'));
+              cookies.set('refreshToken', res.data.refreshToken);
               props.setLoginOn(true); // 로그인 true
+              history.push('/');
+              accessTokenCheck(); // 새로고침 시 로그인 유지
             })
             .catch((err) => {});
         })
