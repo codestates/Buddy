@@ -20,7 +20,7 @@ public class OAuthLoginController {
     private static final String ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
     @Value("${oauth.google.client-id}")
     private String CLIENT_ID;
-    private static final String REDIRECT_URI = "http://ec2-3-34-149-228.ap-northeast-2.compute.amazonaws.com:8080/oauth/google/callback";
+    private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
     private static final String RESPONSE_TYPE = "code";
     private static final String SCOPE = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
 
