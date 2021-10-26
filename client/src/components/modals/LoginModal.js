@@ -51,7 +51,7 @@ export function LoginModal(props) {
           axios
             .get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken, {
               headers: {
-                authorization: `token ${accessToken}`,
+                authorization: `bearer ${accessToken}`,
                 accept: 'application/json',
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Allow-Origin': '*',
