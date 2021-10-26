@@ -98,7 +98,7 @@ export function LoginModal(props) {
               copyUserInfo.nickname = res.data.properties.nickname;
               copyUserInfo.authority = 'GENERAL';
               console.log(cookies.get('kakaoAccessToken'));
-
+              setUserInfo(copyUserInfo);
               props.setLoginOn(true); // 로그인 true
               history.push('/');
               kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
@@ -209,8 +209,6 @@ export function LoginModal(props) {
       withCredentials: true,
     })
       .then((res) => {
-        const kakaoAccessToken = res.data.access_token;
-
         axios(`https://kapi.kakao.com/v2/user/me`, {
           method: 'GET',
           headers: {
@@ -230,11 +228,9 @@ export function LoginModal(props) {
             copyUserInfo.gender = res.data.kakao_account.gender;
             copyUserInfo.nickname = res.data.properties.nickname;
             copyUserInfo.authority = 'GENERAL';
-            console.log(cookies.get('kakaoAccessToken'));
-            cookies.set('kakaoAccessToken', res.data.access_token);
+            setUserInfo(copyUserInfo);
             props.setLoginOn(true); // 로그인 true
             history.push('/');
-            kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
           })
           .catch((err) => {});
       })
