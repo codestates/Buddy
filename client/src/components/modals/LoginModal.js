@@ -99,6 +99,7 @@ export function LoginModal(props) {
               copyUserInfo.email = `${res.data.kakao_account.email}`;
               copyUserInfo.gender = `${res.data.kakao_account.gender}`;
               copyUserInfo.nickname = `${res.data.properties.nickname}`;
+              copyUserInfo.profile_image = `${res.data.properties.nickname}`;
               copyUserInfo.authority = 'GENERAL';
               props.setUserInfo(copyUserInfo);
               console.log(cookies.get('kakaoAccessToken'));
@@ -128,6 +129,7 @@ export function LoginModal(props) {
                     password: '',
                     nickname: copyUserInfo.nickname,
                     gender: upperGender,
+                    profile_image: copyUserInfo.profile_image,
                   };
 
                   console.log(signupInfo);
