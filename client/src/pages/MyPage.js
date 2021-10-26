@@ -1,7 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/MyPage.css';
 
 export function MyPage(props) {
+  // 회원 탈퇴 로직
+
+  const history = useHistory();
+
+  const handleUnregister = () => {
+    axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'DELETE',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        console.log(res.data); // 회원정보 삭제 완료
+        props.setLoginOn(false); // 로그인 상태 false
+        history.push('/'); // 루트 경로로 이동
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <div className="my__page">
       <section className="mypage__wrapper">
@@ -51,7 +78,7 @@ export function MyPage(props) {
       </section>
       <section className="mypage__unregister__wrapper">
         <div className="mypage__unregister__container">
-          <button>회원 탈퇴</button>
+          <button onClick={handleUnregister}>회원 탈퇴</button>
         </div>
       </section>
     </div>
