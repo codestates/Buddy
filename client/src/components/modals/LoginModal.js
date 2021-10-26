@@ -123,10 +123,10 @@ export function LoginModal(props) {
 
                   // 회원정보 넣기
                   const signupInfo = {
-                    email: res.data.kakao_account.email,
+                    email: copyUserInfo.email,
                     password: null,
-                    nickname: res.data.properties.nickname,
-                    gender: res.data.kakao_account.gender,
+                    nickname: copyUserInfo.nickname,
+                    gender: copyUserInfo.gender,
                   };
 
                   axios(`${process.env.REACT_APP_API_URL}/signup`, {
