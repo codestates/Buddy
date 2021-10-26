@@ -248,4 +248,10 @@ public class UserController {
         }
     }
 
+    @GetMapping("/oauth/google/callback")
+    public ResponseEntity<TokenResponse> oauthLogin(String code) {
+        String token = userService.oauthLogin(code);
+        return new ResponseEntity(new TokenResponse(token, "bearer"), HttpStatus.OK);
+    }
+
 }
