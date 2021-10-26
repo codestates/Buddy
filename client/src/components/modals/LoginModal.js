@@ -32,10 +32,10 @@ export function LoginModal(props) {
   // google oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
   const googleCodeOauth = () => {
     const googleUrl = new URL(window.location.href); // 주소창 값 가져오기
-    const search = googleUrl.search; // 쿼리 스크링 가져오기
+    const googleSearch = googleUrl.search; // 쿼리 스크링 가져오기
 
-    if (search) {
-      const googleCode = search.split('=')[1].split('&')[0]; // google code 값만 추출
+    if (googleSearch) {
+      const googleCode = googleSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
       axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${googleCode}`, {
         method: 'GET',
@@ -56,10 +56,10 @@ export function LoginModal(props) {
   // kakao oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
   const kakaoCodeOauth = () => {
     const kakaoUrl = new URL(window.location.href); // 주소창 값 가져오기
-    const search = kakaoUrl.search; // 쿼리 스크링 가져오기
+    const kakaoSearch = kakaoUrl.search; // 쿼리 스크링 가져오기
 
-    if (search) {
-      const kakaoCode = search.split('=')[1].split('&')[0]; // google code 값만 추출
+    if (kakaoSearch) {
+      const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
       axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${kakaoCode}`, {
         method: 'GET',
