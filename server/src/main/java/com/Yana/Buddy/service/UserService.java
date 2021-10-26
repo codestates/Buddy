@@ -1,6 +1,5 @@
 package com.Yana.Buddy.service;
 
-import com.Yana.Buddy.controller.UserController;
 import com.Yana.Buddy.dto.*;
 import com.Yana.Buddy.entity.Gender;
 import com.Yana.Buddy.entity.Role;
@@ -12,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -90,15 +86,15 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public GoogleLoginDto oauthLogin(String code) {
+    public OAuthLoginDto googleOAuthLogin(String code) {
         ResponseEntity<String> accessTokenResponse = oAuthService.createPostRequest(code);
-        OAuthToken oAuthToken = oAuthService.getAccessToken(accessTokenResponse);
+        GoogleToken googleToken = oAuthService.getAccessToken(accessTokenResponse);
 
-        ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(oAuthToken);
+        ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(googleToken);
         GoogleUser googleUser = oAuthService.getUserInfo(userInfoResponse);
 
         if (!isJoinedUser(googleUser)) {
-            googleSignUp(googleUser, oAuthToken);
+            googleSignUp(googleUser, googleToken);
         }
 
         User user = userRepository.findByEmail(googleUser.getEmail()).orElseThrow();
@@ -106,7 +102,7 @@ public class UserService {
         String refreshToken = tokenService.createJwtToken(user, 2L);
         Cookie cookie = new Cookie("refreshToken", refreshToken);
 
-        return new GoogleLoginDto(user, accessToken, refreshToken, cookie);
+        return new OAuthLoginDto(user, accessToken, refreshToken, cookie);
     }
 
     private boolean isJoinedUser(GoogleUser googleUser) {
@@ -114,9 +110,10 @@ public class UserService {
         return searchUser.isPresent();
     }
 
-    private void googleSignUp(GoogleUser user, OAuthToken oAuthToken) {
+    private void googleSignUp(GoogleUser user, GoogleToken googleToken) {
         User signUpUser = User.builder()
                 .email(user.getEmail())
+                .nickname(user.name)
                 .profileImage(user.getPicture())
                 .authority(Role.GENERAL)
                 .build();
