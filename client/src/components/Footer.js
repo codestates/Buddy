@@ -12,7 +12,7 @@ export default function Footer() {
   const githubLink = teamName.map((el) => {
     return (
       <div className="github" key={el.name}>
-        <a className="github__link" href={el.src}>
+        <a className="github__link" href={el.src} target="_blank">
           <img src="/images/github_icon.png" alt="github icon" />
           <span>{el.name}</span>
         </a>
