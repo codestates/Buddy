@@ -1,8 +1,8 @@
 package com.Yana.Buddy.service;
 
 import com.Yana.Buddy.dto.GoogleUser;
-import com.Yana.Buddy.dto.OAuthToken;
-import com.Yana.Buddy.entity.User;
+import com.Yana.Buddy.dto.GoogleToken;
+import com.Yana.Buddy.dto.KakaoToken;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,10 @@ import javax.transaction.Transactional;
 @Transactional
 @RequiredArgsConstructor
 @CrossOrigin(
-        origins = "https://yana-buddy.com, http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, https://accounts.google.com, https://oauth2.googleapis.com",
+        origins = "https://yana-buddy.com, " +
+                "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, " +
+                "https://accounts.google.com, https://www.googleapis.com, " +
+                "https://kauth.kakao.com",
         allowedHeaders = "*",
         allowCredentials = "true"
 )
@@ -35,18 +38,22 @@ public class OAuthService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    @Value("${oauth.google.client-id}") private String CLIENT_ID;
-    @Value("${oauth.google.client-secret}") private String CLIENT_SECRET;
     private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
     private static final String GRANT_TYPE = "authorization_code";
+
+    @Value("${oauth.google.client-id}") private String G_CLIENT_ID;
+    @Value("${oauth.google.client-secret}") private String G_CLIENT_SECRET;
+
+    @Value("${oauth.kakao.client-id}") private String K_CLIENT_ID;
+    @Value("${oauth.kakao.client-secret}") private String K_CLIENT_SECRET;
 
     public ResponseEntity<String> createPostRequest(String code) {
         String url = "https://oauth2.googleapis.com/token";
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
-        params.add("client_id", CLIENT_ID);
-        params.add("client_secret", CLIENT_SECRET);
+        params.add("client_id", G_CLIENT_ID);
+        params.add("client_secret", G_CLIENT_SECRET);
         params.add("redirect_uri", REDIRECT_URI);
         params.add("grant_type", GRANT_TYPE);
 
@@ -58,25 +65,24 @@ public class OAuthService {
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
     }
 
-    public OAuthToken getAccessToken(ResponseEntity<String> response) {
-        OAuthToken oAuthToken = null;
+    public GoogleToken getAccessToken(ResponseEntity<String> response) {
+        GoogleToken googleToken = null;
         try {
-            oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+            googleToken = objectMapper.readValue(response.getBody(), GoogleToken.class);
         } catch (JsonMappingException e) {
             log.error("get access token Exception : " + e);
         } catch (JsonProcessingException e) {
             log.error("get access token Exception : " + e);
         }
 
-        log.info("get access token 반환값 확인 : " + oAuthToken.getAccess_token());
-        return oAuthToken;
+        return googleToken;
     }
 
-    public ResponseEntity<String> createGetRequest(OAuthToken oAuthToken) {
+    public ResponseEntity<String> createGetRequest(GoogleToken googleToken) {
         String url = "https://www.googleapis.com/oauth2/v1/userinfo";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + oAuthToken.getAccess_token());
+        headers.add("Authorization", "Bearer " + googleToken.getAccess_token());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
@@ -94,6 +100,24 @@ public class OAuthService {
         }
 
         return user;
+    }
+
+    public ResponseEntity<KakaoToken> getKakaoToken(String code) {
+        String url = "https://kauth.kakao.com/oauth/token";
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", GRANT_TYPE);
+        params.add("client_id", K_CLIENT_ID);
+        params.add("client_secret", K_CLIENT_SECRET);
+        params.add("redirect_uri", REDIRECT_URI);
+        params.add("code", code);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/x-www-form-urlencoded");
+
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+
+        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, KakaoToken.class);
     }
 
 }

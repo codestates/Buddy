@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: oauth
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -24,3 +26,6 @@ oauth:
   google:
     client-id: 861359541268-gsb56afmds3tjge9jldk8h4i3a3j2drh.apps.googleusercontent.com
     client-secret: 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
+  kakao:
+    client-id: 575ac15539fc8a948809726d8022d095
+    client-secret: WRuZAyVhUCB09iErDsWjXTY1yJxDl0QV
