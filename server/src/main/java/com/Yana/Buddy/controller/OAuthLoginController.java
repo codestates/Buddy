@@ -23,17 +23,12 @@ public class OAuthLoginController {
     private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
     private static final String RESPONSE_TYPE = "code";
     private static final String SCOPE = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
+    private static final String ACCESS_TYPE = "offline";
 
     @GetMapping("/login_google")
     public String GoogleLogin() {
         return "redirect:" + ENDPOINT + "?client_id=" + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
-                + "&response_type=" + RESPONSE_TYPE + "&scope=" + SCOPE;
-    }
-
-    @GetMapping("/oauth/google/callback")
-    public ResponseEntity<TokenResponse> oauthLogin(String code) {
-        String token = userService.oauthLogin(code);
-        return new ResponseEntity(new TokenResponse(token, "bearer"), HttpStatus.OK);
+                + "&response_type=" + RESPONSE_TYPE + "&scope=" + SCOPE + "&access_type=" + ACCESS_TYPE;
     }
 
 }
