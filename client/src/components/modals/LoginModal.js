@@ -26,7 +26,7 @@ export function LoginModal(props) {
   useEffect(() => {
     accessTokenCheck(); //마운트 될 때만 실행된다.
     const url = new URL(window.location.href); // 주소창 값 가져오기
-    console.log(url.hash);
+    console.log(url.search);
   }, []);
 
   const history = useHistory();
