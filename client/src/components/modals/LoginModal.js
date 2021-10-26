@@ -15,7 +15,7 @@ export function LoginModal(props) {
   const [userEmail, setUserEmail] = useState(''); // 이메일
   const [userPassword, setUserPassword] = useState(''); // 비밀번호
   const [userLoginError, setUserLoginError] = useState(''); // 로그인 에러 메세지
-  const [userInfo, setUserInfo] = useState({}); // 로그인 성공 시 저장되는 유저 정보
+  const [userInfo, setUserInfo] = useState({ email: '', nickname: '', authority: '', gender: '' }); // 로그인 성공 시 저장되는 유저 정보
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
 
   const history = useHistory();
@@ -99,7 +99,7 @@ export function LoginModal(props) {
               copyUserInfo.nickname = res.data.properties.nickname;
               copyUserInfo.authority = 'GENERAL';
               console.log(cookies.get('kakaoAccessToken'));
-              setUserInfo({ ...copyUserInfo });
+              setUserInfo(copyUserInfo);
               props.setLoginOn(true); // 로그인 true
               history.push('/');
               kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
@@ -228,7 +228,7 @@ export function LoginModal(props) {
             copyUserInfo.gender = res.data.kakao_account.gender;
             copyUserInfo.nickname = res.data.properties.nickname;
             copyUserInfo.authority = 'GENERAL';
-            setUserInfo({ ...copyUserInfo });
+            setUserInfo(copyUserInfo);
             console.log(setUserInfo);
             console.log(copyUserInfo);
             props.setLoginOn(true); // 로그인 true
