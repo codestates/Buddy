@@ -25,8 +25,8 @@ export function LoginModal(props) {
   // 새로고침해도 로그인 유지
   useEffect(() => {
     accessTokenCheck();
-    googleCodeOauth(); // 구글 인가코드 함수
-    kakaoCodeOauth(); // 카카오 인가코드 함수
+    googleCodeOauth(); // 구글 인가코드 및 로그인 함수
+    kakaoCodeOauth(); // 카카오 소셜 로그인 데이터 저장 함수
   }, []);
 
   // google oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
@@ -92,6 +92,14 @@ export function LoginModal(props) {
           })
             .then((res) => {
               console.log(res.data);
+              let copyUserInfo = { ...userInfo };
+              copyUserInfo.email = res.data.kakao_account.email;
+              copyUserInfo.gender = res.data.kakao_account.gender;
+              copyUserInfo.nickname = res.data.properties.nickname;
+              copyUserInfo.authority = 'GENERAL';
+
+              setUserInfo(copyUserInfo);
+              props.setLoginOn(true); // 로그인 true
             })
             .catch((err) => {});
         })
