@@ -99,7 +99,7 @@ export function LoginModal(props) {
               copyUserInfo.nickname = res.data.properties.nickname;
               copyUserInfo.authority = 'GENERAL';
               console.log(cookies.get('kakaoAccessToken'));
-              setUserInfo(...copyUserInfo);
+              setUserInfo({ ...copyUserInfo });
               props.setLoginOn(true); // 로그인 true
               history.push('/');
               kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
@@ -228,7 +228,7 @@ export function LoginModal(props) {
             copyUserInfo.gender = res.data.kakao_account.gender;
             copyUserInfo.nickname = res.data.properties.nickname;
             copyUserInfo.authority = 'GENERAL';
-            setUserInfo(...copyUserInfo);
+            setUserInfo({ ...copyUserInfo });
             console.log(setUserInfo);
             console.log(copyUserInfo);
             props.setLoginOn(true); // 로그인 true
