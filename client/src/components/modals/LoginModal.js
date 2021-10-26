@@ -12,12 +12,11 @@ axios.defaults.withCredentials = true;
 dotenv.config();
 
 export function LoginModal(props) {
-  const [userEmail, setUserEmail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [userLoginError, setUserLoginError] = useState('');
-  const [userInfo, setUserInfo] = useState({});
+  const [userEmail, setUserEmail] = useState(''); // 이메일
+  const [userPassword, setUserPassword] = useState(''); // 비밀번호
+  const [userLoginError, setUserLoginError] = useState(''); // 로그인 에러 메세지
+  const [userInfo, setUserInfo] = useState({}); // 로그인 성공 시 저장되는 유저 정보
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
-  const [data, setData] = useState(null);
 
   const history = useHistory();
 
@@ -29,11 +28,10 @@ export function LoginModal(props) {
     googleCodeOauth();
   }, []);
 
+  // google oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
   const googleCodeOauth = () => {
     const url = new URL(window.location.href); // 주소창 값 가져오기
     const search = url.search; // 쿼리 스크링 가져오기
-
-    console.log(url.search);
 
     if (search) {
       const googleCode = search.split('=')[1].split('&')[0]; // google code 값만 추출
@@ -47,13 +45,14 @@ export function LoginModal(props) {
           console.log(cookies.get('refreshToken'));
           cookies.set('refreshToken', res.data.refreshToken);
           props.setLoginOn(true); // 로그인 true
-          history.push('/mypage');
+          history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
         })
         .catch((err) => {});
     }
   };
 
+  // 일반 로그인 인증 처리
   const onLogin = async () => {
     const userData = {
       email: userEmail,
@@ -101,6 +100,7 @@ export function LoginModal(props) {
       });
   };
 
+  // 쿠키에 저장된 refreshToken 확인으로 새로고침 시 로그인 유지
   const accessTokenCheck = () => {
     // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
     axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get('refreshToken')}`;
@@ -124,7 +124,7 @@ export function LoginModal(props) {
         setUserInfo(props.userInfo);
         console.log(userInfo);
 
-        // useHistory를 사용하여 로그인 성공시 모달창을 끄고 mypage로 이동
+        // useHistory를 사용하여 로그인 성공시 모달창 닫기
         props.setModalOn(false);
         setUserEmail('');
         setUserPassword('');
@@ -136,6 +136,7 @@ export function LoginModal(props) {
       });
   };
 
+  // 모달 관련 팝업 이벤트
   const togglePopup = () => {
     if (props.modalOn === false) {
       props.setModalOn(true);
