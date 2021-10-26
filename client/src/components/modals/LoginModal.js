@@ -100,7 +100,7 @@ export function LoginModal(props) {
               copyUserInfo.gender = `${res.data.kakao_account.gender}`;
               copyUserInfo.nickname = `${res.data.properties.nickname}`;
               copyUserInfo.authority = 'GENERAL';
-              setUserInfo(copyUserInfo);
+              props.setUserInfo(copyUserInfo);
               console.log(cookies.get('kakaoAccessToken'));
 
               props.setLoginOn(true); // 로그인 true
@@ -233,7 +233,7 @@ export function LoginModal(props) {
             copyUserInfo.nickname = `${res.data.properties.nickname}`;
             copyUserInfo.authority = 'GENERAL';
 
-            setUserInfo(copyUserInfo);
+            props.setUserInfo(copyUserInfo);
             console.log(setUserInfo);
 
             props.setLoginOn(true); // 로그인 true
