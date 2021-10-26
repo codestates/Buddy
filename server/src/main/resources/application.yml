@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: oauth
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
