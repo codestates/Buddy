@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/modal/LoginModal.css';
 import dotenv from 'dotenv';
 import { SignupModal } from './SignupModal';
-import { EMAIL_REGEXP } from '../../constants/constants';
+import { Cookies } from 'react-cookie';
 
 axios.defaults.withCredentials = true;
 
@@ -12,16 +12,47 @@ axios.defaults.withCredentials = true;
 dotenv.config();
 
 export function LoginModal(props) {
-  const [userEmail, setUserEmail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [userLoginError, setUserLoginError] = useState('');
-  const [userInfo, setUserInfo] = useState({});
-
-  const [loginOn, setLoginOn] = useState(false); // 로그인 여부 (test : true로 바꾸고 개발)
+  const [userEmail, setUserEmail] = useState(''); // 이메일
+  const [userPassword, setUserPassword] = useState(''); // 비밀번호
+  const [userLoginError, setUserLoginError] = useState(''); // 로그인 에러 메세지
+  const [userInfo, setUserInfo] = useState({}); // 로그인 성공 시 저장되는 유저 정보
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
 
   const history = useHistory();
 
+  const cookies = new Cookies();
+
+  // 새로고침해도 로그인 유지
+  useEffect(() => {
+    accessTokenCheck();
+    googleCodeOauth();
+  }, []);
+
+  // google oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
+  const googleCodeOauth = () => {
+    const url = new URL(window.location.href); // 주소창 값 가져오기
+    const search = url.search; // 쿼리 스크링 가져오기
+
+    if (search) {
+      const googleCode = search.split('=')[1].split('&')[0]; // google code 값만 추출
+
+      axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${googleCode}`, {
+        method: 'GET',
+      })
+        .then((res) => {
+          console.log(res.data);
+          setUserInfo(res.data); // res.data userInfo에 저장
+          console.log(cookies.get('refreshToken'));
+          cookies.set('refreshToken', res.data.refreshToken);
+          props.setLoginOn(true); // 로그인 true
+          history.push('/');
+          accessTokenCheck(); // 새로고침 시 로그인 유지
+        })
+        .catch((err) => {});
+    }
+  };
+
+  // 일반 로그인 인증 처리
   const onLogin = async () => {
     const userData = {
       email: userEmail,
@@ -47,45 +78,11 @@ export function LoginModal(props) {
       withCredentials: true,
     })
       .then((res) => {
-        const { accessToken } = res.data;
-
-        // 로컬스토리지 accessToken 담기
-        localStorage.setItem('accessToken', accessToken);
-
-        // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
-        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        console.log(res.data);
-
-        // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
-        // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
-        axios(`${process.env.REACT_APP_API_URL}/token-valid-check`, {
-          method: 'GET',
-          headers: {
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET',
-            'Access-Control-Allow-Credentials': 'true',
-          },
-          withCredentials: true,
-        })
-          .then((res) => {
-            // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
-
-            props.setUserInfo(res.data);
-            setUserInfo(props.userInfo);
-            console.log(userInfo);
-
-            // useHistory를 사용하여 로그인 성공시 모달창을 끄고 mypage로 이동
-            props.setModalOn(false);
-            setUserEmail('');
-            setUserPassword('');
-            setUserLoginError('');
-            history.push('/mypage');
-            props.setLoginOn(true);
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+        console.log(res.data); // accessToken (클라이언트에 따로 저장)
+        console.log(cookies.get('refreshToken'));
+        cookies.set('refreshToken', res.data.refreshToken);
+        props.setLoginOn(true);
+        accessTokenCheck();
       })
       .catch((err) => {
         console.error(err);
@@ -103,6 +100,43 @@ export function LoginModal(props) {
       });
   };
 
+  // 쿠키에 저장된 refreshToken 확인으로 새로고침 시 로그인 유지
+  const accessTokenCheck = () => {
+    // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
+    axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get('refreshToken')}`;
+
+    // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
+    // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
+    axios(`${process.env.REACT_APP_API_URL}/token_check`, {
+      method: 'GET',
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
+        console.log(res.data);
+        props.setUserInfo(res.data);
+        setUserInfo(props.userInfo);
+        console.log(userInfo);
+
+        // useHistory를 사용하여 로그인 성공시 모달창 닫기
+        props.setModalOn(false);
+        setUserEmail('');
+        setUserPassword('');
+        setUserLoginError('');
+        props.setLoginOn(true);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  // 모달 관련 팝업 이벤트
   const togglePopup = () => {
     if (props.modalOn === false) {
       props.setModalOn(true);
@@ -129,6 +163,9 @@ export function LoginModal(props) {
   // 로그인 모달창 끄고 회원가입 모달창 열기
   const signupModalOpen = () => {
     props.setModalOn(false);
+    setUserEmail('');
+    setUserPassword('');
+    setUserLoginError('');
     setSignupModalOn(true);
   };
 
@@ -180,9 +217,9 @@ export function LoginModal(props) {
                   </button>
                 </span>
                 <div id="social__login">
-                  <Link id="google__link">
+                  <a id="google__link" href={`${process.env.REACT_APP_API_URL}/login_google`}>
                     <img src="images/google_login.png" alt="구글 로그인" />
-                  </Link>
+                  </a>
                   <Link id="kakao__link">
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </Link>
