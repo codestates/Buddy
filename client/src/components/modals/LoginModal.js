@@ -121,9 +121,17 @@ export function LoginModal(props) {
                 .then((res) => {
                   console.log(res.data);
 
+                  // 회원정보 넣기
+                  const signupInfo = {
+                    email: res.data.kakao_account.email,
+                    password: null,
+                    nickname: res.data.properties.nickname,
+                    gender: res.data.kakao_account.gender,
+                  };
+
                   axios(`${process.env.REACT_APP_API_URL}/signup`, {
                     method: 'POST',
-                    data: copyUserInfo,
+                    data: signupInfo,
                     headers: {
                       'Access-Control-Allow-Headers': 'Content-Type',
                       'Access-Control-Allow-Origin': '*',
