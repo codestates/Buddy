@@ -26,17 +26,42 @@ export function LoginModal(props) {
   useEffect(() => {
     accessTokenCheck();
     googleCodeOauth();
+    kakaoCodeOauth();
   }, []);
 
   // google oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
   const googleCodeOauth = () => {
-    const url = new URL(window.location.href); // 주소창 값 가져오기
-    const search = url.search; // 쿼리 스크링 가져오기
+    const googleUrl = new URL(window.location.href); // 주소창 값 가져오기
+    const search = googleUrl.search; // 쿼리 스크링 가져오기
 
     if (search) {
       const googleCode = search.split('=')[1].split('&')[0]; // google code 값만 추출
 
       axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${googleCode}`, {
+        method: 'GET',
+      })
+        .then((res) => {
+          console.log(res.data);
+          setUserInfo(res.data); // res.data userInfo에 저장
+          console.log(cookies.get('refreshToken'));
+          cookies.set('refreshToken', res.data.refreshToken);
+          props.setLoginOn(true); // 로그인 true
+          history.push('/');
+          accessTokenCheck(); // 새로고침 시 로그인 유지
+        })
+        .catch((err) => {});
+    }
+  };
+
+  // kakao oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
+  const kakaoCodeOauth = () => {
+    const kakaoUrl = new URL(window.location.href); // 주소창 값 가져오기
+    const search = kakaoUrl.search; // 쿼리 스크링 가져오기
+
+    if (search) {
+      const kakaoCode = search.split('=')[1].split('&')[0]; // google code 값만 추출
+
+      axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${kakaoCode}`, {
         method: 'GET',
       })
         .then((res) => {
@@ -220,9 +245,9 @@ export function LoginModal(props) {
                   <a id="google__link" href={`${process.env.REACT_APP_API_URL}/login_google`}>
                     <img src="images/google_login.png" alt="구글 로그인" />
                   </a>
-                  <Link id="kakao__link">
+                  <a id="kakao__link" href={`${process.env.REACT_APP_API_URL}/auth/kakao/callback`}>
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>
