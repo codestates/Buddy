@@ -253,9 +253,17 @@ public class UserController {
     }
 
     @GetMapping("/oauth/google/callback")
-    public ResponseEntity<TokenResponse> oauthLogin(String code) {
-        String token = userService.oauthLogin(code);
-        return new ResponseEntity(new TokenResponse(token, "bearer"), HttpStatus.OK);
+    public ResponseEntity<?> oauthLogin(String code, HttpServletResponse response) {
+        GoogleLoginDto googleLoginUser = userService.oauthLogin(code);
+        response.addCookie(googleLoginUser.getCookie());
+        return ResponseEntity.status(200).body(new HashMap<>() {
+            {
+                put("id", googleLoginUser.getUser().getId());
+                put("email", googleLoginUser.getUser().getEmail());
+                put("accessToken", googleLoginUser.getAccessToken());
+                put("refreshToken", googleLoginUser.getRefreshToken());
+            }
+        });
     }
 
 }
