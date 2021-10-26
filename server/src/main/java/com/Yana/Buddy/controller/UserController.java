@@ -262,6 +262,7 @@ public class UserController {
                 put("email", googleLoginUser.getUser().getEmail());
                 put("accessToken", googleLoginUser.getAccessToken());
                 put("refreshToken", googleLoginUser.getRefreshToken());
+                put("message", "Google Login 에 성공했습니다!");
             }
         });
     }
