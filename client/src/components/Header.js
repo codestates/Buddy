@@ -14,8 +14,8 @@ export default function Header(props) {
   };
 
   const handleSignOut = () => {
-    // 로컬스토리지 accessToken 지우기
     cookies.remove('refreshToken');
+    cookies.remove('kakaoAccessToken');
     history.push('/');
     props.setLoginOn(false);
     props.setUserInfo({});
