@@ -68,12 +68,6 @@ export function LoginModal(props) {
       })
         .then((res) => {
           console.log(res.data);
-          setUserInfo(res.data); // res.data userInfo에 저장
-          console.log(cookies.get('refreshToken'));
-          cookies.set('refreshToken', res.data.refreshToken);
-          props.setLoginOn(true); // 로그인 true
-          history.push('/');
-          accessTokenCheck(); // 새로고침 시 로그인 유지
         })
         .catch((err) => {});
     }
