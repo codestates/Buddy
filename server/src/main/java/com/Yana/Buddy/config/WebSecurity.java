@@ -13,7 +13,8 @@ public class WebSecurity implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com",
                         "https://yana-buddy.com",
-                        "https://accounts.google.com")
+                        "https://accounts.google.com",
+                        "https://www.googleapis.com")
                 .exposedHeaders("typ", "JWT");
     }
 

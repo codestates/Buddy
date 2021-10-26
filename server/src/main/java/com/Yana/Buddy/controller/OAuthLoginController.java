@@ -12,14 +12,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @RequiredArgsConstructor
-@CrossOrigin(origins = "https://yana-buddy.com, http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, https://accounts.google.com", allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(
+        origins = "https://yana-buddy.com, http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, https://accounts.google.com, https://www.googleapis.com",
+        allowedHeaders = "*",
+        allowCredentials = "true"
+)
 public class OAuthLoginController {
 
     private final UserService userService;
 
     private static final String ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
-    @Value("${oauth.google.client-id}")
-    private String CLIENT_ID;
+    @Value("${oauth.google.client-id}") private String CLIENT_ID;
     private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
     private static final String RESPONSE_TYPE = "code";
     private static final String SCOPE = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
