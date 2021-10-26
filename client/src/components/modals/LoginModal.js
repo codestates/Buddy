@@ -75,8 +75,8 @@ export function LoginModal(props) {
       })
         .then((res) => {
           console.log(res.data);
-
           const kakaoAccessToken = res.data.access_token;
+          cookies.set('kakaoAccessToken', kakaoAccessToken);
 
           axios(`https://kapi.kakao.com/v2/user/me`, {
             method: 'GET',
@@ -98,7 +98,7 @@ export function LoginModal(props) {
               copyUserInfo.nickname = res.data.properties.nickname;
               copyUserInfo.authority = 'GENERAL';
               console.log(cookies.get('kakaoAccessToken'));
-              cookies.set('kakaoAccessToken', res.data.access_token);
+
               props.setLoginOn(true); // 로그인 true
               history.push('/');
               kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
