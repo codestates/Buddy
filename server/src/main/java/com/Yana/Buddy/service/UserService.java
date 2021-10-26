@@ -121,4 +121,23 @@ public class UserService {
         userRepository.save(signUpUser);
     }
 
+    public User kakaoSignUp(KakaoRegisterDto dto) {
+        Gender gender = null;
+        if (dto.getGender().equals("MALE")) {
+            gender = Gender.MALE;
+        } else if (dto.getGender().equals("FEMALE")) {
+            gender = Gender.FEMALE;
+        }
+
+        User signUpUser = User.builder()
+                .email(dto.getEmail())
+                .nickname(dto.getNickname())
+                .profileImage(dto.getProfile_image())
+                .gender(gender)
+                .build();
+
+        userRepository.save(signUpUser);
+        return signUpUser;
+    }
+
 }
