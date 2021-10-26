@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 @RestController
 public class KakaoOAuth2 {
-    @GetMapping(value = "auth/kakao/callback")
+    @GetMapping(value = "auth/kakao/callback/home")
     public String  getAccestoken(@RequestParam("code") String code){
         System.out.println(code);
 
