@@ -91,7 +91,7 @@ export function LoginModal(props) {
             withCredentials: true,
           })
             .then((res) => {
-              console.log(res.data);
+              console.log(res.data.access_token);
               let copyUserInfo = { ...userInfo };
               copyUserInfo.email = res.data.kakao_account.email;
               copyUserInfo.gender = res.data.kakao_account.gender;
