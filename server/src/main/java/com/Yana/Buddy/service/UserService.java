@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
@@ -89,12 +90,9 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public String oauthLogin(String code) {
+    public GoogleLoginDto oauthLogin(String code) {
         ResponseEntity<String> accessTokenResponse = oAuthService.createPostRequest(code);
-        log.info("token response 확인 : " + accessTokenResponse.toString());
         OAuthToken oAuthToken = oAuthService.getAccessToken(accessTokenResponse);
-
-        log.info("access token 확인 : " + oAuthToken.getAccess_token());
 
         ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(oAuthToken);
         GoogleUser googleUser = oAuthService.getUserInfo(userInfoResponse);
@@ -104,8 +102,11 @@ public class UserService {
         }
 
         User user = userRepository.findByEmail(googleUser.getEmail()).orElseThrow();
+        String accessToken = tokenService.createJwtToken(user, 1L);
+        String refreshToken = tokenService.createJwtToken(user, 2L);
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
 
-        return tokenService.createJwtToken(user, 1L);
+        return new GoogleLoginDto(user, accessToken, refreshToken, cookie);
     }
 
     private boolean isJoinedUser(GoogleUser googleUser) {
