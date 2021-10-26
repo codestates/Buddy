@@ -25,16 +25,18 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@CrossOrigin(origins = "https://yana-buddy.com, http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, https://accounts.google.com", allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(
+        origins = "https://yana-buddy.com, http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, https://accounts.google.com",
+        allowedHeaders = "*",
+        allowCredentials = "true"
+)
 public class OAuthService {
 
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    @Value("${oauth.google.client-id}")
-    private String CLIENT_ID;
-    @Value("${oauth.google.client-secret}")
-    private String CLIENT_SECRET;
+    @Value("${oauth.google.client-id}") private String CLIENT_ID;
+    @Value("${oauth.google.client-secret}") private String CLIENT_SECRET;
     private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
     private static final String GRANT_TYPE = "authorization_code";
 
