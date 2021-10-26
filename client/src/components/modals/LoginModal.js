@@ -96,9 +96,9 @@ export function LoginModal(props) {
 
               console.log(cookies.get('kakaoAccessToken'));
               setUserInfo({
-                email: res.data.kakao_account.email,
-                gender: res.data.kakao_account.gender,
-                nickname: res.data.properties.nickname,
+                email: `${res.data.kakao_account.email}`,
+                gender: `${res.data.kakao_account.gender}`,
+                nickname: `${res.data.properties.nickname}`,
                 authority: 'GENERAL',
               });
               props.setLoginOn(true); // 로그인 true
@@ -226,9 +226,9 @@ export function LoginModal(props) {
             console.log(res.data);
 
             setUserInfo({
-              email: res.data.kakao_account.email,
-              gender: res.data.kakao_account.gender,
-              nickname: res.data.properties.nickname,
+              email: `${res.data.kakao_account.email}`,
+              gender: `${res.data.kakao_account.gender}`,
+              nickname: `${res.data.properties.nickname}`,
               authority: 'GENERAL',
             });
             console.log(setUserInfo);
