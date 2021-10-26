@@ -17,19 +17,42 @@ export function LoginModal(props) {
   const [userLoginError, setUserLoginError] = useState('');
   const [userInfo, setUserInfo] = useState({});
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
-  const [googleAccessToken, setGoogleAccessToken] = useState('');
   const [data, setData] = useState(null);
-
-  const googleAuthURL = process.env.REACT_APP_GOOGLE_AUTH_URL;
-
-  // 새로고침해도 로그인 유지
-  useEffect(() => {
-    accessTokenCheck(); //마운트 될 때만 실행된다.
-  }, []);
 
   const history = useHistory();
 
   const cookies = new Cookies();
+
+  // 새로고침해도 로그인 유지
+  useEffect(() => {
+    accessTokenCheck();
+    googleCodeOauth();
+  }, []);
+
+  const googleCodeOauth = () => {
+    const url = new URL(window.location.href); // 주소창 값 가져오기
+    const search = url.search; // 쿼리 스크링 가져오기
+
+    console.log(url.search);
+
+    if (search) {
+      const googleCode = search.split('=')[1].split('&')[0]; // google code 값만 추출
+
+      axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${googleCode}`, {
+        method: 'GET',
+      })
+        .then((res) => {
+          console.log(res.data);
+          setUserInfo(res.data); // res.data userInfo에 저장
+          console.log(cookies.get('refreshToken'));
+          cookies.set('refreshToken', res.data.refreshToken);
+          props.setLoginOn(true); // 로그인 true
+          history.push('/mypage');
+          accessTokenCheck();
+        })
+        .catch((err) => {});
+    }
+  };
 
   const onLogin = async () => {
     const userData = {
