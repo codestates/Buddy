@@ -25,8 +25,8 @@ export function LoginModal(props) {
   // 새로고침해도 로그인 유지
   useEffect(() => {
     accessTokenCheck(); //마운트 될 때만 실행된다.
-    const url = new URL(window.location.href);
-    console.log(url);
+    const url = new URL(window.location.href); // 주소창 값 가져오기
+    console.log(url.hash);
   }, []);
 
   const history = useHistory();
