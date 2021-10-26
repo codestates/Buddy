@@ -26,10 +26,7 @@ import javax.transaction.Transactional;
 @Transactional
 @RequiredArgsConstructor
 @CrossOrigin(
-        origins = "https://yana-buddy.com, " +
-                "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, " +
-                "https://accounts.google.com, https://www.googleapis.com, " +
-                "https://kauth.kakao.com",
+        origins = "*",
         allowedHeaders = "*",
         allowCredentials = "true"
 )
@@ -59,7 +56,6 @@ public class OAuthService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/x-www-form-urlencoded");
-        headers.add("Access-Control-Allow-Origin", "");
 
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
