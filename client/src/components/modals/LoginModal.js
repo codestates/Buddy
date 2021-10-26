@@ -61,7 +61,7 @@ export function LoginModal(props) {
     if (kakaoSearch) {
       const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
-      axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${kakaoCode}`, {
+      axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/token?code=${kakaoCode}`, {
         method: 'GET',
       })
         .then((res) => {
