@@ -120,13 +120,14 @@ export function LoginModal(props) {
                 // 중복된 이메일이 아니면 회원가입
                 .then((res) => {
                   console.log(res.data);
+                  const upperGender = copyUserInfo.gender.toUpperCase();
 
                   // 회원정보 넣기
                   const signupInfo = {
                     email: copyUserInfo.email,
                     password: '',
                     nickname: copyUserInfo.nickname,
-                    gender: copyUserInfo.gender,
+                    gender: upperGender,
                   };
 
                   console.log(signupInfo);
