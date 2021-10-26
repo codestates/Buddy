@@ -28,7 +28,7 @@ export function LoginModal(props) {
 
   // 새로고침해도 로그인 유지
   useEffect(() => {
-    accessTokenCheck(); // 마운트 될 때만 실행된다.
+    accessTokenCheck();
     googleCodeOauth();
   }, []);
 
@@ -51,7 +51,7 @@ export function LoginModal(props) {
           axios
             .get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken, {
               headers: {
-                authorization: `bearer ${accessToken}`,
+                authorization: `${accessToken}`,
                 accept: 'application/json',
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Allow-Origin': '*',
