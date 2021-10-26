@@ -19,8 +19,6 @@ export function LoginModal(props) {
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
   const [data, setData] = useState(null);
 
-  const googleAuthURL = process.env.REACT_APP_GOOGLE_AUTH_URL;
-
   const history = useHistory();
 
   const cookies = new Cookies();
@@ -49,6 +47,7 @@ export function LoginModal(props) {
           console.log(cookies.get('refreshToken'));
           cookies.set('refreshToken', res.data.refreshToken);
           props.setLoginOn(true); // 로그인 true
+          history.push('/mypage');
         })
         .catch((err) => {});
     }
