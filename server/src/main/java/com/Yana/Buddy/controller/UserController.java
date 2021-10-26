@@ -203,6 +203,8 @@ public class UserController {
                     put("email", user.getEmail());
                     put("nickname", user.getNickname());
                     put("gender", user.getGender());
+                    put("state_message", user.getStateMessage());
+                    put("password", user.getPassword());
                 }
             });
         } catch (Exception e) {
@@ -225,6 +227,7 @@ public class UserController {
                     put("email", user.getEmail());
                     put("nickname", user.getNickname());
                     put("state_message", user.getStateMessage());
+                    put("profile_image", user.getProfileImage());
                 }
             });
         } catch (Exception e) {
@@ -281,13 +284,13 @@ public class UserController {
                     put("email", user.getEmail());
                     put("nickname", user.getNickname());
                     put("gender", user.getGender());
-                    put("message", "회원가입에 성공했습니다.");
+                    put("message", "카카오 회원가입에 성공했습니다.");
                 }
             });
         } catch (Exception e) {
             return ResponseEntity.status(400).body(new HashMap<>() {
                 {
-                    put("message", "회원가입에 실패했습니다.");
+                    put("message", "카카오 회원가입에 실패했습니다.");
                 }
             });
         }
