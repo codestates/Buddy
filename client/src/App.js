@@ -96,7 +96,7 @@ function App() {
             <PrivacyPage />
           </Route>
           <Route exact path="/mypage">
-            <MyPage userInfo={userInfo} />
+            <MyPage userInfo={userInfo} setLoginOn={setLoginOn} />
           </Route>
         </Switch>
         <Footer />
