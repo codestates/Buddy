@@ -26,7 +26,10 @@ import javax.transaction.Transactional;
 @Transactional
 @RequiredArgsConstructor
 @CrossOrigin(
-        origins = "*",
+        origins = "https://yana-buddy.com, " +
+                "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, " +
+                "https://accounts.google.com, https://www.googleapis.com, " +
+                "https://kauth.kakao.com",
         allowedHeaders = "*",
         allowCredentials = "true"
 )
@@ -97,24 +100,6 @@ public class OAuthService {
         }
 
         return user;
-    }
-
-    public ResponseEntity<KakaoToken> getKakaoToken(String code) {
-        String url = "https://kauth.kakao.com/oauth/token";
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", GRANT_TYPE);
-        params.add("client_id", K_CLIENT_ID);
-        params.add("client_secret", K_CLIENT_SECRET);
-        params.add("redirect_uri", REDIRECT_URI);
-        params.add("code", code);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded");
-
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
-
-        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, KakaoToken.class);
     }
 
 }

@@ -271,9 +271,26 @@ public class UserController {
         });
     }
 
-    @GetMapping("/oauth/kakao/token")
-    public ResponseEntity<KakaoToken> getKakaoToken(String code) {
-        return oAuthService.getKakaoToken(code);
+    @PostMapping("/siginup_kakao")
+    public ResponseEntity<?> kakaoSignUp(@RequestBody KakaoRegisterDto dto) {
+        try {
+            User user = userService.kakaoSignUp(dto);
+            return ResponseEntity.status(200).body(new HashMap<>() {
+                {
+                    put("id", user.getId());
+                    put("email", user.getEmail());
+                    put("nickname", user.getNickname());
+                    put("gender", user.getGender());
+                    put("message", "회원가입에 성공했습니다.");
+                }
+            });
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new HashMap<>() {
+                {
+                    put("message", "회원가입에 실패했습니다.");
+                }
+            });
+        }
     }
 
 }
