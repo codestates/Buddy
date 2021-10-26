@@ -97,11 +97,11 @@ export function LoginModal(props) {
               copyUserInfo.gender = res.data.kakao_account.gender;
               copyUserInfo.nickname = res.data.properties.nickname;
               copyUserInfo.authority = 'GENERAL';
-              console.log(cookies.get('refresh_tToken'));
-              cookies.set('refreshToken', res.data.refresh_token);
+              console.log(cookies.get('kakaoAccessToken'));
+              cookies.set('kakaoAccessToken', res.data.access_token);
               props.setLoginOn(true); // 로그인 true
               history.push('/');
-              accessTokenCheck(); // 새로고침 시 로그인 유지
+              kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
             })
             .catch((err) => {});
         })
@@ -160,7 +160,7 @@ export function LoginModal(props) {
   // 쿠키에 저장된 refreshToken 확인으로 새로고침 시 로그인 유지
   const accessTokenCheck = () => {
     // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
-    axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get('refreshToken')}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get('kakaoAccessToken')}`;
 
     // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
@@ -187,6 +187,56 @@ export function LoginModal(props) {
         setUserPassword('');
         setUserLoginError('');
         props.setLoginOn(true);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  // 쿠키에 저장된 refreshToken 확인으로 새로고침 시 로그인 유지
+  const kakaoAccessTokenCheck = () => {
+    // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
+    // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
+    axios(`https://kapi.kakao.com/v1/user/access_token_info`, {
+      method: 'GET',
+      headers: {
+        'Access-Control-Allow-Headers': 'application/x-www-form-urlencoded;charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Credentials': 'true',
+        Authorization: `Bearer ${cookies.get('kakaoAccessToken')}`,
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        const kakaoAccessToken = res.data.access_token;
+
+        axios(`https://kapi.kakao.com/v2/user/me`, {
+          method: 'GET',
+          headers: {
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET',
+            'Access-Control-Allow-Credentials': 'true',
+            Authorization: `Bearer ${kakaoAccessToken}`,
+          },
+
+          withCredentials: true,
+        })
+          .then((res) => {
+            console.log(res.data);
+            let copyUserInfo = { ...userInfo };
+            copyUserInfo.email = res.data.kakao_account.email;
+            copyUserInfo.gender = res.data.kakao_account.gender;
+            copyUserInfo.nickname = res.data.properties.nickname;
+            copyUserInfo.authority = 'GENERAL';
+            console.log(cookies.get('kakaoAccessToken'));
+            cookies.set('kakaoAccessToken', res.data.access_token);
+            props.setLoginOn(true); // 로그인 true
+            history.push('/');
+            kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
+          })
+          .catch((err) => {});
       })
       .catch((err) => {
         console.error(err);
