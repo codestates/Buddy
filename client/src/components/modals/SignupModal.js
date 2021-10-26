@@ -1,16 +1,57 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/modal/SignupModal.css';
 import dotenv from 'dotenv';
-import { PASSWORD_REGEXP, EMAIL_REGEXP, MOBILE_REGEXP } from '../../constants/constants';
+import { PASSWORD_REGEXP, EMAIL_REGEXP } from '../../constants/constants';
 
 export function SignupModal(props) {
   const [signupUserEmail, setSignupUserEmail] = useState('');
+  const [signupUserEmailCheck, setSignupUserEmailCheck] = useState(0);
   const [signupUserPassword, setSignupUserPassword] = useState('');
   const [signupUserPasswordValid, setSignupUserPasswordValid] = useState('');
   const [signupUserNickname, setSignupUserNickname] = useState('');
-  const [signupUserMobile, setSignupUserMobile] = useState('');
+  const [signupUserNicknameCheck, setSignupUserNicknameCheck] = useState(0);
+  const [signupUserGender, setSignupUserGender] = useState('MALE');
+  const [signupUserinfo, setSignupUserinfo] = useState({});
+
+  const history = useHistory();
+
+  // userinfo 값이 바뀌면 signup 진행
+  useEffect(() => {
+    if (
+      signupUserEmailCheck === 1 &&
+      signupUserNicknameCheck === 1 &&
+      PASSWORD_REGEXP.test(signupUserPassword) &&
+      signupUserPassword === signupUserPasswordValid &&
+      signupUserPasswordValid !== ''
+    ) {
+      axios(`${process.env.REACT_APP_API_URL}/signup`, {
+        method: 'POST',
+        data: signupUserinfo,
+        headers: {
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+        withCredentials: true,
+      })
+        .then((res) => {
+          console.log(res.data);
+          props.setSignupModalOn(false);
+          setSignupUserEmail('');
+          setSignupUserPassword('');
+          setSignupUserPasswordValid('');
+          setSignupUserNickname('');
+          setSignupUserGender('MALE');
+          history.push('/');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [signupUserinfo]);
 
   // 회원 가입 모달창 이벤트
   const togglePopup = () => {
@@ -22,14 +63,41 @@ export function SignupModal(props) {
       setSignupUserPassword('');
       setSignupUserPasswordValid('');
       setSignupUserNickname('');
-      setSignupUserMobile('');
+      setSignupUserGender('MALE');
     }
   };
 
   // 이메일 입력 상태관리
   const handleChangeEmail = (e) => {
     setSignupUserEmail(e.target.value);
+    setSignupUserEmailCheck(0);
     console.log(signupUserEmail);
+  };
+
+  // 이메일 중복 체크
+  const handleEmailValidCheck = () => {
+    axios(`${process.env.REACT_APP_API_URL}/email_check`, {
+      method: 'POST',
+      data: { email: signupUserEmail },
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        console.log(res.data);
+
+        setSignupUserEmailCheck(1);
+        console.log('사용 가능한 이메일입니다.');
+      })
+      .catch((err) => {
+        console.error(err);
+        setSignupUserEmailCheck(2);
+        console.log('이미 존재하는 이메일입니다!');
+      });
   };
 
   // 비밀번호 입력 상태관리
@@ -47,14 +115,53 @@ export function SignupModal(props) {
   // 닉네임 상태관리
   const handleChangeNickname = (e) => {
     setSignupUserNickname(e.target.value);
+    setSignupUserNicknameCheck(0);
     console.log(signupUserNickname);
   };
 
-  // 휴대폰 상태관리
-  const handleChangeMobile = (e) => {
-    setSignupUserMobile(e.target.value);
-    console.log(signupUserMobile);
+  // 닉네임 중복 체크
+  const handleNicknameValidCheck = () => {
+    axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
+      method: 'POST',
+      data: { nickname: signupUserNickname },
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        console.log(res.data);
+        setSignupUserNicknameCheck(1);
+        console.log('사용 가능한 닉네임입니다.');
+      })
+      .catch((err) => {
+        console.error(err);
+        setSignupUserNicknameCheck(2);
+        console.log('이미 존재하는 닉네임입니다!');
+      });
   };
+
+  // 성별 상태관리
+  const handleChangeGender = (e) => {
+    setSignupUserGender(e.target.value);
+    console.log(signupUserGender);
+  };
+
+  // 회원가입 버튼 이벤트
+  function handleSignup() {
+    setSignupUserinfo({
+      email: signupUserEmail,
+      password: signupUserPassword,
+      nickname: signupUserNickname,
+      gender: signupUserGender,
+    });
+
+    console.log(signupUserEmailCheck);
+    console.log(signupUserNicknameCheck);
+  }
 
   return (
     <div>
@@ -78,13 +185,20 @@ export function SignupModal(props) {
                     placeholder="이메일"
                     maxLength="30"
                     value={signupUserEmail}
+                    autocomplete="false"
                   ></input>
                 </fieldset>
-                <button className="signup__input__btn">중복검사</button>
+                <button className="signup__input__btn" onClick={handleEmailValidCheck}>
+                  중복검사
+                </button>
               </div>
               <div className="signup__error">
                 {!EMAIL_REGEXP.test(signupUserEmail) && signupUserEmail !== '' ? (
                   <span className="signup__error__message">이메일 주소에 @를 포함해주세요.</span>
+                ) : (!EMAIL_REGEXP.test(signupUserEmail) && signupUserEmail !== '') || signupUserEmailCheck === 1 ? (
+                  <span className="signup__correct">사용 가능한 이메일입니다.</span>
+                ) : (!EMAIL_REGEXP.test(signupUserEmail) && signupUserEmail !== '') || signupUserEmailCheck === 2 ? (
+                  <span className="signup__error__message">중복된 이메일입니다.</span>
                 ) : (
                   <span className="signup__error__message"></span>
                 )}
@@ -96,8 +210,9 @@ export function SignupModal(props) {
                     onChange={handleChangePassword}
                     type="password"
                     placeholder="비밀번호"
-                    maxLength="30"
+                    maxLength="15"
                     value={signupUserPassword}
+                    autocomplete="new-password"
                   ></input>
                 </fieldset>
               </div>
@@ -117,13 +232,15 @@ export function SignupModal(props) {
                     onChange={handleChangePasswordValid}
                     type="password"
                     placeholder="비밀번호 재입력"
-                    maxLength="30"
+                    maxLength="15"
                     value={signupUserPasswordValid}
                   ></input>
                 </fieldset>
               </div>
               <div className="signup__correct">
-                {signupUserPassword === signupUserPasswordValid && signupUserPasswordValid !== '' ? (
+                {PASSWORD_REGEXP.test(signupUserPassword) &&
+                signupUserPassword === signupUserPasswordValid &&
+                signupUserPasswordValid !== '' ? (
                   <span className="signup__error__message">비밀번호가 일치합니다.</span>
                 ) : (
                   <span className="signup__error__message"></span>
@@ -140,32 +257,43 @@ export function SignupModal(props) {
                     value={signupUserNickname}
                   ></input>
                 </fieldset>
-                <button className="signup__input__btn">중복검사</button>
+                <button className="signup__input__btn" onClick={handleNicknameValidCheck}>
+                  중복검사
+                </button>
               </div>
               <div className="signup__error">
-                <span className="signup__error__message">{/*에러 발생*/}</span>
-              </div>
-              <div className="signup__input__wrappers">
-                <fieldset className="signup__input__container">
-                  <input
-                    className="signup__input"
-                    onChange={handleChangeMobile}
-                    type="text"
-                    placeholder="휴대폰번호"
-                    maxLength="13"
-                    value={signupUserMobile}
-                  ></input>
-                </fieldset>
-              </div>
-              <div className="signup__error">
-                {!MOBILE_REGEXP.test(signupUserMobile) && signupUserMobile !== '' ? (
-                  <span className="signup__error__message">올바른 휴대폰 번호를 입력해주세요. (010-1234-5678)</span>
+                {signupUserNickname === '' ? (
+                  <span className="signup__error__message">닉네임을 입력해주세요.</span>
+                ) : signupUserNickname !== '' && signupUserNicknameCheck === 1 ? (
+                  <span className="signup__correct">사용 가능한 닉네임입니다.</span>
+                ) : signupUserNickname !== '' && signupUserNicknameCheck === 2 ? (
+                  <span className="signup__error__message">중복된 닉네임입니다.</span>
                 ) : (
                   <span className="signup__error__message"></span>
                 )}
               </div>
+              <div className="signup__input__wrappers__gender">
+                <fieldset className="signup__input__container">
+                  <input
+                    type="radio"
+                    name="gender_info"
+                    onChange={handleChangeGender}
+                    value="MALE"
+                    checked={signupUserGender === 'MALE'}
+                  />
+                  남자
+                  <input
+                    type="radio"
+                    name="gender_info"
+                    onChange={handleChangeGender}
+                    value="FEMALE"
+                    checked={signupUserGender === 'FEMALE'}
+                  />
+                  여자
+                </fieldset>
+              </div>
               <div id="signup__btn">
-                <button className="signup__btn__contents" onClick={''}>
+                <button className="signup__btn__contents" onClick={handleSignup}>
                   회원가입
                 </button>
                 <div id="social__signup">
