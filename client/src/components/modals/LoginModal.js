@@ -48,7 +48,7 @@ export function LoginModal(props) {
           cookies.set('refreshToken', res.data.refreshToken);
           props.setLoginOn(true); // 로그인 true
           history.push('/mypage');
-          accessTokenCheck();
+          accessTokenCheck(); // 새로고침 시 로그인 유지
         })
         .catch((err) => {});
     }
