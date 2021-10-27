@@ -68,7 +68,7 @@ export function LoginModal(props) {
         method: 'GET',
         headers: {
           'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': 'http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com',
+          'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET',
           'Access-Control-Allow-Credentials': 'true',
         },
