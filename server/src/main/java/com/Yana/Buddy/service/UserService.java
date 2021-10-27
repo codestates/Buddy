@@ -79,6 +79,7 @@ public class UserService {
                 .gender(userRepo.getGender())
                 .authority(Role.GENERAL)
                 .stateMessage(dto.getStateMessage())
+                .profileImage(dto.getProfile_image())
                 .build();
         userRepository.save(user);
         return user;
