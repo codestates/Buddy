@@ -230,7 +230,7 @@ export function MyPage(props) {
                 placeholder="변경할 닉네임을 입력해주세요"
                 maxLength="15"
               ></input>
-              <button onClick={handleCheckNickname}>중복확인</button>
+              <button onClick={handleCheckNickname}>중복체크</button>
               <button onClick={handleModifyNickname}>변경</button>
             </div>
             {userNicknameCheck === 1 ? (
