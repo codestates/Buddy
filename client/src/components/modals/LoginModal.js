@@ -25,7 +25,6 @@ export function LoginModal(props) {
   // 새로고침해도 로그인 유지
   useEffect(() => {
     accessTokenCheck();
-    kakaoAccessTokenCheck();
     googleCodeOauth(); // 구글 인가코드 및 로그인 함수
     kakaoCodeOauth(); // 카카오 소셜 로그인 데이터 저장 함수
   }, []);
@@ -60,101 +59,19 @@ export function LoginModal(props) {
     const kakaoSearch = kakaoUrl.search; // 쿼리 스크링 가져오기
 
     if (kakaoSearch) {
-      const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // kakao code 값만 추출
+      const googleCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
-      console.log(kakaoCode);
-
-      axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/token?code=${kakaoCode}`, {
+      axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/callback?code=${googleCode}`, {
         method: 'GET',
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET',
-          'Access-Control-Allow-Credentials': 'true',
-        },
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data);
-          const kakaoAccessToken = res.data.access_token;
-          cookies.set('kakaoAccessToken', kakaoAccessToken);
-
-          axios(`https://kapi.kakao.com/v2/user/me`, {
-            method: 'GET',
-            headers: {
-              'Access-Control-Allow-Headers': 'Content-Type',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'GET',
-              'Access-Control-Allow-Credentials': 'true',
-              Authorization: `Bearer ${kakaoAccessToken}`,
-            },
-
-            withCredentials: true,
-          })
-            .then((res) => {
-              console.log(res.data.access_token);
-
-              let copyUserInfo = { ...userInfo };
-
-              copyUserInfo.email = `${res.data.kakao_account.email}`;
-              copyUserInfo.gender = `${res.data.kakao_account.gender}`;
-              copyUserInfo.nickname = `${res.data.properties.nickname}`;
-              copyUserInfo.profile_image = `${res.data.properties.nickname}`;
-              copyUserInfo.authority = 'GENERAL';
-              props.setUserInfo(copyUserInfo);
-              console.log(cookies.get('kakaoAccessToken'));
-              props.setLoginOn(true); // 로그인 true
-              history.push('/');
-
-              // 이메일 체크
-              axios(`${process.env.REACT_APP_API_URL}/email_check`, {
-                method: 'POST',
-                data: { email: res.data.kakao_account.email },
-                headers: {
-                  'Access-Control-Allow-Headers': 'Content-Type',
-                  'Access-Control-Allow-Origin': '*',
-                  'Access-Control-Allow-Methods': 'POST',
-                  'Access-Control-Allow-Credentials': 'true',
-                },
-                withCredentials: true,
-              })
-                // 중복된 이메일이 아니면 회원가입
-                .then((res) => {
-                  console.log(res.data);
-                  const upperGender = copyUserInfo.gender.toUpperCase();
-
-                  // 회원정보 넣기
-                  const signupInfo = {
-                    email: copyUserInfo.email,
-                    password: '',
-                    nickname: copyUserInfo.nickname,
-                    gender: upperGender,
-                    profile_image: copyUserInfo.profile_image,
-                  };
-
-                  console.log(signupInfo);
-
-                  axios(`${process.env.REACT_APP_API_URL}/signup`, {
-                    method: 'POST',
-                    data: signupInfo,
-                    headers: {
-                      'Access-Control-Allow-Headers': 'Content-Type',
-                      'Access-Control-Allow-Origin': '*',
-                      'Access-Control-Allow-Methods': 'POST',
-                      'Access-Control-Allow-Credentials': 'true',
-                    },
-                    withCredentials: true,
-                  })
-                    .then((res) => {
-                      console.log(res.data);
-                    })
-                    .catch((err) => {});
-                })
-                .catch((err) => {});
-
-              kakaoAccessTokenCheck(); // 새로고침 시 로그인 유지
-            })
-            .catch((err) => {});
+          setUserInfo(res.data); // res.data userInfo에 저장
+          console.log(cookies.get('refreshToken'));
+          cookies.set('refreshToken', res.data.access_token);
+          props.setLoginOn(true); // 로그인 true
+          history.push('/');
+          accessTokenCheck(); // 새로고침 시 로그인 유지
         })
         .catch((err) => {});
     }
@@ -238,51 +155,6 @@ export function LoginModal(props) {
         setUserPassword('');
         setUserLoginError('');
         props.setLoginOn(true);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  // 카카오 : 쿠키에 저장된 kakaoAccessToken 확인으로 새로고침 시 로그인 유지
-  const kakaoAccessTokenCheck = () => {
-    // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
-    axios(`https://kapi.kakao.com/v1/user/access_token_info`, {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Headers': 'application/x-www-form-urlencoded;charset=utf-8',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Credentials': 'true',
-        Authorization: `Bearer ${cookies.get('kakaoAccessToken')}`,
-      },
-      withCredentials: true,
-    })
-      .then((res) => {
-        axios(`https://kapi.kakao.com/v2/user/me`, {
-          method: 'GET',
-          headers: {
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET',
-            'Access-Control-Allow-Credentials': 'true',
-            Authorization: `Bearer ${cookies.get('kakaoAccessToken')}`,
-          },
-
-          withCredentials: true,
-        })
-          .then((res) => {
-            console.log(res.data);
-            let copyUserInfo = { ...userInfo };
-
-            copyUserInfo.email = `${res.data.kakao_account.email}`;
-            copyUserInfo.gender = `${res.data.kakao_account.gender}`;
-            copyUserInfo.nickname = `${res.data.properties.nickname}`;
-            copyUserInfo.authority = 'GENERAL';
-            props.setUserInfo(copyUserInfo);
-            props.setLoginOn(true); // 로그인 true
-          })
-          .catch((err) => {});
       })
       .catch((err) => {
         console.error(err);
