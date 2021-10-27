@@ -16,6 +16,7 @@ public class TokenService {
     @Value("${jwt.secret}")
     private String KEY;
 
+    //JWT 토큰 생성
     public String createJwtToken(User user, long time) {
         Date now = new Date();
 
@@ -30,6 +31,7 @@ public class TokenService {
                 .compact();
     }
 
+    //JWT 토큰 유효성 검사
     public Map<String, String> checkJwtToken(String key) {
         try {
             Claims claims = Jwts.parser().setSigningKey(KEY)
@@ -60,12 +62,14 @@ public class TokenService {
         }
     }
 
+    //토큰 헤더 검증
     public void isValidAuthHeader(String authorization) {
         if (authorization == null || !authorization.startsWith("Bearer")) {
             throw new IllegalArgumentException();
         }
     }
 
+    //헤더를 통해 토큰 추출
     public String extractToken(String authorization) {
         return authorization.substring("Bearer ".length());
     }
