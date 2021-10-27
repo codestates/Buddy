@@ -32,6 +32,7 @@ const myBucket = new AWS.S3({
 });
 
 // .env 환경변수 사용
+// .env 환경변수 사용
 dotenv.config();
 
 function App() {
