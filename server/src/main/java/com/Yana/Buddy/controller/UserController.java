@@ -207,6 +207,7 @@ public class UserController {
                     put("gender", user.getGender());
                     put("state_message", user.getStateMessage());
                     put("password", user.getPassword());
+                    put("profile_image", user.getProfileImage());
                 }
             });
         } catch (Exception e) {

@@ -148,7 +148,6 @@ public class OAuthService {
         JSONParser parser = new JSONParser();
         JSONObject object = (JSONObject) parser.parse(jsonValue);
         String body = (String) object.get("body");
-        log.info(body);
         JSONObject main = (JSONObject) parser.parse(body);
 
         JSONObject kakao_account = (JSONObject) main.get("kakao_account");
