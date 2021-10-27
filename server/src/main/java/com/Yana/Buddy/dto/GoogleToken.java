@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OAuthToken {
+public class GoogleToken {
 
     private String access_token;
     private String expires_in;
