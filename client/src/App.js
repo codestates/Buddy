@@ -70,6 +70,7 @@ function App() {
           setLoginOn={setLoginOn}
           userInfo={userInfo}
           setUserInfo={setUserInfo}
+          accessTokenCheck={accessTokenCheck}
         />
         <Header
           modalOn={modalOn}
