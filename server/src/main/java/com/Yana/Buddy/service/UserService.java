@@ -38,6 +38,7 @@ public class UserService {
                 .email(dto.getEmail())
                 .nickname(dto.getNickname())
                 .password(dto.getPassword())
+                .profileImage("https://buddy-image-server.s3.ap-northeast-2.amazonaws.com/mypage_img.png")
                 .gender(Gender.valueOf(dto.getGender()))
                 .authority(Role.GENERAL)
                 .build();
