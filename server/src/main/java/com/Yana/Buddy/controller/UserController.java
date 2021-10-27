@@ -5,7 +5,9 @@ import com.Yana.Buddy.entity.User;
 import com.Yana.Buddy.service.OAuthService;
 import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -274,26 +276,20 @@ public class UserController {
         });
     }
 
-    @PostMapping("/signup_kakao")
-    public ResponseEntity<?> kakaoSignUp(@RequestBody KakaoRegisterDto dto) {
-        try {
-            User user = userService.kakaoSignUp(dto);
-            return ResponseEntity.status(200).body(new HashMap<>() {
-                {
-                    put("id", user.getId());
-                    put("email", user.getEmail());
-                    put("nickname", user.getNickname());
-                    put("gender", user.getGender());
-                    put("message", "카카오 회원가입에 성공했습니다.");
-                }
-            });
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("message", "카카오 회원가입에 실패했습니다.");
-                }
-            });
-        }
+    @GetMapping("/oauth/kakao/callback")
+    public ResponseEntity<?> kakaoOAuthLogin(String code, HttpServletResponse response) throws JsonProcessingException, ParseException {
+        OAuthLoginDto kakaoLoginUser = userService.kakaoOAuthLogin(code);
+        response.addCookie(kakaoLoginUser.getCookie());
+        return ResponseEntity.status(200).body(new HashMap<>() {
+            {
+                put("id", kakaoLoginUser.getUser().getId());
+                put("email", kakaoLoginUser.getUser().getEmail());
+                put("nickname", kakaoLoginUser.getUser().getNickname());
+                put("accessToken", kakaoLoginUser.getAccessToken());
+                put("refreshToken", kakaoLoginUser.getRefreshToken());
+                put("message", "Kakao Login 에 성공했습니다!");
+            }
+        });
     }
 
 }

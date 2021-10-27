@@ -5,8 +5,10 @@ import com.Yana.Buddy.entity.Gender;
 import com.Yana.Buddy.entity.Role;
 import com.Yana.Buddy.entity.User;
 import com.Yana.Buddy.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -105,6 +107,24 @@ public class UserService {
         return new OAuthLoginDto(user, accessToken, refreshToken, cookie);
     }
 
+    public OAuthLoginDto kakaoOAuthLogin(String code) throws JsonProcessingException, ParseException {
+        ResponseEntity<String> kakaoTokenResponse = oAuthService.getTokenInfo(code);
+        KakaoToken kakaoToken = oAuthService.getKakaoToken(kakaoTokenResponse);
+
+        KakaoRegisterDto kakaoUserInfo = oAuthService.getKakaoUser(kakaoToken);
+
+        if (!existEmail(kakaoUserInfo.getEmail())) {
+            kakaoSignUp(kakaoUserInfo);
+        }
+
+        User user = userRepository.findByEmail(kakaoUserInfo.getEmail()).orElseThrow();
+        String accessToken = tokenService.createJwtToken(user, 1L);
+        String refreshToken = tokenService.createJwtToken(user, 2L);
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+
+        return new OAuthLoginDto(user, accessToken, refreshToken, cookie);
+    }
+
     private boolean isJoinedUser(GoogleUser googleUser) {
         Optional<User> searchUser = userRepository.findByEmail(googleUser.getEmail());
         return searchUser.isPresent();
@@ -134,6 +154,7 @@ public class UserService {
                 .nickname(dto.getNickname())
                 .profileImage(dto.getProfile_image())
                 .gender(gender)
+                .authority(Role.GENERAL)
                 .build();
 
         userRepository.save(signUpUser);
