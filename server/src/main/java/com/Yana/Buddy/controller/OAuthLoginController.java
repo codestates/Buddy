@@ -29,12 +29,14 @@ public class OAuthLoginController {
     private static final String K_ENDPOINT = "https://kauth.kakao.com/oauth/authorize";
     @Value("${oauth.kakao.client-id}") private String K_CLIENT_ID;
 
+    //redirect를 통한 Google Login API 접속
     @GetMapping("/login_google")
     public String GoogleLogin() {
         return "redirect:" + G_ENDPOINT + "?client_id=" + G_CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
                 + "&response_type=" + RESPONSE_TYPE + "&scope=" + G_SCOPE + "&access_type=" + G_ACCESS_TYPE;
     }
 
+    //redirect를 통한 Kakao Login API 접속
     @GetMapping("/login_kakao")
     public String KakaoLogin() {
         return "redirect:" + K_ENDPOINT + "?client_id=" + K_CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
