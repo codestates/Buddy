@@ -60,9 +60,9 @@ export function LoginModal(props) {
     const kakaoSearch = kakaoUrl.search; // 쿼리 스크링 가져오기
 
     if (kakaoSearch) {
-      const googleCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
+      const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
-      axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/callback?code=${googleCode}`, {
+      axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/callback?code=${kakaoCode}`, {
         method: 'GET',
       })
         .then((res) => {
