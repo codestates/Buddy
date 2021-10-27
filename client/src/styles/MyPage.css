@@ -87,6 +87,9 @@
 .mypage__image__container > img {
   width: 150px;
   height: auto;
+  border-radius: 230px;
+  overflow: hidden;
+  background-color: rgb(215, 215, 215);
 }
 
 .mypage__image__container > button {
