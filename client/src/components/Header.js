@@ -15,7 +15,6 @@ export default function Header(props) {
 
   const handleSignOut = () => {
     cookies.remove('refreshToken');
-    cookies.remove('kakaoAccessToken');
     history.push('/');
     props.setLoginOn(false);
     props.setUserInfo({});
@@ -25,7 +24,7 @@ export default function Header(props) {
     <div id="header__wrapper">
       <header id="headers">
         <Link className="header__link" to="/">
-          <img src="/images/logo.png" alt="Project_TT LOGO" />
+          <img src="/images/logo.png" alt="Buddy LOGO" />
         </Link>
         <nav id="nav">
           <ul id="ul">
