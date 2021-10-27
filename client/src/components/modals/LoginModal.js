@@ -48,6 +48,7 @@ export function LoginModal(props) {
           props.setLoginOn(true); // 로그인 true
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
+          props.accessTokenCheck();
         })
         .catch((err) => {});
     }
