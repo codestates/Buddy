@@ -14,7 +14,6 @@ export default function Header(props) {
   };
 
   const handleSignOut = () => {
-    // 로컬스토리지 accessToken 지우기
     cookies.remove('refreshToken');
     history.push('/');
     props.setLoginOn(false);
@@ -25,7 +24,7 @@ export default function Header(props) {
     <div id="header__wrapper">
       <header id="headers">
         <Link className="header__link" to="/">
-          <img src="/images/logo.png" alt="Project_TT LOGO" />
+          <img src="/images/logo.png" alt="Buddy LOGO" />
         </Link>
         <nav id="nav">
           <ul id="ul">

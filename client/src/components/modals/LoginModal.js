@@ -15,7 +15,7 @@ export function LoginModal(props) {
   const [userEmail, setUserEmail] = useState(''); // 이메일
   const [userPassword, setUserPassword] = useState(''); // 비밀번호
   const [userLoginError, setUserLoginError] = useState(''); // 로그인 에러 메세지
-  const [userInfo, setUserInfo] = useState({}); // 로그인 성공 시 저장되는 유저 정보
+  const [userInfo, setUserInfo] = useState({ email: '', nickname: '', authority: '', gender: '' }); // 로그인 성공 시 저장되는 유저 정보
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
 
   const history = useHistory();
@@ -25,18 +25,44 @@ export function LoginModal(props) {
   // 새로고침해도 로그인 유지
   useEffect(() => {
     accessTokenCheck();
-    googleCodeOauth();
+    googleCodeOauth(); // 구글 인가코드 및 로그인 함수
+    kakaoCodeOauth(); // 카카오 소셜 로그인 데이터 저장 함수
   }, []);
 
   // google oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
   const googleCodeOauth = () => {
-    const url = new URL(window.location.href); // 주소창 값 가져오기
-    const search = url.search; // 쿼리 스크링 가져오기
+    const googleUrl = new URL(window.location.href); // 주소창 값 가져오기
+    const googleSearch = googleUrl.search; // 쿼리 스크링 가져오기
 
-    if (search) {
-      const googleCode = search.split('=')[1].split('&')[0]; // google code 값만 추출
+    if (googleSearch) {
+      const googleCode = googleSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
       axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${googleCode}`, {
+        method: 'GET',
+      })
+        .then((res) => {
+          console.log(res.data);
+          props.setUserInfo(res.data); // res.data userInfo에 저장
+          console.log(cookies.get('refreshToken'));
+          cookies.set('refreshToken', res.data.refreshToken);
+          props.setLoginOn(true); // 로그인 true
+          history.push('/');
+          accessTokenCheck(); // 새로고침 시 로그인 유지
+          props.accessTokenCheck();
+        })
+        .catch((err) => {});
+    }
+  };
+
+  // kakao oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
+  const kakaoCodeOauth = () => {
+    const kakaoUrl = new URL(window.location.href); // 주소창 값 가져오기
+    const kakaoSearch = kakaoUrl.search; // 쿼리 스크링 가져오기
+
+    if (kakaoSearch) {
+      const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
+
+      axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/callback?code=${kakaoCode}`, {
         method: 'GET',
       })
         .then((res) => {
@@ -47,6 +73,7 @@ export function LoginModal(props) {
           props.setLoginOn(true); // 로그인 true
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
+          props.accessTokenCheck();
         })
         .catch((err) => {});
     }
@@ -82,7 +109,8 @@ export function LoginModal(props) {
         console.log(cookies.get('refreshToken'));
         cookies.set('refreshToken', res.data.refreshToken);
         props.setLoginOn(true);
-        accessTokenCheck();
+        props.setModalOn(false);
+        props.accessTokenCheck();
       })
       .catch((err) => {
         console.error(err);
@@ -103,7 +131,7 @@ export function LoginModal(props) {
   // 쿠키에 저장된 refreshToken 확인으로 새로고침 시 로그인 유지
   const accessTokenCheck = () => {
     // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
-    axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get('refreshToken')}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get('kakaoAccessToken')}`;
 
     // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
@@ -220,9 +248,9 @@ export function LoginModal(props) {
                   <a id="google__link" href={`${process.env.REACT_APP_API_URL}/login_google`}>
                     <img src="images/google_login.png" alt="구글 로그인" />
                   </a>
-                  <Link id="kakao__link">
+                  <a id="kakao__link" href={`${process.env.REACT_APP_API_URL}/login_kakao`}>
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>
