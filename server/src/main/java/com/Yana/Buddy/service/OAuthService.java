@@ -48,6 +48,7 @@ public class OAuthService {
     @Value("${oauth.kakao.client-id}") private String K_CLIENT_ID;
     @Value("${oauth.kakao.client-secret}") private String K_CLIENT_SECRET;
 
+    //구글에서 받은 code를 통해 token 받아오기 (JSON 타입으로 반환되기에, ResponseEntity로 묶어줌)
     public ResponseEntity<String> createPostRequest(String code) {
         String url = "https://oauth2.googleapis.com/token";
 
@@ -66,6 +67,7 @@ public class OAuthService {
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
     }
 
+    //JSON 타입의 token 정보를 dto 클래스를 활용하여 매핑 및 반환
     public GoogleToken getAccessToken(ResponseEntity<String> response) {
         GoogleToken googleToken = null;
         try {
@@ -79,6 +81,7 @@ public class OAuthService {
         return googleToken;
     }
 
+    //구글의 access token을 활용하여 구글 유저 정보 받아오기(JSON 타입을 ResponseEntity로 묶어줌)
     public ResponseEntity<String> createGetRequest(GoogleToken googleToken) {
         String url = "https://www.googleapis.com/oauth2/v1/userinfo";
 
@@ -90,6 +93,7 @@ public class OAuthService {
         return restTemplate.exchange(url, HttpMethod.GET, request, String.class);
     }
 
+    //JSON 타입으로 전달받은 유저 정보를 dto 클래스를 활용하여 매핑 및 반환
     public GoogleUser getUserInfo(ResponseEntity<String> response) {
         GoogleUser user = null;
         try {
@@ -103,6 +107,7 @@ public class OAuthService {
         return user;
     }
 
+    //카카오에서 받은 code를 통해 token 받아오기 (JSON 타입으로 반환되기에, ResponseEntity로 묶어줌)
     public ResponseEntity<String> getTokenInfo(String code) {
         String url = "https://kauth.kakao.com/oauth/token";
 
@@ -121,6 +126,7 @@ public class OAuthService {
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
     }
 
+    //JSON 타입의 token 정보를 dto 클래스를 활용하여 매핑 및 반환
     public KakaoToken getKakaoToken(ResponseEntity<String> response) {
         KakaoToken kakaoToken = null;
         try {
@@ -134,6 +140,11 @@ public class OAuthService {
         return kakaoToken;
     }
 
+    /*
+    카카오의 access token을 활용하여 카카오 유저 정보 받아옴
+    카카오의 유저 정보는 JSON 형태가 다소 복잡하기 때문에 JSONParser를 활용하여 필요한 정보들만 가져온 뒤,
+    카카오 전용 회원가입 dto를 통해 전달
+     */
     public KakaoRegisterDto getKakaoUser(KakaoToken kakaoToken) throws JsonProcessingException, ParseException {
         String url = "https://kapi.kakao.com/v2/user/me";
 
