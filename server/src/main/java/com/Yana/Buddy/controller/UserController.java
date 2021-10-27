@@ -140,6 +140,9 @@ public class UserController {
                     put("nickname", user.getNickname());
                     put("gender", user.getGender());
                     put("authority", user.getAuthority());
+                    put("profile_image", user.getProfileImage());
+                    put("state_message", user.getStateMessage());
+                    put("password", user.getPassword());
                 }
             });
         } else {
@@ -206,7 +209,6 @@ public class UserController {
                     put("nickname", user.getNickname());
                     put("gender", user.getGender());
                     put("state_message", user.getStateMessage());
-                    put("password", user.getPassword());
                     put("profile_image", user.getProfileImage());
                 }
             });
