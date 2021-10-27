@@ -4,9 +4,10 @@ import axios from 'axios';
 import '../styles/MyPage.css';
 
 export function MyPage(props) {
-  // 회원 탈퇴 로직
-
   const history = useHistory();
+
+  const [userNickname, SetUserNickname] = useState('');
+  const [userNicknameCheck, setUserNicknameCheck] = useState(0);
 
   const handleUnregister = () => {
     axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
@@ -29,6 +30,60 @@ export function MyPage(props) {
       });
   };
 
+  // 닉네임 입력 상태관리
+  const handleChangeNickname = (e) => {
+    SetUserNickname(e.target.value);
+    console.log(userNickname);
+  };
+
+  // 닉네임 체크 이벤트 함수
+  const handleCheckNickname = () => {
+    axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
+      method: 'POST',
+      data: { nickname: userNickname },
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        console.log(res.data);
+        setUserNicknameCheck(1);
+        console.log('사용 가능한 닉네임입니다.');
+      })
+      .catch((err) => {
+        console.error(err);
+        setUserNicknameCheck(2);
+        console.log('이미 존재하는 닉네임입니다!');
+      });
+  };
+
+  // 닉네임 변경 이벤트 함수
+  const handleModifyNickname = () => {
+    if (userNickname !== '' && userNicknameCheck === 1) {
+      axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
+        method: 'PUT',
+        data: { nickname: userNickname },
+        headers: {
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'PUT',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+        withCredentials: true,
+      })
+        .then((res) => {
+          console.log(res.data);
+          window.location.replace('/mypage'); // mypage 새로고침
+        })
+        .catch((err) => {});
+    } else {
+    }
+  };
+
   return (
     <div className="my__page">
       <section className="mypage__wrapper">
@@ -38,17 +93,27 @@ export function MyPage(props) {
             <span className="mypage__email">{props.userInfo.email}</span>
             <span className="mypage__role">{props.userInfo.authority}</span>
             <span className="mypage__gender">{props.userInfo.gender}</span>
+            {userNicknameCheck === 1 ? (
+              <span className="mypage__state__message" style={{ color: 'green' }}>
+                사용 가능한 닉네임입니다.
+              </span>
+            ) : userNicknameCheck === 2 ? (
+              <span className="mypage__state__message" style={{ color: 'red' }}>
+                중복된 닉네임입니다.
+              </span>
+            ) : null}
           </div>
           <div className="mypage__modifyinfo">
             <div className="mypage__modifyinfo__container">
               <input
                 className="modify__nickname"
                 type="text"
+                onChange={handleChangeNickname}
                 placeholder="변경할 닉네임을 입력해주세요"
                 maxLength="15"
               ></input>
-              <button>중복확인</button>
-              <button>변경</button>
+              <button onClick={handleCheckNickname}>중복확인</button>
+              <button onClick={handleModifyNickname}>변경</button>
             </div>
             <div className="mypage__modifyinfo__container">
               <input
