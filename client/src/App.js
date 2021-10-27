@@ -13,8 +13,26 @@ import ScrollToTop from './utils/ScrollToTop';
 import { MyPage } from './pages/MyPage';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
+import dotenv from 'dotenv';
+import AWS from 'aws-sdk';
 
 axios.defaults.withCredentials = true;
+
+const S3_BUCKET = 'YOUR_BUCKET_NAME_HERE';
+const REGION = 'YOUR_DESIRED_REGION_HERE';
+
+AWS.config.update({
+  accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
+  secretAccessKey: process.env.REACT_APP_AWS_SECRET_KEY,
+});
+
+const myBucket = new AWS.S3({
+  params: { Bucket: process.env.REACT_APP_S3_BUCKET },
+  region: process.env.REACT_APP_REGION,
+});
+
+// .env 환경변수 사용
+dotenv.config();
 
 function App() {
   const [loginOn, setLoginOn] = useState(false); // 로그인 여부 (test : true로 바꾸고 개발)
@@ -22,6 +40,33 @@ function App() {
   const [userInfo, setUserInfo] = useState({}); // 로그인 회원 정보
 
   const cookies = new Cookies();
+
+  //? 업로드 로직 //
+  const [progress, setProgress] = useState(0);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileInput = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const uploadFile = (file) => {
+    const params = {
+      ACL: 'public-read',
+      Body: file,
+      Bucket: process.env.REACT_APP_S3_BUCKET,
+      Key: file.name,
+    };
+
+    myBucket
+      .putObject(params)
+      .on('httpUploadProgress', (evt) => {
+        setProgress(Math.round((evt.loaded / evt.total) * 100));
+      })
+      .send((err) => {
+        if (err) console.log(err);
+      });
+  };
+  //? 업로드 로직 //
 
   // 새로고침해도 로그인 유지
   useEffect(() => {
@@ -101,6 +146,12 @@ function App() {
           </Route>
         </Switch>
         <Footer />
+        {/* 업로드 로직 */}
+        <div>
+          <div>Native SDK File Upload Progress is {progress}%</div>
+          <input type="file" onChange={handleFileInput} />
+          <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
+        </div>
       </div>
     </BrowserRouter>
   );
