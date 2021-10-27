@@ -190,7 +190,7 @@ export function MyPage(props) {
           </div>
         </div>
         <div className="mypage__image__container">
-          <img src="images/mypage_img.png" alt="마이페이지 이미지" />
+          <img src={props.userInfo.profile_image} alt="마이페이지 이미지" />
           <button>이미지 변경</button>
           <button>이미지 삭제</button>
         </div>
