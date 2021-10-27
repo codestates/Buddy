@@ -108,7 +108,8 @@ export function LoginModal(props) {
         console.log(cookies.get('refreshToken'));
         cookies.set('refreshToken', res.data.refreshToken);
         props.setLoginOn(true);
-        accessTokenCheck();
+        props.setModalOn(false);
+        props.accessTokenCheck();
       })
       .catch((err) => {
         console.error(err);
