@@ -69,7 +69,12 @@ export function MyPage(props) {
     if (userNickname !== '' && userNicknameCheck === 1) {
       axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
         method: 'PUT',
-        data: { nickname: userNickname },
+        data: {
+          nickname: userNickname,
+          password: props.userInfo.password,
+          profile_image: props.userInfo.profile_image,
+          state_message: props.userInfo.state_message,
+        },
         headers: {
           'Access-Control-Allow-Headers': 'Content-Type',
           'Access-Control-Allow-Origin': '*',
@@ -104,7 +109,12 @@ export function MyPage(props) {
     if (userPassword === userPasswordCheck) {
       axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
         method: 'PUT',
-        data: { password: userPassword },
+        data: {
+          password: userPassword,
+          profile_image: props.userInfo.profile_image,
+          state_message: props.userInfo.state_message,
+          nickname: props.userInfo.nickname,
+        },
         headers: {
           'Access-Control-Allow-Headers': 'Content-Type',
           'Access-Control-Allow-Origin': '*',
