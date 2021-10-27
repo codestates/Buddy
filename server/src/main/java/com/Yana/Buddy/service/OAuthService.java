@@ -1,13 +1,14 @@
 package com.Yana.Buddy.service;
 
-import com.Yana.Buddy.dto.GoogleUser;
-import com.Yana.Buddy.dto.GoogleToken;
-import com.Yana.Buddy.dto.KakaoToken;
+import com.Yana.Buddy.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -100,6 +101,66 @@ public class OAuthService {
         }
 
         return user;
+    }
+
+    public ResponseEntity<String> getTokenInfo(String code) {
+        String url = "https://kauth.kakao.com/oauth/token";
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", K_CLIENT_ID);
+        params.add("redirect_uri", REDIRECT_URI);
+        params.add("code", code);
+        params.add("client_secret", K_CLIENT_SECRET);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/x-www-form-urlencoded");
+
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+
+        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+    }
+
+    public KakaoToken getKakaoToken(ResponseEntity<String> response) {
+        KakaoToken kakaoToken = null;
+        try {
+            kakaoToken = objectMapper.readValue(response.getBody(), KakaoToken.class);
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return kakaoToken;
+    }
+
+    public KakaoRegisterDto getKakaoUser(KakaoToken kakaoToken) throws JsonProcessingException, ParseException {
+        String url = "https://kapi.kakao.com/v2/user/me";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + kakaoToken.getAccess_token());
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
+
+        ResponseEntity<String> result =  restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+
+        String jsonValue = objectMapper.writeValueAsString(result);
+
+        JSONParser parser = new JSONParser();
+        JSONObject object = (JSONObject) parser.parse(jsonValue);
+        String body = (String) object.get("body");
+        log.info(body);
+        JSONObject main = (JSONObject) parser.parse(body);
+
+        JSONObject kakao_account = (JSONObject) main.get("kakao_account");
+
+        String email = kakao_account.get("email").toString();
+
+        JSONObject profile = (JSONObject) kakao_account.get("profile");
+        String nickname = profile.get("nickname").toString();
+        String profile_image = profile.get("profile_image_url").toString();
+        String gender = kakao_account.get("gender").toString().toUpperCase();
+
+        return new KakaoRegisterDto(email, nickname, profile_image, gender);
     }
 
 }
