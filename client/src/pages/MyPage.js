@@ -99,7 +99,7 @@ export function MyPage(props) {
     console.log(userPasswordCheck);
   };
 
-  // 닉네임 변경 이벤트 함수
+  // 비밀번호 변경 이벤트 함수
   const handleModifyPassword = () => {
     if (userPassword === userPasswordCheck) {
       axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
