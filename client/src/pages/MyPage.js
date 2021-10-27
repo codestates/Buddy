@@ -3,6 +3,21 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/MyPage.css';
 import { PASSWORD_REGEXP } from '../constants/constants';
+import dotenv from 'dotenv';
+import AWS from 'aws-sdk';
+
+AWS.config.update({
+  accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
+  secretAccessKey: process.env.REACT_APP_AWS_SECRET_KEY,
+});
+
+const myBucket = new AWS.S3({
+  params: { Bucket: process.env.REACT_APP_S3_BUCKET },
+  region: process.env.REACT_APP_REGION,
+});
+
+// .env 환경변수 사용
+dotenv.config();
 
 export function MyPage(props) {
   const history = useHistory();
@@ -11,6 +26,64 @@ export function MyPage(props) {
   const [userNicknameCheck, setUserNicknameCheck] = useState(0);
   const [userPassword, setUserPassword] = useState('');
   const [userPasswordCheck, setUserPasswordCheck] = useState('');
+
+  //? 업로드 로직 //
+  const [progress, setProgress] = useState(0);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  // 새로고침해도 로그인 유지
+  useEffect(() => {
+    console.log(selectedFile);
+    // selectedFile 값이 바뀌면 이미지 파일을 S3 이미지 서버에 업로드
+    if (selectedFile !== null) {
+      uploadFile(selectedFile);
+
+      axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
+        method: 'PUT',
+        data: {
+          nickname: props.userInfo.nickname,
+          password: props.userInfo.password,
+          profile_image: `${process.env.REACT_APP_S3_IMAGE_URL}/${selectedFile.name}`,
+          state_message: props.userInfo.state_message,
+        },
+        headers: {
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'PUT',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+        withCredentials: true,
+      })
+        .then((res) => {
+          console.log(res.data);
+          window.location.replace('/mypage'); // mypage 새로고침
+        })
+        .catch((err) => {});
+    }
+  }, [selectedFile]);
+
+  const handleFileInput = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const uploadFile = (file) => {
+    const params = {
+      ACL: 'public-read',
+      Body: file,
+      Bucket: process.env.REACT_APP_S3_BUCKET,
+      Key: file.name,
+    };
+
+    myBucket
+      .putObject(params)
+      .on('httpUploadProgress', (evt) => {
+        setProgress(Math.round((evt.loaded / evt.total) * 100));
+      })
+      .send((err) => {
+        if (err) console.log(err);
+      });
+  };
+  //? 업로드 로직 //
 
   const handleUnregister = () => {
     axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
@@ -136,6 +209,12 @@ export function MyPage(props) {
     <div className="my__page">
       <section className="mypage__wrapper">
         <div className="mypage__container">
+          <div className="mypage__image__container">
+            <label for="file-input">
+              <img src={props.userInfo.profile_image} alt="마이페이지 이미지" title="이미지를 수정합니다" />
+            </label>
+            <input id="file-input" type="file" onChange={handleFileInput} style={{ display: 'none' }} />
+          </div>
           <div className="mypage__basicinfo">
             <span className="mypage__nickname">{props.userInfo.nickname}</span>
             <span className="mypage__email">{props.userInfo.email}</span>
@@ -198,11 +277,6 @@ export function MyPage(props) {
               <span className="mypage__error__message"></span>
             )}
           </div>
-        </div>
-        <div className="mypage__image__container">
-          <img src={props.userInfo.profile_image} alt="마이페이지 이미지" />
-          <button>이미지 변경</button>
-          <button>이미지 삭제</button>
         </div>
       </section>
       <section className="mypage__unregister__wrapper">
