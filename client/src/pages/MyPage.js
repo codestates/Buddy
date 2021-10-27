@@ -165,7 +165,7 @@ export function MyPage(props) {
     }
   };
 
-  // 비밀번호 입력 이벤트 함수
+  // 비밀번호 입력 이벤트 함수.
   const handleChangePassword = (e) => {
     setUserPassword(e.target.value);
     console.log(userPassword);
