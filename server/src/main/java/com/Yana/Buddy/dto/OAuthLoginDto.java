@@ -8,7 +8,7 @@ import javax.servlet.http.Cookie;
 
 @Data
 @AllArgsConstructor
-public class GoogleLoginDto {
+public class OAuthLoginDto {
 
     private User user;
     private String accessToken;
