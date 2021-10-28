@@ -296,14 +296,6 @@ export function SignupModal(props) {
                 <button className="signup__btn__contents" onClick={handleSignup}>
                   회원가입
                 </button>
-                <div id="social__signup">
-                  <Link id="google__link__signup">
-                    <img src="images/google_login.png" alt="구글 로그인" />
-                  </Link>
-                  <Link id="kakao__link__signup">
-                    <img src="images/kakao_login.png" alt="카카오 로그인" />
-                  </Link>
-                </div>
               </div>
             </div>
           </div>

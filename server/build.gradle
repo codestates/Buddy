@@ -26,6 +26,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	runtimeOnly 'mysql:mysql-connector-java'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
