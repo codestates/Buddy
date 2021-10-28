@@ -17,9 +17,10 @@ public class EmailController {
         this.emailService = emailService;
     }
 
-    @PostMapping("/emailConfirm")
+    @PostMapping("/email_confirm")
     public ResponseEntity<?> emailConfirm(@RequestBody (required = true) EmailDto email) throws  Exception{
         String confirm = emailService.sendSimpleMessage(email.getEmail());
         return ResponseEntity.status(200).body(confirm);
     }
+    
 }
