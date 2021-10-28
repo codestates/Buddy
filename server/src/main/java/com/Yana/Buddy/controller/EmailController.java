@@ -22,5 +22,5 @@ public class EmailController {
         String confirm = emailService.sendSimpleMessage(email.getEmail());
         return ResponseEntity.status(200).body(confirm);
     }
-    
+
 }
