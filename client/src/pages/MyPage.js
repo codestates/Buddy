@@ -109,6 +109,7 @@ export function MyPage(props) {
   // 닉네임 입력 상태관리
   const handleChangeNickname = (e) => {
     SetUserNickname(e.target.value);
+    setUserNicknameCheck(0);
     console.log(userNickname);
   };
 
