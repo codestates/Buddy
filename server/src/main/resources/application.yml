@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: oauth
+    include:
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -29,3 +29,19 @@ oauth:
   kakao:
     client-id: 575ac15539fc8a948809726d8022d095
     client-secret: WRuZAyVhUCB09iErDsWjXTY1yJxDl0QV
+
+mail:
+  smtp:
+    auth: true
+    starttls:
+      required: true
+      enable: true
+    socketFactory:
+      class: javax.net.ssl.SSLSocketFactory
+      fallback: false
+      port: 465
+    port: 465
+
+AdminMail:
+  id: namtndus@gmail.com
+  password: nam%160752
