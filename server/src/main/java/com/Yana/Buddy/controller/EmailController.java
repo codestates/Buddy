@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+
 @RestController
 public class EmailController {
 
@@ -20,6 +22,10 @@ public class EmailController {
     @PostMapping("/email_confirm")
     public ResponseEntity<?> emailConfirm(@RequestBody (required = true) EmailDto email) throws  Exception{
         String confirm = emailService.sendSimpleMessage(email.getEmail());
-        return ResponseEntity.status(200).body(confirm);
+        return ResponseEntity.status(200).body(new HashMap<>(){
+            {
+                put("code",confirm);
+            }
+        });
     }
 }
