@@ -46,7 +46,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 /* 로그인 회원가입 컨텐츠 박스 내부 로고 이미지 */
@@ -88,7 +88,7 @@
   justify-content: flex-start;
   width: 400px;
   margin-left: 90px;
-  margin-bottom: -5px;
+  margin-bottom: 13px;
 }
 
 .signup__emailcheck__container {
@@ -164,7 +164,16 @@
   height: 30px;
   font-size: 12px;
   color: #22cc88;
-  margin-bottom: 5px;
+}
+
+.signup__emailcode__correct {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 305px;
+  margin-top: -10px;
+  font-size: 12px;
+  color: #22cc88;
 }
 
 .signup__error__message {
@@ -203,29 +212,19 @@
   color: #27e99b;
 }
 
-#social__signup {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 30px;
+#signup__term__agree {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-#google__link__signup {
-  margin-right: 15px;
+.signup__term__link {
+  text-decoration: none;
+  color: #22cc88;
 }
 
-#google__link__signup > img {
-  width: 40px;
-}
-
-#google__link__signup > img:hover {
-  opacity: 0.5;
-}
-
-#kakao__link__signup > img {
-  width: 40px;
-}
-
-#kakao__link__signup > img:hover {
-  opacity: 0.5;
+.signup__term__link:hover {
+  text-decoration: none;
+  color: #27e99b;
 }
