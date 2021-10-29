@@ -365,7 +365,7 @@ export function SignupModal(props) {
                   ></input>
                 </fieldset>
                 <button className="signup__input__btn" onClick={handleNicknameValidCheck}>
-                  중복검사
+                  닉네임인증
                 </button>
               </div>
               <div className="signup__error">
