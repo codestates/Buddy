@@ -51,6 +51,7 @@ export function SignupModal(props) {
           setSignupUserPasswordValid('');
           setSignupUserNickname('');
           setSignupUserNicknameCheck(0);
+          alert('회원가입이 완료되었습니다.');
           history.push('/');
         })
         .catch((err) => {
@@ -183,27 +184,29 @@ export function SignupModal(props) {
 
   // 닉네임 중복 체크
   const handleNicknameValidCheck = () => {
-    axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
-      method: 'POST',
-      data: { nickname: signupUserNickname },
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
-    })
-      .then((res) => {
-        console.log(res.data);
-        setSignupUserNicknameCheck(1);
-        console.log('사용 가능한 닉네임입니다.');
+    if (signupUserNickname !== '') {
+      axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
+        method: 'POST',
+        data: { nickname: signupUserNickname },
+        headers: {
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+        withCredentials: true,
       })
-      .catch((err) => {
-        console.error(err);
-        setSignupUserNicknameCheck(2);
-        console.log('이미 존재하는 닉네임입니다!');
-      });
+        .then((res) => {
+          console.log(res.data);
+          setSignupUserNicknameCheck(1);
+          console.log('사용 가능한 닉네임입니다.');
+        })
+        .catch((err) => {
+          console.error(err);
+          setSignupUserNicknameCheck(2);
+          console.log('이미 존재하는 닉네임입니다!');
+        });
+    }
   };
 
   // 성별 상태관리
@@ -214,12 +217,20 @@ export function SignupModal(props) {
 
   // 회원가입 버튼 이벤트
   function handleSignup() {
-    setSignupUserinfo({
-      email: signupUserEmail,
-      password: signupUserPassword,
-      nickname: signupUserNickname,
-      gender: signupUserGender,
-    });
+    if (signupUserEmailCodeCheck === 0) {
+      alert('이메일을 인증해주세요.');
+    } else if (signupUserPassword !== signupUserPasswordValid || signupUserPassword === '') {
+      alert('입력된 비밀번호가 일치해야 합니다.');
+    } else if (signupUserNicknameCheck === 0) {
+      alert('닉네임을 인증해주세요.');
+    } else {
+      setSignupUserinfo({
+        email: signupUserEmail,
+        password: signupUserPassword,
+        nickname: signupUserNickname,
+        gender: signupUserGender,
+      });
+    }
 
     console.log(signupUserEmailCheck);
     console.log(signupUserNicknameCheck);
@@ -251,7 +262,7 @@ export function SignupModal(props) {
                   ></input>
                 </fieldset>
                 <button className="signup__input__btn" onClick={handleEmailValidCheck}>
-                  중복검사
+                  이메일인증
                 </button>
               </div>
               <div className="signup__error">
@@ -259,7 +270,7 @@ export function SignupModal(props) {
                   <span className="signup__error__message">이메일 주소에 @를 포함해주세요.</span>
                 ) : (!EMAIL_REGEXP.test(signupUserEmail) && signupUserEmail !== '') || signupUserEmailCheck === 1 ? (
                   <span className="signup__correct">
-                    이메일로 인증번호가 전송되었습니다. <br /> 인증번호를 입력해주세요.
+                    이메일로 인증코드가 전송되었습니다. <br /> 인증번호를 입력해주세요.
                   </span>
                 ) : (!EMAIL_REGEXP.test(signupUserEmail) && signupUserEmail !== '') || signupUserEmailCheck === 2 ? (
                   <span className="signup__error__message">중복된 이메일입니다.</span>
@@ -289,7 +300,9 @@ export function SignupModal(props) {
                 {signupUserEmailCodeCheck === 1 ? (
                   <span className="signup__correct">이메일 인증코드가 일치합니다.</span>
                 ) : signupUserEmailCodeCheck === 2 ? (
-                  <span className="signup__error__message">이메일 인증코드가 일치하지 않습니다.</span>
+                  <span className="signup__correct" style={{ color: 'red' }}>
+                    이메일 인증코드가 일치하지 않습니다.
+                  </span>
                 ) : null}
               </div>
               <div className="signup__input__wrappers">
