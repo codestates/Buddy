@@ -7,8 +7,6 @@ import { SignupModal } from './SignupModal';
 import { AXIOS_DEFAULT_HEADER } from '../../constants/constants';
 import '../../styles/modal/LoginModal.css';
 
-axios.defaults.withCredentials = true;
-
 // .env 환경변수 사용
 dotenv.config();
 
@@ -100,7 +98,6 @@ export function LoginModal(props) {
       method: 'POST',
       data: userData,
       headers: AXIOS_DEFAULT_HEADER,
-      withCredentials: true,
     })
       .then((res) => {
         console.log(res.data); // accessToken (클라이언트에 따로 저장)
@@ -137,7 +134,6 @@ export function LoginModal(props) {
     axios(`${process.env.REACT_APP_API_URL}/token_check`, {
       method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
-      withCredentials: true,
     })
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장

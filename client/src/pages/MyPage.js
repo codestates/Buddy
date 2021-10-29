@@ -47,7 +47,6 @@ export function MyPage(props) {
           state_message: props.userInfo.state_message,
         },
         headers: AXIOS_DEFAULT_HEADER,
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data);
@@ -87,7 +86,6 @@ export function MyPage(props) {
       axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
         method: 'DELETE',
         headers: AXIOS_DEFAULT_HEADER,
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data); // 회원정보 삭제 완료
@@ -115,7 +113,6 @@ export function MyPage(props) {
         method: 'POST',
         data: { nickname: userNickname },
         headers: AXIOS_DEFAULT_HEADER,
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data);
@@ -142,7 +139,6 @@ export function MyPage(props) {
           state_message: props.userInfo.state_message,
         },
         headers: AXIOS_DEFAULT_HEADER,
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data);
@@ -178,7 +174,6 @@ export function MyPage(props) {
           nickname: props.userInfo.nickname,
         },
         headers: AXIOS_DEFAULT_HEADER,
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data);
