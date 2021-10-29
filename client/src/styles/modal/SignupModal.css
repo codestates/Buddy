@@ -1,0 +1,199 @@
+/* 회원가입 모달 전체 회색 배경 */
+.signup__popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  animation: fadein 0.4s;
+  -webkit-animation: fadein 0.4s;
+}
+
+/* 회원가입 모달 내부 흰색 배경 */
+.signup__popup__inner {
+  width: 400px;
+  height: 600px;
+  background: white;
+  border-radius: 15px;
+  margin-top: 170px;
+  box-shadow: 1px 3px 10px;
+}
+
+/* 회원가입 모달 닫기 버튼 */
+#signup__close__btn {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 20px;
+}
+
+#signup__close__btn > .signup__close {
+  all: unset;
+  cursor: pointer;
+}
+
+/* 회원가입 모달 닫기 버튼 내 이미지 */
+.signup__close > img {
+  width: 18px;
+}
+
+/* 회원가입 컨텐츠 박스 */
+#signup__contents {
+  font-family: 'Noto Sans KR';
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+/* 로그인 회원가입 컨텐츠 박스 내부 로고 이미지 */
+#signup__contents > img {
+  width: 90px;
+  margin-bottom: 30px;
+}
+
+/* 회원가입 컨텐츠 '로그인' 글씨 */
+#signup__title {
+  font-size: 25px;
+  color: black;
+  margin-bottom: 50px;
+}
+
+.signup__input__wrappers {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 400px;
+  margin-left: 90px;
+}
+
+.signup__input__container {
+  display: flex;
+  align-items: center;
+}
+
+.signup__input__wrappers__gender {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* 회원가입 컨텐츠 이메일, 비번 입력 input */
+.signup__input {
+  outline: none;
+  font-size: 15px;
+  color: black;
+  width: 200px;
+  border: none;
+  border-bottom: 1px solid rgb(180, 180, 180);
+}
+
+.signup__input::placeholder {
+  color: rgb(180, 180, 180);
+  font-size: 12px;
+}
+
+.signup__input__btn {
+  border: none;
+  margin-left: 20px;
+  border-radius: 20px;
+  width: 80px;
+  height: 20px;
+  font-size: 13px;
+  background-color: #22cc88;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
+.signup__input__btn:hover {
+  background-color: #27e99b;
+}
+
+.signup__error {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 305px;
+  height: 30px;
+  font-size: 12px;
+  color: red;
+  margin-bottom: 5px;
+}
+
+.signup__correct {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 305px;
+  height: 30px;
+  font-size: 12px;
+  color: #22cc88;
+  margin-bottom: 5px;
+}
+
+.signup__error__message {
+  height: 15px;
+}
+
+#signup__btn > .signup__btn__contents {
+  width: 270px;
+  height: 40px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #22cc88;
+  cursor: pointer;
+}
+
+#signup__btn > .signup__btn__contents:hover {
+  background-color: #27e99b;
+}
+
+#signup__link {
+  margin-left: 10px;
+  color: #22cc88;
+  text-decoration: none;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-family: 'Noto Sans KR';
+  cursor: pointer;
+}
+
+#signup__link:hover {
+  color: #27e99b;
+}
+
+#social__signup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+#google__link__signup {
+  margin-right: 15px;
+}
+
+#google__link__signup > img {
+  width: 40px;
+}
+
+#google__link__signup > img:hover {
+  opacity: 0.5;
+}
+
+#kakao__link__signup > img {
+  width: 40px;
+}
+
+#kakao__link__signup > img:hover {
+  opacity: 0.5;
+}
