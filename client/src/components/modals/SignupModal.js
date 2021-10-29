@@ -60,6 +60,11 @@ export function SignupModal(props) {
     }
   }, [signupUserinfo]);
 
+  // 모달창 끄기
+  const handleModalOff = () => {
+    props.setSignupModalOn(false);
+  };
+
   // 회원 가입 모달창 이벤트
   const togglePopup = () => {
     if (props.signupModalOn === false) {
@@ -298,9 +303,9 @@ export function SignupModal(props) {
               ) : null}
               <div className="signup__error">
                 {signupUserEmailCodeCheck === 1 ? (
-                  <span className="signup__correct">이메일 인증코드가 일치합니다.</span>
+                  <span className="signup__emailcode__correct">이메일 인증코드가 일치합니다.</span>
                 ) : signupUserEmailCodeCheck === 2 ? (
-                  <span className="signup__correct" style={{ color: 'red' }}>
+                  <span className="signup__emailcode__correct" style={{ color: 'red' }}>
                     이메일 인증코드가 일치하지 않습니다.
                   </span>
                 ) : null}
@@ -393,6 +398,20 @@ export function SignupModal(props) {
                   />
                   여자
                 </fieldset>
+              </div>
+              <div id="signup__term__agree">
+                <span>
+                  회원가입 버튼을 클릭하면
+                  <br /> 서비스{' '}
+                  <Link className="signup__term__link" to="/term" onClick={handleModalOff}>
+                    약관
+                  </Link>{' '}
+                  및{' '}
+                  <Link className="signup__term__link" to="/privacy" onClick={handleModalOff}>
+                    개인정보 취급 방침
+                  </Link>
+                  에 동의하게 됩니다.
+                </span>
               </div>
               <div id="signup__btn">
                 <button className="signup__btn__contents" onClick={handleSignup}>
