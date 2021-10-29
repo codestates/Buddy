@@ -88,7 +88,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 40px;
 }
 
 .mypage__image__container > label > img {
@@ -141,7 +141,6 @@
   font-weight: bold;
   background-color: #eb1515;
   cursor: pointer;
-  margin-top: 20px;
 }
 
 .mypage__unregister__container > button:hover {
