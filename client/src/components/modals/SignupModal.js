@@ -18,18 +18,6 @@ export function SignupModal(props) {
 
   const history = useHistory();
 
-  // 회원가입 입력창 state 초기화
-  const resetSignupInput = () => {
-    setSignupUserEmail('');
-    setSignupUserEmailCheck(0);
-    setSignupUserEmailCode('');
-    setSignupUserEmailCodeCheck(0);
-    setSignupUserPassword('');
-    setSignupUserPasswordValid('');
-    setSignupUserNickname('');
-    setSignupUserNicknameCheck(0);
-  };
-
   // userinfo 값이 바뀌면 signup 진행
   useEffect(() => {
     if (
@@ -44,7 +32,6 @@ export function SignupModal(props) {
         method: 'POST',
         data: signupUserinfo,
         headers: AXIOS_DEFAULT_HEADER,
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data);
@@ -58,6 +45,18 @@ export function SignupModal(props) {
         });
     }
   }, [signupUserinfo]);
+
+  // 회원가입 입력창 state 초기화
+  const resetSignupInput = () => {
+    setSignupUserEmail('');
+    setSignupUserEmailCheck(0);
+    setSignupUserEmailCode('');
+    setSignupUserEmailCodeCheck(0);
+    setSignupUserPassword('');
+    setSignupUserPasswordValid('');
+    setSignupUserNickname('');
+    setSignupUserNicknameCheck(0);
+  };
 
   // 모달창 끄기
   const handleModalOff = () => {
@@ -96,7 +95,6 @@ export function SignupModal(props) {
         method: 'POST',
         data: { email: signupUserEmail },
         headers: AXIOS_DEFAULT_HEADER,
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data);
@@ -108,7 +106,6 @@ export function SignupModal(props) {
             method: 'POST',
             data: { email: signupUserEmail },
             headers: AXIOS_DEFAULT_HEADER,
-            withCredentials: true,
           })
             .then((res) => {
               console.log(res.data);
@@ -132,7 +129,6 @@ export function SignupModal(props) {
       method: 'POST',
       data: { code: signupUserEmailCode },
       headers: AXIOS_DEFAULT_HEADER,
-      withCredentials: true,
     })
       .then((res) => {
         console.log(res.data);
@@ -171,7 +167,6 @@ export function SignupModal(props) {
         method: 'POST',
         data: { nickname: signupUserNickname },
         headers: AXIOS_DEFAULT_HEADER,
-        withCredentials: true,
       })
         .then((res) => {
           console.log(res.data);
