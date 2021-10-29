@@ -1,5 +1,7 @@
 package com.Yana.Buddy.service;
 
+import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,19 +11,24 @@ import org.springframework.stereotype.Service;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Random;
 
+@Log4j2
 @Service
 public class EmailServiceImpl implements EmailService{
 
     @Autowired
     JavaMailSender emailSender;
 
-    public static final String ePw = createKey();
+    public static String ePw = null;
 
     private MimeMessage createMessage(String to)throws Exception{
-        System.out.println("보내는 대상 : "+to);
-        System.out.println("인증 번호 : "+ePw);
+
+        ePw= createKey();
+        log.info("보내는 대상 : "+to);
+        log.info("인증 번호 : "+ePw);
         MimeMessage message = emailSender.createMimeMessage();
 
         message.addRecipients(Message.RecipientType.TO,to);
@@ -44,7 +51,12 @@ public class EmailServiceImpl implements EmailService{
     private static String createKey() {
         StringBuffer key = new StringBuffer();
 
-        Random rnd = new Random();
+        SecureRandom rnd  = null;
+        try{
+            rnd = SecureRandom.getInstance("SHA1PRNG");
+        }catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
 
         for(int i = 0; i< 8; i++){
             int index = rnd.nextInt(3);
