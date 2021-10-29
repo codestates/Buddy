@@ -8,14 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @RequiredArgsConstructor
-@CrossOrigin(
-        origins = "https://yana-buddy.com, " +
-                "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, " +
-                "https://accounts.google.com, https://www.googleapis.com, " +
-                "https://kauth.kakao.com",
-        allowedHeaders = "*",
-        allowCredentials = "true"
-)
 public class OAuthLoginController {
 
     private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
