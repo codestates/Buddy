@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { PASSWORD_REGEXP, EMAIL_REGEXP, AXIOS_DEFAULT_HEADER } from '../../constants/constants';
 import '../../styles/modal/SignupModal.css';
-import dotenv from 'dotenv';
-import { PASSWORD_REGEXP, EMAIL_REGEXP } from '../../constants/constants';
 
 export function SignupModal(props) {
   const [signupUserEmail, setSignupUserEmail] = useState(''); // 이메일
@@ -32,12 +31,7 @@ export function SignupModal(props) {
       axios(`${process.env.REACT_APP_API_URL}/signup`, {
         method: 'POST',
         data: signupUserinfo,
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST',
-          'Access-Control-Allow-Credentials': 'true',
-        },
+        headers: AXIOS_DEFAULT_HEADER,
         withCredentials: true,
       })
         .then((res) => {
@@ -103,12 +97,7 @@ export function SignupModal(props) {
       axios(`${process.env.REACT_APP_API_URL}/email_check`, {
         method: 'POST',
         data: { email: signupUserEmail },
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST',
-          'Access-Control-Allow-Credentials': 'true',
-        },
+        headers: AXIOS_DEFAULT_HEADER,
         withCredentials: true,
       })
         .then((res) => {
@@ -120,12 +109,7 @@ export function SignupModal(props) {
           axios(`${process.env.REACT_APP_API_URL}/email_confirm`, {
             method: 'POST',
             data: { email: signupUserEmail },
-            headers: {
-              'Access-Control-Allow-Headers': 'Content-Type',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'POST',
-              'Access-Control-Allow-Credentials': 'true',
-            },
+            headers: AXIOS_DEFAULT_HEADER,
             withCredentials: true,
           })
             .then((res) => {
@@ -149,12 +133,7 @@ export function SignupModal(props) {
     axios(`${process.env.REACT_APP_API_URL}/email_code_check`, {
       method: 'POST',
       data: { code: signupUserEmailCode },
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Credentials': 'true',
-      },
+      headers: AXIOS_DEFAULT_HEADER,
       withCredentials: true,
     })
       .then((res) => {
@@ -193,12 +172,7 @@ export function SignupModal(props) {
       axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
         method: 'POST',
         data: { nickname: signupUserNickname },
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST',
-          'Access-Control-Allow-Credentials': 'true',
-        },
+        headers: AXIOS_DEFAULT_HEADER,
         withCredentials: true,
       })
         .then((res) => {

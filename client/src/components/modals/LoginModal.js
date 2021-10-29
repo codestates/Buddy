@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
 import axios from 'axios';
-import '../../styles/modal/LoginModal.css';
 import dotenv from 'dotenv';
 import { SignupModal } from './SignupModal';
-import { Cookies } from 'react-cookie';
+import { AXIOS_DEFAULT_HEADER } from '../../constants/constants';
+import '../../styles/modal/LoginModal.css';
 
 axios.defaults.withCredentials = true;
 
@@ -98,12 +99,7 @@ export function LoginModal(props) {
     await axios(`${process.env.REACT_APP_API_URL}/login`, {
       method: 'POST',
       data: userData,
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Credentials': 'true',
-      },
+      headers: AXIOS_DEFAULT_HEADER,
       withCredentials: true,
     })
       .then((res) => {
@@ -140,12 +136,7 @@ export function LoginModal(props) {
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
     axios(`${process.env.REACT_APP_API_URL}/token_check`, {
       method: 'GET',
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Credentials': 'true',
-      },
+      headers: AXIOS_DEFAULT_HEADER,
       withCredentials: true,
     })
       .then((res) => {
