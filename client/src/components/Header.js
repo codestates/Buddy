@@ -16,6 +16,7 @@ export default function Header(props) {
   const handleSignOut = () => {
     cookies.remove('refreshToken');
     history.push('/');
+    alert('정상적으로 로그아웃되었습니다.');
     props.setLoginOn(false);
     props.setUserInfo({});
   };
