@@ -20,6 +20,7 @@ public class WebSecurity implements WebMvcConfigurer {
                 )
                 .allowCredentials(true)
                 .allowedHeaders("*")
+                .allowedMethods("GET", "POST", "DELETE", "PUT")
                 .exposedHeaders("typ", "JWT");
     }
 
