@@ -109,7 +109,6 @@ export function LoginModal(props) {
         alert('로그인에 성공했습니다.');
       })
       .catch((err) => {
-        console.error(err);
         console.log(`email = ${userData.email}, password = ${userData.password}`);
 
         if (userData.email === '' && userData.password === '') {
@@ -149,9 +148,7 @@ export function LoginModal(props) {
         setUserLoginError('');
         props.setLoginOn(true);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch((err) => {});
   };
 
   // 모달 관련 팝업 이벤트

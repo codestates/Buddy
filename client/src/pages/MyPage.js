@@ -93,9 +93,7 @@ export function MyPage(props) {
           history.push('/'); // 루트 경로로 이동
           alert('회원탈퇴가 완료되었습니다.');
         })
-        .catch((err) => {
-          console.error(err);
-        });
+        .catch((err) => {});
     }
   };
 
@@ -120,7 +118,6 @@ export function MyPage(props) {
           console.log('사용 가능한 닉네임입니다.');
         })
         .catch((err) => {
-          console.error(err);
           setUserNicknameCheck(2);
           console.log('이미 존재하는 닉네임입니다!');
         });
