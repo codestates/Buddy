@@ -56,6 +56,7 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
+          alert('프로필 이미지가 변경되었습니다.');
           window.location.replace('/mypage'); // mypage 새로고침
         })
         .catch((err) => {});
@@ -85,25 +86,29 @@ export function MyPage(props) {
   };
   //? 업로드 로직 //
 
+  // 회원탈퇴 이벤트
   const handleUnregister = () => {
-    axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'DELETE',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
-    })
-      .then((res) => {
-        console.log(res.data); // 회원정보 삭제 완료
-        props.setLoginOn(false); // 로그인 상태 false
-        history.push('/'); // 루트 경로로 이동
+    if (window.confirm('회원탈퇴를 진행하시겠습니까?')) {
+      axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'DELETE',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+        withCredentials: true,
       })
-      .catch((err) => {
-        console.error(err);
-      });
+        .then((res) => {
+          console.log(res.data); // 회원정보 삭제 완료
+          props.setLoginOn(false); // 로그인 상태 false
+          history.push('/'); // 루트 경로로 이동
+          alert('회원탈퇴가 완료되었습니다.');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   };
 
   // 닉네임 입력 상태관리
@@ -115,27 +120,29 @@ export function MyPage(props) {
 
   // 닉네임 체크 이벤트 함수
   const handleCheckNickname = () => {
-    axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
-      method: 'POST',
-      data: { nickname: userNickname },
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
-    })
-      .then((res) => {
-        console.log(res.data);
-        setUserNicknameCheck(1);
-        console.log('사용 가능한 닉네임입니다.');
+    if (userNickname !== '') {
+      axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
+        method: 'POST',
+        data: { nickname: userNickname },
+        headers: {
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+        withCredentials: true,
       })
-      .catch((err) => {
-        console.error(err);
-        setUserNicknameCheck(2);
-        console.log('이미 존재하는 닉네임입니다!');
-      });
+        .then((res) => {
+          console.log(res.data);
+          setUserNicknameCheck(1);
+          console.log('사용 가능한 닉네임입니다.');
+        })
+        .catch((err) => {
+          console.error(err);
+          setUserNicknameCheck(2);
+          console.log('이미 존재하는 닉네임입니다!');
+        });
+    }
   };
 
   // 닉네임 변경 이벤트 함수
@@ -160,6 +167,7 @@ export function MyPage(props) {
         .then((res) => {
           console.log(res.data);
           window.location.replace('/mypage'); // mypage 새로고침
+          alert('닉네임이 변경되었습니다.');
         })
         .catch((err) => {});
     } else {
@@ -180,7 +188,7 @@ export function MyPage(props) {
 
   // 비밀번호 변경 이벤트 함수
   const handleModifyPassword = () => {
-    if (userPassword === userPasswordCheck) {
+    if (userPassword === userPasswordCheck && userPassword !== '') {
       axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
         method: 'PUT',
         data: {
@@ -199,6 +207,7 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
+          alert('비밀번호가 변경되었습니다.');
           window.location.replace('/mypage'); // mypage 새로고침
         })
         .catch((err) => {});

@@ -49,6 +49,7 @@ export function LoginModal(props) {
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
+          alert('로그인에 성공했습니다.');
         })
         .catch((err) => {});
     }
@@ -74,6 +75,7 @@ export function LoginModal(props) {
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
+          alert('로그인에 성공했습니다.');
         })
         .catch((err) => {});
     }
@@ -111,6 +113,7 @@ export function LoginModal(props) {
         props.setLoginOn(true);
         props.setModalOn(false);
         props.accessTokenCheck();
+        alert('로그인에 성공했습니다.');
       })
       .catch((err) => {
         console.error(err);
