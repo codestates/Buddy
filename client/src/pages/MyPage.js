@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/MyPage.css';
-import { PASSWORD_REGEXP } from '../constants/constants';
 import dotenv from 'dotenv';
 import AWS from 'aws-sdk';
+import { PASSWORD_REGEXP, AXIOS_DEFAULT_HEADER } from '../constants/constants';
+import '../styles/MyPage.css';
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -46,12 +46,7 @@ export function MyPage(props) {
           profile_image: `${process.env.REACT_APP_S3_IMAGE_URL}/${selectedFile.name}`,
           state_message: props.userInfo.state_message,
         },
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'PUT',
-          'Access-Control-Allow-Credentials': 'true',
-        },
+        headers: AXIOS_DEFAULT_HEADER,
         withCredentials: true,
       })
         .then((res) => {
@@ -91,12 +86,7 @@ export function MyPage(props) {
     if (window.confirm('회원탈퇴를 진행하시겠습니까?')) {
       axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
         method: 'DELETE',
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'DELETE',
-          'Access-Control-Allow-Credentials': 'true',
-        },
+        headers: AXIOS_DEFAULT_HEADER,
         withCredentials: true,
       })
         .then((res) => {
@@ -124,12 +114,7 @@ export function MyPage(props) {
       axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
         method: 'POST',
         data: { nickname: userNickname },
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST',
-          'Access-Control-Allow-Credentials': 'true',
-        },
+        headers: AXIOS_DEFAULT_HEADER,
         withCredentials: true,
       })
         .then((res) => {
@@ -156,12 +141,7 @@ export function MyPage(props) {
           profile_image: props.userInfo.profile_image,
           state_message: props.userInfo.state_message,
         },
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'PUT',
-          'Access-Control-Allow-Credentials': 'true',
-        },
+        headers: AXIOS_DEFAULT_HEADER,
         withCredentials: true,
       })
         .then((res) => {
@@ -197,12 +177,7 @@ export function MyPage(props) {
           state_message: props.userInfo.state_message,
           nickname: props.userInfo.nickname,
         },
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'PUT',
-          'Access-Control-Allow-Credentials': 'true',
-        },
+        headers: AXIOS_DEFAULT_HEADER,
         withCredentials: true,
       })
         .then((res) => {
