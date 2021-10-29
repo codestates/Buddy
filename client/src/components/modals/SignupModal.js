@@ -18,6 +18,18 @@ export function SignupModal(props) {
 
   const history = useHistory();
 
+  // 회원가입 입력창 state 초기화
+  const resetSignupInput = () => {
+    setSignupUserEmail('');
+    setSignupUserEmailCheck(0);
+    setSignupUserEmailCode('');
+    setSignupUserEmailCodeCheck(0);
+    setSignupUserPassword('');
+    setSignupUserPasswordValid('');
+    setSignupUserNickname('');
+    setSignupUserNicknameCheck(0);
+  };
+
   // userinfo 값이 바뀌면 signup 진행
   useEffect(() => {
     if (
@@ -37,14 +49,7 @@ export function SignupModal(props) {
         .then((res) => {
           console.log(res.data);
           props.setSignupModalOn(false);
-          setSignupUserEmail('');
-          setSignupUserEmailCheck(0);
-          setSignupUserEmailCode('');
-          setSignupUserEmailCodeCheck(0);
-          setSignupUserPassword('');
-          setSignupUserPasswordValid('');
-          setSignupUserNickname('');
-          setSignupUserNicknameCheck(0);
+          resetSignupInput();
           alert('회원가입이 완료되었습니다.');
           history.push('/');
         })
@@ -65,14 +70,7 @@ export function SignupModal(props) {
       props.setSignupModalOn(true);
     } else {
       props.setSignupModalOn(false);
-      setSignupUserEmail('');
-      setSignupUserEmailCheck(0);
-      setSignupUserEmailCode('');
-      setSignupUserEmailCodeCheck(0);
-      setSignupUserPassword('');
-      setSignupUserPasswordValid('');
-      setSignupUserNickname('');
-      setSignupUserNicknameCheck(0);
+      resetSignupInput();
       setSignupUserGender('MALE');
     }
   };
