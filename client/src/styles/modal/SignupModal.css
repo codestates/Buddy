@@ -81,6 +81,38 @@
   font-size: 14px;
 }
 
+/* 이메일 인증번호 */
+.signup__emailcheck__wrappers {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 400px;
+  margin-left: 90px;
+  margin-bottom: -5px;
+}
+
+.signup__emailcheck__container {
+  display: flex;
+  align-items: center;
+}
+
+.signup__emailcheck__btn {
+  border: none;
+  margin-left: 20px;
+  border-radius: 20px;
+  width: 80px;
+  height: 20px;
+  font-size: 13px;
+  background-color: #22cc88;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
+.signup__emailcheck__btn:hover {
+  background-color: #27e99b;
+}
+
 /* 회원가입 컨텐츠 이메일, 비번 입력 input */
 .signup__input {
   outline: none;
