@@ -50,9 +50,7 @@ function App() {
         setModalOn(false);
         setLoginOn(true);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch((err) => {});
   };
 
   return (
