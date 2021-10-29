@@ -25,14 +25,14 @@ export function Introduce() {
       {/* 랜딩 페이지 소개  */}
       <div id="landing__introduce">
         <div id="introduce__wrapper" data-aos="fade-right" data-aos-duration="1200" data-aos-easing="ease">
-          <div id="introduce__image">
-            <img src="images/introduce_img.png" alt="introduce_image" />
-          </div>
           <div id="introduce__text">
-            <h1>심심한 날 익명의 친구들과 대화를 나누고 싶으신가요?</h1>
+            <h1>혼자 부담 없이 얘기하고 싶은 친구를 찾고 계시나요?</h1>
             <span>버디(Buddy)는 다양한 주제의 챗봇과 익명의 친구들과 대화할 수 있는 채팅방이 준비되어 있습니다.</span>
             <br />
             <span>일상의 무료함을 달래고 싶을 땐 저 버디(Buddy)를 찾아주세요!</span>
+          </div>
+          <div id="introduce__image">
+            <img src="images/introduce_img.png" alt="introduce_image" />
           </div>
         </div>
       </div>
