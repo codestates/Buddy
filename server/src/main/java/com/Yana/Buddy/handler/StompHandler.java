@@ -38,6 +38,7 @@ public class StompHandler implements ChannelInterceptor {
             log.info("CONNECT -> JWT TOKEN : {}", token);
             tokenService.checkJwtToken(token);
              */
+            log.info("CONNECT : 채팅방 연결됨 (JWT token 없이 단순 검증 로직)");
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             /*
             header 정보에서 구독 destination 정보를 얻고 roomId 추출
