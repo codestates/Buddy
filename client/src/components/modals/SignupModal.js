@@ -8,7 +8,7 @@ export function SignupModal(props) {
   const [signupUserEmail, setSignupUserEmail] = useState(''); // 이메일
   const [signupUserEmailCheck, setSignupUserEmailCheck] = useState(0); // 이메일 중복 체크
   const [signupUserEmailCode, setSignupUserEmailCode] = useState(''); // 이메일 인증 코드
-  const [signupUserEmailCodeCheck, setSignupUserEmailCodeCheck] = useState(0); // 이메일 인증 코드
+  const [signupUserEmailCodeCheck, setSignupUserEmailCodeCheck] = useState(0); // 이메일 인증 코드 체크
   const [signupUserPassword, setSignupUserPassword] = useState(''); // 비밀번호
   const [signupUserPasswordValid, setSignupUserPasswordValid] = useState(''); // 비밀번호 재입력
   const [signupUserNickname, setSignupUserNickname] = useState(''); // 닉네임
