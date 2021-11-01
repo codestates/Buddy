@@ -18,6 +18,9 @@ public class WebSecurity implements WebMvcConfigurer {
                         "https://www.googleapis.com",
                         "https://kauth.kakao.com"
                 )
+                .allowCredentials(true)
+                .allowedHeaders("*")
+                .allowedMethods("GET", "POST", "DELETE", "PUT")
                 .exposedHeaders("typ", "JWT");
     }
 

@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static javax.persistence.EnumType.*;
 
 @Entity
@@ -37,6 +40,9 @@ public class User extends BaseEntity {
 
     @Enumerated(STRING)
     private Role authority;
+
+    @OneToMany(mappedBy = "user")
+    private List<ChatMessage> messages = new ArrayList<>();
 
     public User update(String email, String picture) {
         this.email = email;
