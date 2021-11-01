@@ -10,9 +10,9 @@ import javax.annotation.PreDestroy;
 
 /*
 내장 Redis 를 사용하기 위한 클래스
-로컬 환경에서 CRUD 테스트를 하려면 Profile 을 local로 설정해야 함
+로컬 환경에서 CRUD 테스트를 하려면 Profile 을 local 로 설정해야 함
  */
-@Profile("local")
+@Profile("3.34.142.226")
 @Configuration
 public class EmbeddedRedisConfig {
 

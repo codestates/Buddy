@@ -7,12 +7,14 @@ import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -31,8 +33,12 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            String token = accessor.getFirstNativeHeader("token");
+            String token = accessor.getFirstNativeHeader("Authorization");
             log.info("CONNECT -> JWT TOKEN : {}", token);
+            if (StringUtils.hasText(token) && token.startsWith("Bearer")) {
+                token = tokenService.extractToken(token);
+            }
+            log.info("Parsed Token : {}", token);
             tokenService.checkJwtToken(token);
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             /*
