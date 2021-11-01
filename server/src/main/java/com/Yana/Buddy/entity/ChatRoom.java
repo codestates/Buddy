@@ -3,6 +3,7 @@ package com.Yana.Buddy.entity;
 import com.Yana.Buddy.dto.ChatRoomRequestDto;
 import com.Yana.Buddy.service.UserService;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class ChatRoom extends BaseEntity {
 
     @Id @GeneratedValue
@@ -22,7 +24,7 @@ public class ChatRoom extends BaseEntity {
 
     private String subject;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
