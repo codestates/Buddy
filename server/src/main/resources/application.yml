@@ -15,8 +15,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   redis:
-    host: 127.0.0.1
+    host: 3.34.142.226
     post: 6379
+    password: buddy1357
 
   config:
     domain: https://yana-buddy.com/
