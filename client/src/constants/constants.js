@@ -6,3 +6,10 @@ export const EMAIL_REGEXP = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?
 
 // 휴대폰번호 정규식
 export const MOBILE_REGEXP = /^\d{3}-\d{3,4}-\d{4}$/;
+
+// axios 기본 헤더
+export const AXIOS_DEFAULT_HEADER = {
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': 'true',
+};

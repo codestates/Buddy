@@ -12,8 +12,10 @@ import { DemoPage } from './pages/DemoPage';
 import ScrollToTop from './utils/ScrollToTop';
 import { MyPage } from './pages/MyPage';
 import { Cookies } from 'react-cookie';
+import { AXIOS_DEFAULT_HEADER } from './constants/constants';
 import axios from 'axios';
 
+// 도메인간 쿠키 전송을 하기 위해서는 true로 해야 함.
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -36,13 +38,7 @@ function App() {
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
     axios(`${process.env.REACT_APP_API_URL}/token_check`, {
       method: 'GET',
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
+      headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
@@ -54,9 +50,7 @@ function App() {
         setModalOn(false);
         setLoginOn(true);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch((err) => {});
   };
 
   return (

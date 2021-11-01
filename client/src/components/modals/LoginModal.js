@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
 import axios from 'axios';
-import '../../styles/modal/LoginModal.css';
 import dotenv from 'dotenv';
 import { SignupModal } from './SignupModal';
-import { Cookies } from 'react-cookie';
-
-axios.defaults.withCredentials = true;
+import { AXIOS_DEFAULT_HEADER } from '../../constants/constants';
+import '../../styles/modal/LoginModal.css';
 
 // .env 환경변수 사용
 dotenv.config();
@@ -98,13 +97,7 @@ export function LoginModal(props) {
     await axios(`${process.env.REACT_APP_API_URL}/login`, {
       method: 'POST',
       data: userData,
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
+      headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
         console.log(res.data); // accessToken (클라이언트에 따로 저장)
@@ -116,7 +109,6 @@ export function LoginModal(props) {
         alert('로그인에 성공했습니다.');
       })
       .catch((err) => {
-        console.error(err);
         console.log(`email = ${userData.email}, password = ${userData.password}`);
 
         if (userData.email === '' && userData.password === '') {
@@ -140,13 +132,7 @@ export function LoginModal(props) {
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
     axios(`${process.env.REACT_APP_API_URL}/token_check`, {
       method: 'GET',
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
+      headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
@@ -162,9 +148,7 @@ export function LoginModal(props) {
         setUserLoginError('');
         props.setLoginOn(true);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch((err) => {});
   };
 
   // 모달 관련 팝업 이벤트
