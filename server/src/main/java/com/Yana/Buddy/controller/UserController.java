@@ -7,6 +7,7 @@ import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +20,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(
-        origins = "https://yana-buddy.com, " +
-                "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com, " +
-                "https://accounts.google.com, https://www.googleapis.com, " +
-                "https://kauth.kakao.com",
-        allowedHeaders = "*",
-        allowCredentials = "true"
-)
 public class UserController {
 
     private final UserService userService;
