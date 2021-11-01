@@ -33,13 +33,11 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            String token = accessor.getFirstNativeHeader("Authorization");
+            /* JWT 토큰 검증 로직이 제대로 작동하지 않아서 우선 채팅 관련 나머지 기능을 구현한 이후 다시 검증 로직 작성 예정
+            String token = accessor.getFirstNativeHeader("token");
             log.info("CONNECT -> JWT TOKEN : {}", token);
-            if (StringUtils.hasText(token) && token.startsWith("Bearer")) {
-                token = tokenService.extractToken(token);
-            }
-            log.info("Parsed Token : {}", token);
             tokenService.checkJwtToken(token);
+             */
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             /*
             header 정보에서 구독 destination 정보를 얻고 roomId 추출
