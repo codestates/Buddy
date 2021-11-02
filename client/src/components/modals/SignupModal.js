@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { PASSWORD_REGEXP, EMAIL_REGEXP, AXIOS_DEFAULT_HEADER } from '../../constants/constants';
 import '../../styles/modal/SignupModal.css';
-import dotenv from 'dotenv';
-import { PASSWORD_REGEXP, EMAIL_REGEXP } from '../../constants/constants';
 
 export function SignupModal(props) {
   const [signupUserEmail, setSignupUserEmail] = useState(''); // 이메일
   const [signupUserEmailCheck, setSignupUserEmailCheck] = useState(0); // 이메일 중복 체크
   const [signupUserEmailCode, setSignupUserEmailCode] = useState(''); // 이메일 인증 코드
-  const [signupUserEmailCodeCheck, setSignupUserEmailCodeCheck] = useState(0); // 이메일 인증 코드
+  const [signupUserEmailCodeCheck, setSignupUserEmailCodeCheck] = useState(0); // 이메일 인증 코드 체크
   const [signupUserPassword, setSignupUserPassword] = useState(''); // 비밀번호
   const [signupUserPasswordValid, setSignupUserPasswordValid] = useState(''); // 비밀번호 재입력
   const [signupUserNickname, setSignupUserNickname] = useState(''); // 닉네임
@@ -32,33 +31,35 @@ export function SignupModal(props) {
       axios(`${process.env.REACT_APP_API_URL}/signup`, {
         method: 'POST',
         data: signupUserinfo,
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST',
-          'Access-Control-Allow-Credentials': 'true',
-        },
-        withCredentials: true,
+        headers: AXIOS_DEFAULT_HEADER,
       })
         .then((res) => {
           console.log(res.data);
           props.setSignupModalOn(false);
-          setSignupUserEmail('');
-          setSignupUserEmailCheck(0);
-          setSignupUserEmailCode('');
-          setSignupUserEmailCodeCheck(0);
-          setSignupUserPassword('');
-          setSignupUserPasswordValid('');
-          setSignupUserNickname('');
-          setSignupUserNicknameCheck(0);
+          resetSignupInput();
           alert('회원가입이 완료되었습니다.');
           history.push('/');
         })
-        .catch((err) => {
-          console.error(err);
-        });
+        .catch((err) => {});
     }
   }, [signupUserinfo]);
+
+  // 회원가입 입력창 state 초기화
+  const resetSignupInput = () => {
+    setSignupUserEmail('');
+    setSignupUserEmailCheck(0);
+    setSignupUserEmailCode('');
+    setSignupUserEmailCodeCheck(0);
+    setSignupUserPassword('');
+    setSignupUserPasswordValid('');
+    setSignupUserNickname('');
+    setSignupUserNicknameCheck(0);
+  };
+
+  // 모달창 끄기
+  const handleModalOff = () => {
+    props.setSignupModalOn(false);
+  };
 
   // 회원 가입 모달창 이벤트
   const togglePopup = () => {
@@ -66,14 +67,7 @@ export function SignupModal(props) {
       props.setSignupModalOn(true);
     } else {
       props.setSignupModalOn(false);
-      setSignupUserEmail('');
-      setSignupUserEmailCheck(0);
-      setSignupUserEmailCode('');
-      setSignupUserEmailCodeCheck(0);
-      setSignupUserPassword('');
-      setSignupUserPasswordValid('');
-      setSignupUserNickname('');
-      setSignupUserNicknameCheck(0);
+      resetSignupInput();
       setSignupUserGender('MALE');
     }
   };
@@ -98,13 +92,7 @@ export function SignupModal(props) {
       axios(`${process.env.REACT_APP_API_URL}/email_check`, {
         method: 'POST',
         data: { email: signupUserEmail },
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST',
-          'Access-Control-Allow-Credentials': 'true',
-        },
-        withCredentials: true,
+        headers: AXIOS_DEFAULT_HEADER,
       })
         .then((res) => {
           console.log(res.data);
@@ -115,23 +103,14 @@ export function SignupModal(props) {
           axios(`${process.env.REACT_APP_API_URL}/email_confirm`, {
             method: 'POST',
             data: { email: signupUserEmail },
-            headers: {
-              'Access-Control-Allow-Headers': 'Content-Type',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'POST',
-              'Access-Control-Allow-Credentials': 'true',
-            },
-            withCredentials: true,
+            headers: AXIOS_DEFAULT_HEADER,
           })
             .then((res) => {
               console.log(res.data);
             })
-            .catch((err) => {
-              console.error(err);
-            });
+            .catch((err) => {});
         })
         .catch((err) => {
-          console.error(err);
           setSignupUserEmailCheck(2);
           console.log('이미 존재하는 이메일입니다!');
         });
@@ -144,13 +123,7 @@ export function SignupModal(props) {
     axios(`${process.env.REACT_APP_API_URL}/email_code_check`, {
       method: 'POST',
       data: { code: signupUserEmailCode },
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
+      headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
         console.log(res.data);
@@ -158,7 +131,6 @@ export function SignupModal(props) {
         console.log('이메일 코드가 일치합니다.');
       })
       .catch((err) => {
-        console.error(err);
         setSignupUserEmailCodeCheck(2);
         console.log('이메일 코드가 일치하지 않습니다.');
       });
@@ -188,13 +160,7 @@ export function SignupModal(props) {
       axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
         method: 'POST',
         data: { nickname: signupUserNickname },
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST',
-          'Access-Control-Allow-Credentials': 'true',
-        },
-        withCredentials: true,
+        headers: AXIOS_DEFAULT_HEADER,
       })
         .then((res) => {
           console.log(res.data);
@@ -202,7 +168,6 @@ export function SignupModal(props) {
           console.log('사용 가능한 닉네임입니다.');
         })
         .catch((err) => {
-          console.error(err);
           setSignupUserNicknameCheck(2);
           console.log('이미 존재하는 닉네임입니다!');
         });
@@ -298,9 +263,9 @@ export function SignupModal(props) {
               ) : null}
               <div className="signup__error">
                 {signupUserEmailCodeCheck === 1 ? (
-                  <span className="signup__correct">이메일 인증코드가 일치합니다.</span>
+                  <span className="signup__emailcode__correct">이메일 인증코드가 일치합니다.</span>
                 ) : signupUserEmailCodeCheck === 2 ? (
-                  <span className="signup__correct" style={{ color: 'red' }}>
+                  <span className="signup__emailcode__correct" style={{ color: 'red' }}>
                     이메일 인증코드가 일치하지 않습니다.
                   </span>
                 ) : null}
@@ -360,7 +325,7 @@ export function SignupModal(props) {
                   ></input>
                 </fieldset>
                 <button className="signup__input__btn" onClick={handleNicknameValidCheck}>
-                  중복검사
+                  닉네임인증
                 </button>
               </div>
               <div className="signup__error">
@@ -393,6 +358,20 @@ export function SignupModal(props) {
                   />
                   여자
                 </fieldset>
+              </div>
+              <div id="signup__term__agree">
+                <span>
+                  회원가입 버튼을 클릭하면
+                  <br /> 서비스{' '}
+                  <Link className="signup__term__link" to="/term" onClick={handleModalOff}>
+                    약관
+                  </Link>{' '}
+                  및{' '}
+                  <Link className="signup__term__link" to="/privacy" onClick={handleModalOff}>
+                    개인정보 취급 방침
+                  </Link>
+                  에 동의하게 됩니다.
+                </span>
               </div>
               <div id="signup__btn">
                 <button className="signup__btn__contents" onClick={handleSignup}>

@@ -12,5 +12,6 @@ public class ChatMessageRequestDto {
     private String sender;
     private String message;
     private String createdAt;
+    private int userCount;
 
 }
