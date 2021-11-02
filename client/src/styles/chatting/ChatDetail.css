@@ -1,0 +1,26 @@
+.chat__detail {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(78, 194, 126);
+  width: 70%;
+  height: 700px;
+}
+
+.chat__container {
+  background-color: rgb(78, 194, 126);
+  height: 95%;
+}
+
+.chat__log {
+  border: 1px solid black;
+}
+
+.chat__input {
+  background-color: gray;
+  height: 5%;
+  border: 1px solid black;
+}
+
+.chat__input::placeholder {
+  color: rgb(201, 201, 201);
+}
