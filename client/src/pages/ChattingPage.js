@@ -4,6 +4,8 @@ import { Cookies } from 'react-cookie';
 import ChatDetail from '../components/chatting/ChatDetail';
 import ChatList from '../components/chatting/ChatList';
 import dotenv from 'dotenv';
+import { AXIOS_DEFAULT_HEADER } from './constants/constants';
+import axios from 'axios';
 import '../styles/ChattingPage.css';
 
 // 소켓 통신
@@ -37,6 +39,15 @@ export function ChattingPage(props) {
   // 렌더링 될 때마다 연결,구독 다른 방으로 옮길 때 연결, 구독 해제
   useEffect(() => {
     wsConnectSubscribe();
+
+    axios(`${process.env.REACT_APP_API_URL}/chat/room/${roomId}`, {
+      method: 'GET',
+      headers: AXIOS_DEFAULT_HEADER,
+    })
+      .then((res) => {
+        setRoomid(res.data.id);
+      })
+      .catch((err) => {});
   }, []);
 
   // 웹소켓 연결, 구독
@@ -48,7 +59,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/rooms/${roomId}`,
+            `/sub/chat/room/${roomId}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
             },
