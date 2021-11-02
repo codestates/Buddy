@@ -59,7 +59,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/room/3`,
+            `/sub/chat/message`,
             (data) => {
               const newMessage = JSON.parse(data.body);
             },
