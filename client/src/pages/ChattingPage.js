@@ -15,11 +15,14 @@ dotenv.config();
 
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
-  // 상태관리(chatdetail.js)
+  // 상태관리(chatdetail)
   const [chattingMessage, setChattingMessage] = useState(''); // 채팅 메시지
 
-  // 상태관리(chatlist.js)
+  // 상태관리(chatlist)
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
+
+  // 상태관리(ChattingPage)
+  const [roomId, setRoomid] = useState(1); // 방 번호
 
   // 소켓 통신 객체
   const sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
@@ -45,7 +48,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/rooms/2`,
+            `/sub/chat/rooms/${roomId}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
             },
@@ -92,7 +95,7 @@ export function ChattingPage(props) {
         createdAt: '',
       };
 
-      ws.send('/pub/chat', { token: token }, JSON.stringify(data));
+      ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
 
       console.log(ws.ws.readyState);
     } catch (error) {
