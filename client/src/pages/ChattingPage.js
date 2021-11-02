@@ -3,11 +3,15 @@ import { useHistory } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import ChatDetail from '../components/chatting/ChatDetail';
 import ChatList from '../components/chatting/ChatList';
+import dotenv from 'dotenv';
 import '../styles/ChattingPage.css';
 
 // 소켓 통신
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+
+// .env 환경변수 사용
+dotenv.config();
 
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
@@ -18,7 +22,7 @@ export function ChattingPage(props) {
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
 
   // 소켓 통신 객체
-  const sock = new SockJS('http://localhost:8080/chatting');
+  const sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
   const ws = Stomp.over(sock);
 
   const history = useHistory();
