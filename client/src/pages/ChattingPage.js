@@ -11,10 +11,10 @@ import SockJS from 'sockjs-client';
 
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
-  // chatdetail.js
+  // 상태관리(chatdetail.js)
   const [chattingMessage, setChattingMessage] = useState(''); // 채팅 메시지
 
-  // chatlist.js
+  // 상태관리(chatlist.js)
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
 
   // 소켓 통신 객체
@@ -82,8 +82,10 @@ export function ChattingPage(props) {
       const data = {
         type: 'TALK',
         roomId: 2,
+        chatUserId: 1,
         sender: 'aaa',
         message: 'bbb',
+        createdAt: '',
       };
 
       ws.send('/pub/chat', { token: token }, JSON.stringify(data));
@@ -102,6 +104,7 @@ export function ChattingPage(props) {
           <ChatList chattingLog={chattingLog} setChattingLog={setChattingLog} />
           <ChatDetail chattingMessage={chattingMessage} setChattingMessage={setChattingMessage} />
         </section>
+        <button onClick={sendMessage}>메세지 보내기</button>
       </div>
     </>
   );
