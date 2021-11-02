@@ -16,6 +16,7 @@
   align-items: center;
   justify-content: space-between;
   width: 60%;
+  margin-left: 55px;
 }
 
 .header__link > img {
