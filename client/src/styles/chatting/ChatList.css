@@ -1,0 +1,19 @@
+.chat__list {
+  background-color: red;
+  width: 30%;
+  height: 700px;
+}
+
+.chat__list > ul > li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  background-color: gray;
+}
+
+.chat__list > ul > li {
+  border: 1px solid black;
+  height: 50px;
+}
