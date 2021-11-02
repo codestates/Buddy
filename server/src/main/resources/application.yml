@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    include: ecc
+
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -13,11 +16,6 @@ spring:
     username: admin
     password: buddy1357
     driver-class-name: com.mysql.cj.jdbc.Driver
-
-  redis:
-    host: 3.34.142.226
-    post: 6379
-    password: buddy1357
 
   config:
     domain: https://yana-buddy.com/

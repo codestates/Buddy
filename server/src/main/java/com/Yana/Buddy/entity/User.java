@@ -41,9 +41,6 @@ public class User extends BaseEntity {
     @Enumerated(STRING)
     private Role authority;
 
-    @OneToMany(mappedBy = "user")
-    private List<ChatMessage> messages = new ArrayList<>();
-
     public User update(String email, String picture) {
         this.email = email;
         this.profileImage = picture;

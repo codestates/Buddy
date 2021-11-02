@@ -21,15 +21,17 @@ public class ChatMessage {
     }
 
     @Id @GeneratedValue
-    @Column(name = "chat_message_id")
+    @Column(name = "message_id")
     private Long id;
 
     private MessageType type;
 
     private String roomId;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    private int userCount;
+
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "user_id_message")
     private User user;
 
     //Redis Message Listener 로 웹 소켓을 통해 바로 채팅창에 메시지를 전달해주기 위한 별도의 컬럼들
