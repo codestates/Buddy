@@ -4,7 +4,7 @@ import { Cookies } from 'react-cookie';
 import ChatDetail from '../components/chatting/ChatDetail';
 import ChatList from '../components/chatting/ChatList';
 import dotenv from 'dotenv';
-import { AXIOS_DEFAULT_HEADER } from './constants/constants';
+import { AXIOS_DEFAULT_HEADER } from '../constants/constants';
 import axios from 'axios';
 import '../styles/ChattingPage.css';
 
