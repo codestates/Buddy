@@ -1,13 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
+import ChatDetail from '../components/chatting/ChatDetail';
+import ChatList from '../components/chatting/ChatList';
+import '../styles/ChattingPage.css';
 
 // 소켓 통신
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 
 // 채팅 방 컴포넌트
-export function ChatingPage(props) {
+export function ChattingPage(props) {
+  // 상태관리(chatdetail.js)
+  const [chattingMessage, setChattingMessage] = useState(''); // 채팅 메시지
+
+  // 상태관리(chatlist.js)
+  const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
+
   // 소켓 통신 객체
   const sock = new SockJS('http://localhost:8080/chatting');
   const ws = Stomp.over(sock);
@@ -73,8 +82,10 @@ export function ChatingPage(props) {
       const data = {
         type: 'TALK',
         roomId: 2,
+        chatUserId: 1,
         sender: 'aaa',
         message: 'bbb',
+        createdAt: '',
       };
 
       ws.send('/pub/chat', { token: token }, JSON.stringify(data));
@@ -88,10 +99,13 @@ export function ChatingPage(props) {
 
   return (
     <>
-      채팅 페이지
-      <br />
-      <br />
-      <button onClick={sendMessage}>메시지 보내기</button>
+      <div className="chatting__page">
+        <section className="chatting__wrapper">
+          <ChatList chattingLog={chattingLog} setChattingLog={setChattingLog} />
+          <ChatDetail chattingMessage={chattingMessage} setChattingMessage={setChattingMessage} />
+        </section>
+        <button onClick={sendMessage}>메세지 보내기</button>
+      </div>
     </>
   );
 }
