@@ -38,13 +38,9 @@ export function ChattingPage(props) {
 
   // 렌더링 될 때마다 연결,구독 다른 방으로 옮길 때 연결, 구독 해제
   useEffect(() => {
-    // 소켓 통신 객체
-    const sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
-    const ws = Stomp.over(sock);
-
     wsConnectSubscribe();
 
-    axios(`${process.env.REACT_APP_API_URL}/chat/room/3`, {
+    axios(`http://localhost:8080/chat/room/3`, {
       method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
     })
@@ -63,7 +59,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/rooms`,
+            `/sub/chat/rooms/${roomId}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
             },
