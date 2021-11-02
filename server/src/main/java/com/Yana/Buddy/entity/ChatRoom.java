@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.*;
 public class ChatRoom extends BaseEntity {
 
     @Id @GeneratedValue
-    @Column(name = "chat_room_id")
+    @Column(name = "room_id")
     private Long id;
 
     private String name;
@@ -25,7 +25,7 @@ public class ChatRoom extends BaseEntity {
     private String subject;
 
     @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id_room")
     private User user;
 
     public ChatRoom(ChatRoomRequestDto dto, UserService userService) {
