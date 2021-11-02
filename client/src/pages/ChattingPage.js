@@ -59,7 +59,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/rooms/${roomId}`,
+            `/sub/chat/rooms`,
             (data) => {
               const newMessage = JSON.parse(data.body);
             },
@@ -99,7 +99,7 @@ export function ChattingPage(props) {
       // send할 데이터
       const data = {
         type: 'TALK',
-        roomId: 3,
+        roomId: 'null',
         chatUserId: props.userInfo.id,
         sender: props.userInfo.nickname,
         message: 'bbb',
