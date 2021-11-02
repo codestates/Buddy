@@ -88,7 +88,7 @@ export function ChattingPage(props) {
       // send할 데이터
       const data = {
         type: 'TALK',
-        roomId: 2,
+        roomId: roomId,
         chatUserId: 1,
         sender: 'aaa',
         message: 'bbb',
