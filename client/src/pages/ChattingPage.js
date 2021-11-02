@@ -40,12 +40,12 @@ export function ChattingPage(props) {
   useEffect(() => {
     wsConnectSubscribe();
 
-    axios(`${process.env.REACT_APP_API_URL}/chat/room/${roomId}`, {
+    axios(`${process.env.REACT_APP_API_URL}/chat/room/3`, {
       method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
-        setRoomid(res.data.id);
+        setRoomid(3);
       })
       .catch((err) => {});
   }, []);
@@ -59,7 +59,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/room/${roomId}`,
+            `/sub/chat/room/3`,
             (data) => {
               const newMessage = JSON.parse(data.body);
             },
@@ -99,7 +99,7 @@ export function ChattingPage(props) {
       // send할 데이터
       const data = {
         type: 'TALK',
-        roomId: roomId,
+        roomId: 3,
         chatUserId: props.userInfo.id,
         sender: props.userInfo.nickname,
         message: 'bbb',
