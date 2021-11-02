@@ -89,8 +89,8 @@ export function ChattingPage(props) {
       const data = {
         type: 'TALK',
         roomId: roomId,
-        chatUserId: 1,
-        sender: 'aaa',
+        chatUserId: props.userInfo.id,
+        sender: props.userInfo.nickname,
         message: 'bbb',
         createdAt: '',
       };
