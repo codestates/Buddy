@@ -24,8 +24,6 @@ public class ChatRoom extends BaseEntity {
 
     private String subject;
 
-    private int userCount;
-
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "user_id_room")
     private User user;

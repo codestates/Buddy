@@ -28,8 +28,6 @@ public class ChatMessage {
 
     private String roomId;
 
-    private int userCount;
-
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "user_id_message")
     private User user;
