@@ -7,7 +7,7 @@ import { LandingPage } from './pages/LandingPage';
 import { TermPage } from './pages/TermPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { LoginModal } from './components/modals/LoginModal';
-import { ChatingPage } from './pages/ChatingPage';
+import { ChattingPage } from './pages/ChattingPage';
 import { DemoPage } from './pages/DemoPage';
 import ScrollToTop from './utils/ScrollToTop';
 import { MyPage } from './pages/MyPage';
@@ -78,8 +78,8 @@ function App() {
             <LandingPage />
           </Route>
           <Route exact path="/"></Route>
-          <Route exact path="/chat">
-            <ChatingPage />
+          <Route exact path="/chatting">
+            <ChattingPage />
           </Route>
           <Route exact path="/demo">
             <DemoPage />
