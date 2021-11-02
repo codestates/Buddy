@@ -7,14 +7,12 @@ import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -33,14 +31,11 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            String token = accessor.getFirstNativeHeader("Authorization");
+            String token = accessor.getFirstNativeHeader("token");
             log.info("CONNECT -> JWT TOKEN : {}", token);
-            if (StringUtils.hasText(token) && token.startsWith("Bearer")) {
-                token = tokenService.extractToken(token);
-            }
-            log.info("Parsed Token : {}", token);
-            tokenService.checkJwtToken(token);
-        } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
+        }
+
+        else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             /*
             header 정보에서 구독 destination 정보를 얻고 roomId 추출
             roomId는 URL 통해서 전송되고 있음
@@ -64,7 +59,9 @@ public class StompHandler implements ChannelInterceptor {
                             .build());
 
             log.info("SUBSCRIBED {}, {}", name, roomId);
-        } else if (StompCommand.DISCONNECT == accessor.getCommand()) {
+        }
+
+        else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             //연결 종료된 클라이언트 sessionId 를 통해 채팅방 id 얻기
             String sessionId = (String) message.getHeaders().get("simpSessionId");
             String roomId = chatRoomService.getEnterUserId(sessionId);

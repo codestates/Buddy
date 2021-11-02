@@ -24,8 +24,7 @@ public class ChatRoomController {
     //채팅방 생성
     @PostMapping("/room")
     public ChatRoom createChatRoom(@RequestBody ChatRoomRequestDto dto) {
-        ChatRoom chatRoom = chatRoomService.createChatRoom(dto);
-        return chatRoom;
+        return chatRoomService.createChatRoom(dto);
     }
 
     //채팅방 전체 조회
