@@ -18,43 +18,59 @@ public class ChatRoomService {
     private HashOperations<String, String, String> hashOperations;
 
     private final ChatRoomRepository chatRoomRepository;
-    private final UserService userService;
-    private static final String ENTER_INFO = "ENTER_INFO";
+    public static final String ENTER_INFO = "ENTER_INFO"; //채팅방에 들어간 클라이언트의 sessionId 및 채팅방 id 매핑 정보 저장
+
+    //채팅방 전체 조회
+    public List<ChatRoom> findAllRooms() {
+        return chatRoomRepository.findAll();
+    }
 
     //채팅방 생성
     public ChatRoom createChatRoom(ChatRoomRequestDto dto) {
-        ChatRoom chatRoom = new ChatRoom(dto, userService);
+        ChatRoom chatRoom = ChatRoom.builder()
+                .name(dto.getName())
+                .subject(dto.getSubject())
+                .image(dto.getImage())
+                .build();
         chatRoomRepository.save(chatRoom);
         return chatRoom;
     }
 
-    //전체 채팅방 조회
-    public List<ChatRoom> getAllChatRoom() {
-        return chatRoomRepository.findAllByOrderByCreatedAtDesc();
-    }
-
     //채팅방 주제별 조회
-    public List<ChatRoom> getChatRoomBySubject(String subject) {
+    public List<ChatRoom> findBySubject(String subject) {
         return chatRoomRepository.findBySubject(subject);
     }
 
-    //채팅방 개별 조회
-    public ChatRoom getChatRoom(Long roomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다."));
-        return chatRoom;
+    //채팅방 상세 조회
+    public ChatRoom getRoomInfo(Long roomId) {
+        return chatRoomRepository.findById(roomId).orElseThrow(
+                () -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.")
+        );
     }
 
-    public void setEnterUserInfo(String sessionId, String roomId) {
+    //유저가 입장한 채팅방 id 및 유저 세션 id 정보 저장
+    public void setUserEnterInfo(String sessionId, String roomId) {
         hashOperations.put(ENTER_INFO, sessionId, roomId);
     }
 
-    public String getEnterUserId(String sessionId) {
+    //유저 세션으로 입장해 있는 채팅방 id 조회
+    public String getUserEnterRoomId(String sessionId) {
         return hashOperations.get(ENTER_INFO, sessionId);
     }
 
-    public void removeEnterUserInfo(String sessionId) {
-        hashOperations.delete(ENTER_INFO, sessionId);
+    //유저 세션 정보와 매핑된 채팅방 id 삭제
+    public void removeUserEnterInfo(String sessionID) {
+        hashOperations.delete(ENTER_INFO, sessionID);
+    }
+
+    public ChatRoom testChatRoom(String name) {
+        ChatRoom chatRoom = ChatRoom.Create(name);
+        chatRoomRepository.save(chatRoom);
+        return chatRoom;
+    }
+
+    public ChatRoom getRoomInfoByRoomId(String roomId) {
+        return chatRoomRepository.findByRoomId(roomId);
     }
 
 }
