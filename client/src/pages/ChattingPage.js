@@ -19,6 +19,7 @@ export function ChattingPage(props) {
   // 상태관리(ChatDetail)
   const [chattingMessage, setChattingMessage] = useState(''); // 채팅 메시지
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
+  const [tests, setTests] = useState(''); // 채팅 로그
 
   // 상태관리(ChattingPage)
   const [chatRoomInfo, setChatRoomInfo] = useState([]); // 채팅방 정보
@@ -34,7 +35,7 @@ export function ChattingPage(props) {
   const token = cookies.get('refreshToken');
 
   // 소켓 통신 객체
-  const sock = new SockJS(`http://localhost:8080/chatting`);
+  const sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
   const ws = Stomp.over(sock);
 
   useEffect(() => {
@@ -64,7 +65,7 @@ export function ChattingPage(props) {
       userId: props.userInfo.id,
     };
 
-    axios(`http://localhost:8080/chat/room`, {
+    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
       method: 'POST',
       data: createRoomUserInfo,
       headers: AXIOS_DEFAULT_HEADER,
@@ -80,21 +81,15 @@ export function ChattingPage(props) {
       });
   };
 
-  const handleChattingEnter = (e) => {
-    if (e.key === 'Enter') {
-      setChattingMessage('');
-    }
-  };
-
   // 채팅메시지 value값 저장
   const handleChattingChange = (e) => {
-    props.setChattingMessage(e.target.value);
+    setChattingMessage(e.target.value);
     console.log(chattingMessage);
   };
 
   // 방 목록 받아오기
   const getChattingRoomList = () => {
-    axios(`http://localhost:8080/chat/room`, {
+    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
       method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
     })
@@ -117,6 +112,7 @@ export function ChattingPage(props) {
             `/sub/chat/room/${currentRoomid}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
+              setTests(newMessage.message);
             },
             { token: token }
           );
@@ -126,6 +122,10 @@ export function ChattingPage(props) {
       console.log(error);
     }
   }
+
+  const addMessage = (message) => {
+    setChattingLog(() => [message]);
+  };
 
   // 연결해제, 구독해제
   function wsDisConnectUnsubscribe() {
@@ -141,7 +141,7 @@ export function ChattingPage(props) {
     }
   }
 
-  // 웹소켓이 연결될 때 까지 실행하는 함수
+  // 웹소켓이 연결될 때까지 실행하는 함수
   function waitForConnection(ws, callback) {
     setTimeout(
       function () {
@@ -158,20 +158,29 @@ export function ChattingPage(props) {
   }
 
   // 메시지 보내기
-  function sendMessage() {
-    try {
-      // send할 데이터
-      const data = {
-        type: 'TALK',
-        roomId: currentRoomid,
-        userId: props.userInfo.id,
-        sender: props.userInfo.nickname,
-        message: '메시지를 전송하였습니다.',
-        createdAt: '',
-      };
-      ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
-      console.log(ws.ws.readyState);
-    } catch (error) {}
+  function sendMessage(e) {
+    if (e.key === 'Enter') {
+      try {
+        // send할 데이터
+        const data = {
+          type: 'TALK',
+          roomId: currentRoomid,
+          userId: props.userInfo.id,
+          sender: props.userInfo.nickname,
+          message: chattingMessage,
+          createdAt: '',
+        };
+        waitForConnection(ws, function () {
+          ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
+          console.log(ws.ws.readyState);
+          setChattingMessage('');
+          setChattingLog([...chattingMessage]);
+        });
+      } catch (error) {
+        console.log(error);
+        console.log(ws.ws.readyState);
+      }
+    }
   }
 
   const ChattingList = chattingRoomList.map((ele) => (
@@ -207,23 +216,34 @@ export function ChattingPage(props) {
     <>
       <div className="chatting__page">
         <section className="chatting__wrapper">
-          <ScrollContainer className="chat__list">{ChattingList}</ScrollContainer>
-          <div className="chat__detail">
-            <div className="chat__container">
-              <div className="chat__log">안녕하세요</div>
+          <div>
+            <div className="chat__list__maintitle">Room List</div>
+            <ScrollContainer className="chat__list">{ChattingList}</ScrollContainer>
+            <div className="chat__list__btnlist">
+              <button onClick={handleCreateRoom}>방 만들기</button>
             </div>
-            <input
-              type="text"
-              onKeyPress={handleChattingEnter}
-              onChange={handleChattingChange}
-              value={chattingMessage}
-              className="chat__input"
-              placeholder="메세지를 입력해주세요"
-            ></input>
           </div>
+          {currentRoomid !== '' ? (
+            <div className="chat__detail">
+              <div className="chat__container">
+                <div className="chat__log">채팅로그박스</div>
+                <div>{tests}</div>
+              </div>
+              <input
+                type="text"
+                onKeyPress={sendMessage}
+                onChange={handleChattingChange}
+                value={chattingMessage}
+                className="chat__input"
+                placeholder="메세지를 입력해주세요"
+              ></input>
+            </div>
+          ) : (
+            <div className="chat__detail">
+              <img src="images/chat_main_image.jpg" />
+            </div>
+          )}
         </section>
-        <button onClick={handleCreateRoom}>방 만들기</button>
-        <button onClick={sendMessage}>메시지 보내기</button>
       </div>
     </>
   );
