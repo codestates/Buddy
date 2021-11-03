@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static javax.persistence.EnumType.*;
 import static javax.persistence.FetchType.*;
 
 @Entity
@@ -21,6 +22,7 @@ public class ChatMessage {
         ENTER, QUIT, TALK
     }
 
+    @Enumerated(STRING)
     private MessageType type;
 
     private String sender;
