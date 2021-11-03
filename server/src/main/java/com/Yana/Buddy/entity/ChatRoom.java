@@ -33,10 +33,11 @@ public class ChatRoom implements Serializable {
     private String roomId;
 
     @Builder
-    public ChatRoom(String name, String subject, String image) {
+    public ChatRoom(String name, String subject, String image, String roomId) {
         this.name = name;
         this.subject = subject;
         this.image = image;
+        this.roomId = roomId;
     }
 
     //테스트 전용 (추후 제거 예정)
