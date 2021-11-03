@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
-import dotenv from 'dotenv';
 import { AXIOS_DEFAULT_HEADER } from '../constants/constants';
-import axios from 'axios';
 import ScrollContainer from 'react-indiana-drag-scroll';
+import axios from 'axios';
+import dotenv from 'dotenv';
 import '../styles/ChattingPage.css';
 
 // 소켓 통신
@@ -22,6 +22,7 @@ export function ChattingPage(props) {
 
   // 상태관리(ChattingPage)
   const [chatRoomInfo, setChatRoomInfo] = useState([]); // 채팅방 정보
+  const [currentRoomid, setCurrentRoomId] = useState(''); // 현재 방 id
 
   // 상태관리(ChatList)
   const [chattingRoomList, setChattingRoomList] = useState([]); // 채팅 리스트
@@ -36,14 +37,21 @@ export function ChattingPage(props) {
   const sock = new SockJS(`http://localhost:8080/chatting`);
   const ws = Stomp.over(sock);
 
-  // 렌더링 될 때마다 연결,구독 다른 방으로 옮길 때 연결, 구독 해제
   useEffect(() => {
     wsConnectSubscribe();
     console.log(chatRoomInfo);
-  }, [chatRoomInfo]);
+    return () => {
+      wsDisConnectUnsubscribe();
+    };
+  }, [currentRoomid]);
 
   // 새로고침 시, 방 목록 가져오기
   useEffect(() => {
+    // token이 없으면 로그인 페이지로 이동
+    if (!token) {
+      alert('회원 전용 페이지입니다. 로그인해 주세요.');
+      history.push('/');
+    }
     getChattingRoomList();
   }, []);
 
@@ -106,13 +114,27 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/room/${chatRoomInfo.roomId}`,
+            `/sub/chat/room/${currentRoomid}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
             },
             { token: token }
           );
         }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // 연결해제, 구독해제
+  function wsDisConnectUnsubscribe() {
+    try {
+      ws.disconnect(
+        () => {
+          ws.unsubscribe('sub-0');
+        },
+        { token: token }
       );
     } catch (error) {
       console.log(error);
@@ -138,28 +160,18 @@ export function ChattingPage(props) {
   // 메시지 보내기
   function sendMessage() {
     try {
-      // token이 없으면 로그인 페이지로 이동
-      if (!token) {
-        alert('토큰이 없습니다. 다시 로그인 해주세요.');
-        history.push('/');
-      }
       // send할 데이터
       const data = {
         type: 'TALK',
-        roomId: 'undefined',
-        chatUserId: props.userInfo.id,
+        roomId: currentRoomid,
+        userId: props.userInfo.id,
         sender: props.userInfo.nickname,
-        message: 'bbb',
+        message: '메시지를 전송하였습니다.',
         createdAt: '',
       };
-
       ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
-
       console.log(ws.ws.readyState);
-    } catch (error) {
-      console.log(error);
-      console.log(ws.ws.readyState);
-    }
+    } catch (error) {}
   }
 
   const ChattingList = chattingRoomList.map((ele) => (
@@ -168,6 +180,9 @@ export function ChattingPage(props) {
       to={`/chat?roomid=${ele.roomId}`}
       onClick={() => {
         // 구독 채널 바꾸기
+        setCurrentRoomId(ele.roomId);
+
+        ws.unsubscribe('sub-0');
         ws.subscribe(
           `/sub/chat/room/${ele.roomId}`,
           (data) => {
@@ -178,7 +193,7 @@ export function ChattingPage(props) {
       }}
     >
       <div className="chattingroomlist__image">
-        <img src="images/github_icon.png" />
+        <img src="images/github_icon.png" alt="Chatting Room Image" />
       </div>
       <div className="chattingroomlist__description">
         <span className="chattingroomlist__name">{ele.name}</span>

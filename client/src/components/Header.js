@@ -8,6 +8,9 @@ export default function Header(props) {
 
   const cookies = new Cookies();
 
+  // 토큰
+  const token = cookies.get('refreshToken');
+
   const loginModalOpen = () => {
     props.setModalOn(true);
     console.log(props.modalOn);
@@ -21,6 +24,10 @@ export default function Header(props) {
     props.setUserInfo({});
   };
 
+  const handleOnlyUserError = () => {
+    alert('회원 전용 페이지입니다. 로그인해 주세요.');
+  };
+
   return (
     <div id="header__wrapper">
       <header id="headers">
@@ -30,9 +37,15 @@ export default function Header(props) {
         <nav id="nav">
           <ul id="ul">
             <li>
-              <Link className="header__link" to="/chat">
-                채팅
-              </Link>
+              {!token ? (
+                <Link className="header__link" to="/" onClick={handleOnlyUserError}>
+                  채팅
+                </Link>
+              ) : (
+                <Link className="header__link" to="/chat">
+                  채팅
+                </Link>
+              )}
             </li>
             <li>
               <Link className="header__link" to="/demo">
