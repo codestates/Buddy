@@ -43,7 +43,7 @@ public class ChatMessageController {
 
         ChatMessage message = ChatMessage.builder()
                 .room(chatRoom)
-                .type(dto.getType())
+                .type(ChatMessage.MessageType.valueOf(dto.getType()))
                 .roomId(dto.getRoomId())
                 .sender(dto.getSender())
                 .message(dto.getMessage())
