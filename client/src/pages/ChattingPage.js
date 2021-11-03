@@ -47,6 +47,11 @@ export function ChattingPage(props) {
 
   // 새로고침 시, 방 목록 가져오기
   useEffect(() => {
+    // token이 없으면 로그인 페이지로 이동
+    if (!token) {
+      alert('회원 전용 페이지입니다. 로그인해 주세요.');
+      history.push('/');
+    }
     getChattingRoomList();
   }, []);
 
@@ -155,11 +160,6 @@ export function ChattingPage(props) {
   // 메시지 보내기
   function sendMessage() {
     try {
-      // token이 없으면 로그인 페이지로 이동
-      if (!token) {
-        alert('토큰이 없습니다. 다시 로그인 해주세요.');
-        history.push('/');
-      }
       // send할 데이터
       const data = {
         type: 'TALK',
