@@ -17,14 +17,12 @@ dotenv.config();
 
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
-  // 상태관리(chatdetail)
+  // 상태관리(ChatDetail)
   const [chattingMessage, setChattingMessage] = useState(''); // 채팅 메시지
-
-  // 상태관리(chatlist)
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
 
   // 상태관리(ChattingPage)
-  const [roomId, setRoomid] = useState(1); // 방 번호
+  const [chatRoomInfo, setChatRoomInfo] = useState({}); // 채팅방 정보
 
   const history = useHistory();
   const cookies = new Cookies();
@@ -33,22 +31,14 @@ export function ChattingPage(props) {
   const token = cookies.get('refreshToken');
 
   // 소켓 통신 객체
-  const sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
+  const sock = new SockJS(`http://localhost:8080/chatting`);
   const ws = Stomp.over(sock);
 
   // 렌더링 될 때마다 연결,구독 다른 방으로 옮길 때 연결, 구독 해제
   useEffect(() => {
     wsConnectSubscribe();
-
-    axios(`http://localhost:8080/chat/room/3`, {
-      method: 'GET',
-      headers: AXIOS_DEFAULT_HEADER,
-    })
-      .then((res) => {
-        setRoomid(3);
-      })
-      .catch((err) => {});
-  }, []);
+    console.log(chatRoomInfo);
+  }, [chatRoomInfo]);
 
   // 웹소켓 연결, 구독
   function wsConnectSubscribe() {
@@ -59,7 +49,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/room`,
+            `/sub/chat/room/${chatRoomInfo.roomId}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
             },
@@ -94,12 +84,12 @@ export function ChattingPage(props) {
       // token이 없으면 로그인 페이지로 이동
       if (!token) {
         alert('토큰이 없습니다. 다시 로그인 해주세요.');
-        history.replace('/');
+        history.push('/');
       }
       // send할 데이터
       const data = {
         type: 'TALK',
-        roomId: '',
+        roomId: chatRoomInfo.roomId,
         chatUserId: props.userInfo.id,
         sender: props.userInfo.nickname,
         message: 'bbb',
@@ -120,8 +110,8 @@ export function ChattingPage(props) {
     const createRoomUserInfo = {
       name: '채팅방 테스트',
       image: '#',
-      subject: 'react',
-      userId: 1,
+      subject: '일상생활',
+      userId: props.userInfo.id,
     };
 
     axios(`http://localhost:8080/chat/room`, {
@@ -131,6 +121,9 @@ export function ChattingPage(props) {
     })
       .then((res) => {
         alert('방이 생성되었습니다');
+        console.log(res.data);
+        setChatRoomInfo(res.data);
+        window.location.replace('/chat');
       })
       .catch((err) => {
         alert('방 생성에 실패하였습니다');
@@ -141,7 +134,12 @@ export function ChattingPage(props) {
     <>
       <div className="chatting__page">
         <section className="chatting__wrapper">
-          <ChatList chattingLog={chattingLog} setChattingLog={setChattingLog} />
+          <ChatList
+            chattingLog={chattingLog}
+            setChattingLog={setChattingLog}
+            chatRoomInfo={chatRoomInfo}
+            setChatRoomInfo={setChatRoomInfo}
+          />
           <ChatDetail chattingMessage={chattingMessage} setChattingMessage={setChattingMessage} />
         </section>
         <button onClick={sendMessage}>메세지 보내기</button>
