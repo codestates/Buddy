@@ -39,8 +39,8 @@ public class ChatRoomController {
 
     //채팅방 상세 조회
     @GetMapping("/room/{roomId}")
-    public ChatRoom getRoomDetail(@PathVariable Long roomId) {
-        return chatRoomService.getRoomInfoById(roomId);
+    public ChatRoom getRoomDetail(@PathVariable String roomId) {
+        return chatRoomService.getRoomInfoByRoomId(roomId);
     }
 
     //채팅방 메시지 전체 조회
