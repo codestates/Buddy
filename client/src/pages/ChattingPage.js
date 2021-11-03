@@ -19,6 +19,7 @@ export function ChattingPage(props) {
   // 상태관리(ChatDetail)
   const [chattingMessage, setChattingMessage] = useState(''); // 채팅 메시지
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
+  const [tests, setTests] = useState(''); // 채팅 로그
 
   // 상태관리(ChattingPage)
   const [chatRoomInfo, setChatRoomInfo] = useState([]); // 채팅방 정보
@@ -111,6 +112,7 @@ export function ChattingPage(props) {
             `/sub/chat/room/${currentRoomid}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
+              setTests(newMessage.message);
             },
             { token: token }
           );
@@ -120,6 +122,10 @@ export function ChattingPage(props) {
       console.log(error);
     }
   }
+
+  const addMessage = (message) => {
+    setChattingLog(() => [message]);
+  };
 
   // 연결해제, 구독해제
   function wsDisConnectUnsubscribe() {
@@ -135,7 +141,7 @@ export function ChattingPage(props) {
     }
   }
 
-  // 웹소켓이 연결될 때 까지 실행하는 함수
+  // 웹소켓이 연결될 때까지 실행하는 함수
   function waitForConnection(ws, callback) {
     setTimeout(
       function () {
@@ -164,10 +170,16 @@ export function ChattingPage(props) {
           message: chattingMessage,
           createdAt: '',
         };
-        ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
+        waitForConnection(ws, function () {
+          ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
+          console.log(ws.ws.readyState);
+          setChattingMessage('');
+          setChattingLog([...chattingMessage]);
+        });
+      } catch (error) {
+        console.log(error);
         console.log(ws.ws.readyState);
-        setChattingMessage('');
-      } catch (error) {}
+      }
     }
   }
 
@@ -215,6 +227,7 @@ export function ChattingPage(props) {
             <div className="chat__detail">
               <div className="chat__container">
                 <div className="chat__log">채팅로그박스</div>
+                <div>{tests}</div>
               </div>
               <input
                 type="text"
