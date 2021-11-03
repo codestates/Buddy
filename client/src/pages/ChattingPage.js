@@ -34,7 +34,7 @@ export function ChattingPage(props) {
   const token = cookies.get('refreshToken');
 
   // 소켓 통신 객체
-  const sock = new SockJS(`http://localhost:8080/chatting`);
+  const sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
   const ws = Stomp.over(sock);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export function ChattingPage(props) {
       userId: props.userInfo.id,
     };
 
-    axios(`http://localhost:8080/chat/room`, {
+    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
       method: 'POST',
       data: createRoomUserInfo,
       headers: AXIOS_DEFAULT_HEADER,
@@ -80,12 +80,6 @@ export function ChattingPage(props) {
       });
   };
 
-  const handleChattingEnter = (e) => {
-    if (e.key === 'Enter') {
-      setChattingMessage('');
-    }
-  };
-
   // 채팅메시지 value값 저장
   const handleChattingChange = (e) => {
     setChattingMessage(e.target.value);
@@ -94,7 +88,7 @@ export function ChattingPage(props) {
 
   // 방 목록 받아오기
   const getChattingRoomList = () => {
-    axios(`http://localhost:8080/chat/room`, {
+    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
       method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
     })
