@@ -2,12 +2,12 @@ package com.Yana.Buddy.controller;
 
 import com.Yana.Buddy.dto.*;
 import com.Yana.Buddy.entity.User;
+import com.Yana.Buddy.handler.ResponseEntityHandler;
 import com.Yana.Buddy.service.OAuthService;
 import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -24,7 +23,7 @@ public class UserController {
 
     private final UserService userService;
     private final TokenService tokenService;
-    private final OAuthService oAuthService;
+    private final ResponseEntityHandler responseHandler;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto dto, HttpServletResponse response) {
@@ -36,27 +35,15 @@ public class UserController {
                 Cookie cookie = new Cookie("refreshToken", refreshToken);
                 response.addCookie(cookie);
 
-                return ResponseEntity.status(200).body(new HashMap<>() {
-                    {
-                        put("id", user.getId());
-                        put("accessToken", accessToken);
-                        put("refreshToken", refreshToken);
-                        put("message", "로그인에 성공했습니다.");
-                    }
-                });
+                return responseHandler.loginSuccess(
+                        new LoginSuccessResponse(user.getId(), user.getEmail(), user.getNickname(),
+                                accessToken, refreshToken, "기본 로그인에 성공했습니다.")
+                );
             } else {
-                return ResponseEntity.status(400).body(new HashMap<>() {
-                    {
-                        put("message", "비밀번호가 틀렸습니다.");
-                    }
-                });
+                return responseHandler.badRequest("비밀번호가 틀렸습니다.");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("message", "Email이나 비밀번호 입력이 올바르지 않습니다.");
-                }
-            });
+            return responseHandler.badRequest("email 혹은 비밀번호가 올바르지 않습니다.");
         }
     }
 
@@ -64,21 +51,17 @@ public class UserController {
     public ResponseEntity<?> signup(@RequestBody RegisterDto dto) {
         try {
             User user = userService.join(dto);
-            return ResponseEntity.status(200).body(new HashMap<>() {
-                {
-                    put("id", user.getId());
-                    put("email", user.getEmail());
-                    put("nickname", user.getNickname());
-                    put("gender", user.getGender());
-                    put("message", "회원가입에 성공했습니다.");
-                }
-            });
+            return responseHandler.userBasicInfo(new UserBasicInfoResponse(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getNickname(),
+                    user.getGender().getValue(),
+                    user.getStateMessage(),
+                    user.getProfileImage(),
+                    "회원 가입에 성공했습니다."
+            ));
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("message", "회원가입에 실패했습니다.");
-                }
-            });
+            return responseHandler.badRequest("회원 가입에 실패했습니다.");
         }
     }
 
@@ -86,17 +69,9 @@ public class UserController {
     @PostMapping("/email_check")
     public ResponseEntity<?> emailCheck(@RequestBody EmailDto dto) {
         if (userService.existEmail(dto.getEmail())) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("message", "이미 존재하는 이메일입니다!");
-                }
-            });
+            return responseHandler.badRequest("이미 존재하는 이메일입니다!");
         } else {
-            return ResponseEntity.status(200).body(new HashMap<>() {
-                {
-                    put("message", "사용 가능한 이메일입니다.");
-                }
-            });
+            return responseHandler.singleSuccessResponse("사용 가능한 이메일입니다.");
         }
     }
 
@@ -104,17 +79,9 @@ public class UserController {
     @PostMapping("/nickname_check")
     public ResponseEntity<?> nicknameCheck(@RequestBody NicknameDto dto) {
         if (userService.existNickname(dto.getNickname())) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("message", "이미 존재하는 닉네임입니다.");
-                }
-            });
+            return responseHandler.badRequest("이미 존재하는 닉네임입니다.");
         } else {
-            return ResponseEntity.status(200).body(new HashMap<>() {
-                {
-                    put("message", "사용 가능한 닉네임입니다.");
-                }
-            });
+            return responseHandler.singleSuccessResponse("사용 가능한 닉네임입니다.");
         }
     }
 
@@ -123,30 +90,12 @@ public class UserController {
     public ResponseEntity<?> tokenValidCheck(@RequestHeader Map<String, String> header) {
         tokenService.isValidAuthHeader(header.get("authorization"));
         String key = tokenService.extractToken(header.get("authorization"));
-
         Map<String, String> checkResult = tokenService.checkJwtToken(key);
-        if (checkResult.get("email") != null) {
-            User user = userService.findUserByEmail(checkResult.get("email"));
 
-            return ResponseEntity.status(200).body(new HashMap<>() {
-                {
-                    put("message", checkResult.get("message"));
-                    put("id", user.getId());
-                    put("email", user.getEmail());
-                    put("nickname", user.getNickname());
-                    put("gender", user.getGender());
-                    put("authority", user.getAuthority());
-                    put("profile_image", user.getProfileImage());
-                    put("state_message", user.getStateMessage());
-                    put("password", user.getPassword());
-                }
-            });
+        if (checkResult.get("email") != null) {
+            return responseHandler.userEntireInfo(userService.findUserByEmail(checkResult.get("email")));
         } else {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("message", checkResult.get("message"));
-                }
-            });
+            return responseHandler.badRequest(checkResult.get("message"));
         }
     }
 
@@ -162,34 +111,16 @@ public class UserController {
         }
 
         if (cookieResult.equals("")) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("data", null);
-                    put("message", "refresh token 이 존재하지 않습니다.");
-                }
-            });
+            return responseHandler.badRequest("Refresh Token 이 존재하지 않습니다.");
         }
 
         Map<String, String> checkResult = tokenService.checkJwtToken(cookieResult);
         if (checkResult.get("email") != null) {
             User user = userService.findUserByEmail(checkResult.get("email"));
             String finalCookiesResult = cookieResult;
-            return ResponseEntity.status(200).body(new HashMap<>() {
-                {
-                    put("data", new HashMap<>() {
-                        {
-                            put("accessToken", tokenService.createJwtToken(user, 1L));
-                        }
-                    });
-                }
-            });
+            return responseHandler.singleSuccessResponse(tokenService.createJwtToken(user, 1L));
         } else {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("data", null);
-                    put("message", checkResult.get("message"));
-                }
-            });
+            return responseHandler.badRequest(checkResult.get("message"));
         }
     }
 
@@ -199,23 +130,17 @@ public class UserController {
         try {
             User user = userService.findUserById(id);
 
-            return ResponseEntity.status(200).body(new HashMap<>() {
-                {
-                    put("message", "유저 정보가 성공적으로 조회되었습니다.");
-                    put("id", user.getId());
-                    put("email", user.getEmail());
-                    put("nickname", user.getNickname());
-                    put("gender", user.getGender());
-                    put("state_message", user.getStateMessage());
-                    put("profile_image", user.getProfileImage());
-                }
-            });
+            return responseHandler.userBasicInfo(new UserBasicInfoResponse(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getNickname(),
+                    user.getGender().getValue(),
+                    user.getStateMessage(),
+                    user.getProfileImage(),
+                    "유저 정보가 성공적으로 조회되었습니다."
+            ));
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("message", "유저 정보 조회에 실패했습니다.");
-                }
-            });
+            return responseHandler.badRequest("유저 정보 조회에 실패했습니다.");
         }
     }
 
@@ -224,22 +149,17 @@ public class UserController {
     public ResponseEntity<?> editProfile(@PathVariable("id") Long id, @RequestBody EditProfileDto dto) {
         try {
             User user = userService.editProfile(id, dto);
-            return ResponseEntity.status(200).body(new HashMap<>() {
-                {
-                    put("message", "유저 정보가 수정되었습니다.");
-                    put("id", user.getId());
-                    put("email", user.getEmail());
-                    put("nickname", user.getNickname());
-                    put("state_message", user.getStateMessage());
-                    put("profile_image", user.getProfileImage());
-                }
-            });
+            return responseHandler.userBasicInfo(new UserBasicInfoResponse(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getNickname(),
+                    user.getGender().getValue(),
+                    user.getStateMessage(),
+                    user.getProfileImage(),
+                    "유저 정보가 수정되었습니다."
+            ));
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("message", "회원 정보 수정에 실패했습니다.");
-                }
-            });
+            return responseHandler.badRequest("회원 정보 수정에 실패했습니다.");
         }
     }
 
@@ -248,66 +168,22 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         try {
             userService.deleteUser(id);
-            return ResponseEntity.status(200).body(new HashMap<>() {
-                {
-                    put("message", "유저 정보가 삭제되었습니다.");
-                    put("id", id);
-                }
-            });
+            return responseHandler.singleSuccessResponse("유저 정보가 삭제되었습니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("message", "유저 정보 삭제에 실패했습니다.");
-                }
-            });
+            return responseHandler.badRequest("유저 정보 삭제에 실패했습니다.");
         }
     }
 
-    /*
-    Google Login API 접속 후 생성되는 code를 이 API에 전송
-    code를 받아와서 Google의 관련 API를 이용하여 구글 토큰을 받아옴
-    해당 구글 토큰을 통해 구글 유저 정보를 가져옴
-    유저의 이메일이 우리 서비스에 이미 가입된 계정이라면 회원 가입 진행
-    이후, 해당 이메일 계정 로그인 진행 및 토큰 생성
-    유저 정보 반환
-     */
+    //Google Login API 접속 후 생성되는 code 를 이 API 에 전송
     @GetMapping("/oauth/google/callback")
     public ResponseEntity<?> googleOAuthLogin(String code, HttpServletResponse response) {
-        OAuthLoginDto googleLoginUser = userService.googleOAuthLogin(code);
-        response.addCookie(googleLoginUser.getCookie());
-        return ResponseEntity.status(200).body(new HashMap<>() {
-            {
-                put("id", googleLoginUser.getUser().getId());
-                put("email", googleLoginUser.getUser().getEmail());
-                put("nickname", googleLoginUser.getUser().getNickname());
-                put("accessToken", googleLoginUser.getAccessToken());
-                put("refreshToken", googleLoginUser.getRefreshToken());
-                put("message", "Google Login 에 성공했습니다!");
-            }
-        });
+        return responseHandler.loginSuccess(userService.googleLogin(code, response));
     }
 
-    /*
-    Google과 똑같은 로직으로 code를 통해 토큰을 받아오고,
-    토큰을 통해 유저 정보를 가져오고,
-    유저 정보 안의 이메일이 우리 서비스에 가입되어 있지 않다면 회원 가입 진행 후,
-    해당 유저 계정으로 로그인까지 진행
-    유저 정보 반환
-     */
+    //Google 과 똑같은 로직
     @GetMapping("/oauth/kakao/callback")
     public ResponseEntity<?> kakaoOAuthLogin(String code, HttpServletResponse response) throws JsonProcessingException, ParseException {
-        OAuthLoginDto kakaoLoginUser = userService.kakaoOAuthLogin(code);
-        response.addCookie(kakaoLoginUser.getCookie());
-        return ResponseEntity.status(200).body(new HashMap<>() {
-            {
-                put("id", kakaoLoginUser.getUser().getId());
-                put("email", kakaoLoginUser.getUser().getEmail());
-                put("nickname", kakaoLoginUser.getUser().getNickname());
-                put("accessToken", kakaoLoginUser.getAccessToken());
-                put("refreshToken", kakaoLoginUser.getRefreshToken());
-                put("message", "Kakao Login 에 성공했습니다!");
-            }
-        });
+        return responseHandler.loginSuccess(userService.kakaoLogin(code, response));
     }
 
 }
