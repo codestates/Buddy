@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
+
+    private static final long serialVersionUID = 6494678977089006639L;
 
     @Resource(name = "redisTemplate")
     private HashOperations<String, String, String> hashOperations;
@@ -31,6 +34,7 @@ public class ChatRoomService {
                 .name(dto.getName())
                 .subject(dto.getSubject())
                 .image(dto.getImage())
+                .roomId(UUID.randomUUID().toString())
                 .build();
         chatRoomRepository.save(chatRoom);
         return chatRoom;

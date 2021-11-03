@@ -28,9 +28,7 @@ public class ChatMessageController {
     @MessageMapping("/chat/message")
     public void message(@RequestBody ChatMessageRequestDto dto) {
         //유저 아이디를 통해 닉네임을 찾은 후, sender 로 지정
-        //dto.setSender(userService.findUserById(dto.getUserId()).getNickname());
-        dto.setSender("loko");
-        dto.setRoomId("2f24e2c7-fb00-462b-9f72-e810b3069efe");
+        dto.setSender(userService.findUserById(dto.getUserId()).getNickname());
 
         //메시지 생성 시간 삽입
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm");
