@@ -78,7 +78,7 @@ function App() {
             <LandingPage />
           </Route>
           <Route exact path="/"></Route>
-          <Route exact path="/sub/chat/room">
+          <Route exact path="/chat">
             <ChattingPage userInfo={userInfo} />
           </Route>
           <Route exact path="/demo">
