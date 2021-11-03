@@ -77,4 +77,8 @@ public class ChatRoomService {
         return chatRoomRepository.findByRoomId(roomId);
     }
 
+    public ChatRoom getRoomInfoById(Long id) {
+        return chatRoomRepository.findById(id).get();
+    }
+
 }

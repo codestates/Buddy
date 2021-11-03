@@ -39,12 +39,11 @@ public class ChatMessageController {
         dto.setCreatedAt(dateResult);
 
         //roomId 를 통해 채팅방 정보 획득
-        ChatRoom chatRoom = chatRoomService.getRoomInfoByRoomId(dto.getRoomId());
+        ChatRoom chatRoom = chatRoomService.getRoomInfoById(dto.getRoomId());
 
         ChatMessage message = ChatMessage.builder()
                 .room(chatRoom)
                 .type(dto.getType())
-                .roomId(dto.getRoomId())
                 .sender(dto.getSender())
                 .message(dto.getMessage())
                 .createdAt(dto.getCreatedAt())
