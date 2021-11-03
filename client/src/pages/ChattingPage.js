@@ -88,7 +88,7 @@ export function ChattingPage(props) {
         createdAt: '',
       };
 
-      ws.send('/pub/chat', { token: token }, JSON.stringify(data));
+      ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
 
       console.log(ws.ws.readyState);
     } catch (error) {

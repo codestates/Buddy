@@ -2,8 +2,8 @@ package com.Yana.Buddy.service;
 
 import com.Yana.Buddy.entity.ChatMessage;
 import com.Yana.Buddy.repository.ChatMessageRepository;
-import com.Yana.Buddy.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
@@ -18,10 +19,8 @@ public class ChatMessageService {
     private final ChannelTopic channelTopic;
     private final RedisTemplate redisTemplate;
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomRepository chatRoomRepository;
     private final UserService userService;
 
-    //destination 정보에서 roomId 추출
     public String getRoomId(String destination) {
         int lastIndex = destination.lastIndexOf('/');
         if (lastIndex != -1) {
@@ -30,7 +29,6 @@ public class ChatMessageService {
         else return "";
     }
 
-    //채팅방에 메시지 발송
     public void sendChatMessage(ChatMessage message) {
         if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
             message.setMessage(message.getSender() + "님이 입장했습니다.");
