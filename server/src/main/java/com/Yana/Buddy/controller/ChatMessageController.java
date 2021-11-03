@@ -42,7 +42,6 @@ public class ChatMessageController {
         ChatRoom chatRoom = chatRoomService.getRoomInfoByRoomId(dto.getRoomId());
 
         ChatMessage message = ChatMessage.builder()
-                .room(chatRoom)
                 .type(ChatMessage.MessageType.valueOf(dto.getType()))
                 .roomId(dto.getRoomId())
                 .sender(dto.getSender())
