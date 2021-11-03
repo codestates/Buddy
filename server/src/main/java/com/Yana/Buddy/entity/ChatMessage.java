@@ -1,11 +1,10 @@
 package com.Yana.Buddy.entity;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
+import static javax.persistence.EnumType.*;
 import static javax.persistence.FetchType.*;
 
 @Entity
@@ -17,10 +16,14 @@ public class ChatMessage {
     @Column(name = "chat_message_id")
     private Long id;
 
+    @AllArgsConstructor @Getter
     public enum MessageType {
-        ENTER, QUIT, TALK
+        ENTER("ENTER"), QUIT("QUIT"), TALK("TALK");
+
+        private String value;
     }
 
+    @Enumerated(STRING)
     private MessageType type;
 
     private String sender;
@@ -31,13 +34,8 @@ public class ChatMessage {
 
     private String roomId;
 
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoom room;
-
     @Builder
-    public ChatMessage(ChatRoom room, MessageType type, String sender, String message, String createdAt, String roomId) {
-        this.room = room;
+    public ChatMessage(MessageType type, String sender, String message, String createdAt, String roomId) {
         this.type = type;
         this.sender = sender;
         this.message = message;
