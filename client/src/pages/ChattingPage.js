@@ -115,6 +115,28 @@ export function ChattingPage(props) {
     }
   }
 
+  // 방 만들기
+  const handleCreateRoom = () => {
+    const createRoomUserInfo = {
+      name: '채팅방 테스트',
+      image: '#',
+      subject: 'react',
+      userId: 1,
+    };
+
+    axios(`http://localhost:8080/chat/room`, {
+      method: 'POST',
+      data: createRoomUserInfo,
+      headers: AXIOS_DEFAULT_HEADER,
+    })
+      .then((res) => {
+        alert('방이 생성되었습니다');
+      })
+      .catch((err) => {
+        alert('방 생성에 실패하였습니다');
+      });
+  };
+
   return (
     <>
       <div className="chatting__page">
@@ -123,6 +145,7 @@ export function ChattingPage(props) {
           <ChatDetail chattingMessage={chattingMessage} setChattingMessage={setChattingMessage} />
         </section>
         <button onClick={sendMessage}>메세지 보내기</button>
+        <button onClick={handleCreateRoom}>방 만들기</button>
       </div>
     </>
   );
