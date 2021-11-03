@@ -25,7 +25,7 @@ public class ChatMessageService {
     }
 
     public List<ChatMessage> getAllMessage(Long roomId) {
-        return chatMessageRepository.findByRoom(roomId);
+        return chatMessageRepository.findByRoomId(roomId);
     }
 
     public void save(ChatMessage message) {
@@ -42,6 +42,8 @@ public class ChatMessageService {
             message.setMessage(message.getSender() + " 님이 퇴장했어요... 🥺");
             message.setSender("[알림]");
         }
+
+        chatMessageRepository.save(message);
 
         redisTemplate.convertAndSend(channelTopic.getTopic(), message);
     }
