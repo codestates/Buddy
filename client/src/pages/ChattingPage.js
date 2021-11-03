@@ -41,7 +41,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/rooms/2`,
+            `/sub/chat/room/2`,
             (data) => {
               const newMessage = JSON.parse(data.body);
             },
@@ -82,13 +82,13 @@ export function ChattingPage(props) {
       const data = {
         type: 'TALK',
         roomId: 2,
-        chatUserId: 1,
+        userId: 1,
         sender: 'aaa',
         message: 'bbb',
         createdAt: '',
       };
 
-      ws.send('/pub/chat', { token: token }, JSON.stringify(data));
+      ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
 
       console.log(ws.ws.readyState);
     } catch (error) {
