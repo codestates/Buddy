@@ -99,7 +99,7 @@ export function ChattingPage(props) {
       // send할 데이터
       const data = {
         type: 'TALK',
-        roomId: 'null',
+        roomId: '',
         chatUserId: props.userInfo.id,
         sender: props.userInfo.nickname,
         message: 'bbb',
