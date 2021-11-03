@@ -88,7 +88,7 @@ export function ChattingPage(props) {
 
   // 채팅메시지 value값 저장
   const handleChattingChange = (e) => {
-    props.setChattingMessage(e.target.value);
+    setChattingMessage(e.target.value);
     console.log(chattingMessage);
   };
 
@@ -158,20 +158,23 @@ export function ChattingPage(props) {
   }
 
   // 메시지 보내기
-  function sendMessage() {
-    try {
-      // send할 데이터
-      const data = {
-        type: 'TALK',
-        roomId: currentRoomid,
-        userId: props.userInfo.id,
-        sender: props.userInfo.nickname,
-        message: '메시지를 전송하였습니다.',
-        createdAt: '',
-      };
-      ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
-      console.log(ws.ws.readyState);
-    } catch (error) {}
+  function sendMessage(e) {
+    if (e.key === 'Enter') {
+      try {
+        // send할 데이터
+        const data = {
+          type: 'TALK',
+          roomId: currentRoomid,
+          userId: props.userInfo.id,
+          sender: props.userInfo.nickname,
+          message: chattingMessage,
+          createdAt: '',
+        };
+        ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
+        console.log(ws.ws.readyState);
+        setChattingMessage('');
+      } catch (error) {}
+    }
   }
 
   const ChattingList = chattingRoomList.map((ele) => (
@@ -207,23 +210,33 @@ export function ChattingPage(props) {
     <>
       <div className="chatting__page">
         <section className="chatting__wrapper">
-          <ScrollContainer className="chat__list">{ChattingList}</ScrollContainer>
-          <div className="chat__detail">
-            <div className="chat__container">
-              <div className="chat__log">안녕하세요</div>
+          <div>
+            <div className="chat__list__maintitle">Room List</div>
+            <ScrollContainer className="chat__list">{ChattingList}</ScrollContainer>
+            <div className="chat__list__btnlist">
+              <button onClick={handleCreateRoom}>방 만들기</button>
             </div>
-            <input
-              type="text"
-              onKeyPress={handleChattingEnter}
-              onChange={handleChattingChange}
-              value={chattingMessage}
-              className="chat__input"
-              placeholder="메세지를 입력해주세요"
-            ></input>
           </div>
+          {currentRoomid !== '' ? (
+            <div className="chat__detail">
+              <div className="chat__container">
+                <div className="chat__log">채팅로그박스</div>
+              </div>
+              <input
+                type="text"
+                onKeyPress={sendMessage}
+                onChange={handleChattingChange}
+                value={chattingMessage}
+                className="chat__input"
+                placeholder="메세지를 입력해주세요"
+              ></input>
+            </div>
+          ) : (
+            <div className="chat__detail">
+              <img src="images/chat_main_image.jpg" />
+            </div>
+          )}
         </section>
-        <button onClick={handleCreateRoom}>방 만들기</button>
-        <button onClick={sendMessage}>메시지 보내기</button>
       </div>
     </>
   );
