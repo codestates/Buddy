@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -96,7 +97,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    /*
+    /**
     Google로부터 받은 code를 받아와서 Google의 관련 API를 이용하여 구글 토큰을 받아옴
     해당 구글 토큰을 통해 구글 유저 정보를 가져옴
     유저의 이메일이 우리 서비스에 이미 가입된 계정이라면 회원 가입 진행
@@ -122,7 +123,7 @@ public class UserService {
         return new OAuthLoginDto(user, accessToken, refreshToken, cookie);
     }
 
-    /*
+    /**
     Google과 똑같은 로직으로 code를 통해 토큰을 받아오고,
     토큰을 통해 유저 정보를 가져오고,
     유저 정보 안의 이메일이 우리 서비스에 가입되어 있지 않다면 회원 가입 진행 후,
@@ -178,6 +179,34 @@ public class UserService {
 
         userRepository.save(signUpUser);
         return signUpUser;
+    }
+
+    //Google Login 에 대한 return 값 설정
+    public LoginSuccessResponse googleLogin(String code, HttpServletResponse response) {
+        OAuthLoginDto googleLoginUser = googleOAuthLogin(code);
+        response.addCookie(googleLoginUser.getCookie());
+
+        return new LoginSuccessResponse(
+                googleLoginUser.getUser().getId(),
+                googleLoginUser.getUser().getEmail(),
+                googleLoginUser.getUser().getNickname(),
+                googleLoginUser.getAccessToken(),
+                googleLoginUser.getRefreshToken(),
+                "Google Login 에 성공했습니다.");
+    }
+
+    //Kakao Login 에 대한 return 값 설정
+    public LoginSuccessResponse kakaoLogin(String code, HttpServletResponse response) throws ParseException, JsonProcessingException {
+        OAuthLoginDto kakaoLoginUser = kakaoOAuthLogin(code);
+        response.addCookie(kakaoLoginUser.getCookie());
+
+        return new LoginSuccessResponse(
+                kakaoLoginUser.getUser().getId(),
+                kakaoLoginUser.getUser().getEmail(),
+                kakaoLoginUser.getUser().getNickname(),
+                kakaoLoginUser.getAccessToken(),
+                kakaoLoginUser.getRefreshToken(),
+                "Kakao Login 에 성공했습니다.");
     }
 
 }
