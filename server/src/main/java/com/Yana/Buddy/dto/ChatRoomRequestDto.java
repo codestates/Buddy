@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class ChatRoomRequestDto {
 
-    private String name;
-    private String image;
-    private String subject;
     private Long userId;
+    private String name;
+    private String subject;
+    private String image;
 
 }

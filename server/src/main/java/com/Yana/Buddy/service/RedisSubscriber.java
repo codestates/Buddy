@@ -19,10 +19,10 @@ public class RedisSubscriber {
 
     //Redis 에서 메시지가 publish 되면 대기하고 있던 Redis Subscriber 가 해당 메시지를 받아서 처리
     public void sendMessage(String publishMessage) {
-        log.info("메시지 sub 확인 : {}", publishMessage);
+        log.info("메시지 pub 확인 : {}", publishMessage);
         try {
             ChatMessage message = objectMapper.readValue(publishMessage, ChatMessage.class);
-            messagingTemplate.convertAndSend("/sub/chat/rooms/" + message.getRoomId(), message);
+            messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
         } catch (JsonMappingException e) {
             log.error("JsonMappingException");
         } catch (JsonProcessingException e) {
