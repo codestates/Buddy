@@ -26,7 +26,7 @@ public class ChatMessageService {
     }
 
     public List<ChatMessage> getAllMessage(Long roomId) {
-        return chatMessageRepository.findByRoom(roomId);
+        return chatMessageRepository.findByRoomId(roomId);
     }
 
     public void save(ChatMessage message) {
