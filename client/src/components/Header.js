@@ -30,7 +30,7 @@ export default function Header(props) {
         <nav id="nav">
           <ul id="ul">
             <li>
-              <Link className="header__link" to="/sub/chat/rooms">
+              <Link className="header__link" to="/sub/chat/room">
                 채팅
               </Link>
             </li>
