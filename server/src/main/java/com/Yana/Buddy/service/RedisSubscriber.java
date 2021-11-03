@@ -22,7 +22,7 @@ public class RedisSubscriber {
         log.info("메시지 pub 확인 : {}", publishMessage);
         try {
             ChatMessage message = objectMapper.readValue(publishMessage, ChatMessage.class);
-            messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoom().getId(), message);
+            messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
         } catch (JsonMappingException e) {
             log.error("JsonMappingException");
         } catch (JsonProcessingException e) {
