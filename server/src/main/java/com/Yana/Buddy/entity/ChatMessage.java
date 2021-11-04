@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 
 import static javax.persistence.EnumType.*;
-import static javax.persistence.FetchType.*;
 
 @Entity
 @Data

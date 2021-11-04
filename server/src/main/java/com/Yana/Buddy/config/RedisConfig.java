@@ -28,6 +28,10 @@ public class RedisConfig {
     @Value("${spring.redis.password}")
     private String redisPassword;
 
+    private RedisStandaloneConfiguration redisStandaloneConfiguration;
+    private LettuceConnectionFactory lettuceConnectionFactory;
+    private RedisMessageListenerContainer container;
+
     //단일 Topic 사용을 위한 설정
     @Bean
     public ChannelTopic channelTopic() {
@@ -36,11 +40,11 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHost);
         redisStandaloneConfiguration.setPort(redisPort);
         redisStandaloneConfiguration.setPassword(redisPassword);
-        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
+        lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
         return lettuceConnectionFactory;
     }
 
@@ -49,7 +53,7 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory,
                                                                        MessageListenerAdapter listenerAdapter,
                                                                        ChannelTopic channelTopic) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(listenerAdapter, channelTopic);
         return container;
