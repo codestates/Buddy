@@ -43,8 +43,6 @@ public class ChatMessageService {
             message.setSender("[알림]");
         }
 
-        chatMessageRepository.save(message);
-
         redisTemplate.convertAndSend(channelTopic.getTopic(), message);
     }
 
