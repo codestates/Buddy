@@ -17,7 +17,6 @@ dotenv.config();
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
   // 상태관리(ChatDetail)
-  const [chattingMessage, setChattingMessage] = useState(''); // 채팅 메시지
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
 
   // 상태관리(ChattingPage)
