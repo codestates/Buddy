@@ -1,9 +1,31 @@
 package com.Yana.Buddy.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.fasterxml.jackson.databind.ser.Serializers;
+import lombok.Data;
 
-@Table(name = "prohibied_user_entity")
+import javax.persistence.*;
+
+@Data
+@Table(name = "prohibied_user")
 @Entity
-public class ProhibiedUserEntity {
+public class ProhibiedUserEntity extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    private Long id;
+    private String logImg;
+    private String reason;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
