@@ -4,6 +4,7 @@ import com.Yana.Buddy.dto.*;
 import com.Yana.Buddy.entity.Gender;
 import com.Yana.Buddy.entity.Role;
 import com.Yana.Buddy.entity.User;
+import com.Yana.Buddy.handler.ResponseEntityHandler;
 import com.Yana.Buddy.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +27,32 @@ public class UserService {
     private final UserRepository userRepository;
     private final OAuthService oAuthService;
     private final TokenService tokenService;
+    private final ResponseEntityHandler responseHandler;
 
-    //로그인 시 입력한 비밀번호가 맞는지 검증
-    public boolean passwordCheck(User user, String password) {
-        if (user.getPassword().equals(password)) return true;
-        else return false;
+    //기본 로그인 (소셜 로그인 X)
+    public ResponseEntity<?> basicLogin(LoginDto dto, HttpServletResponse response) {
+        if (findUserByEmail(dto.getEmail()).isPresent()) {
+            User user = findUserByEmail(dto.getEmail()).get();
+            if (passwordCheck(user, dto.getPassword())) {
+                String accessToken = tokenService.createJwtToken(user, 1L);
+                String refreshToken = tokenService.createJwtToken(user, 2L);
+                Cookie cookie = new Cookie("refreshToken", refreshToken);
+                response.addCookie(cookie);
+
+                return responseHandler.loginSuccess(
+                        new LoginSuccessResponse(user.getId(), user.getEmail(), user.getNickname(),
+                                accessToken, refreshToken, "기본 로그인에 성공했습니다.")
+                );
+            } else {
+                return responseHandler.badRequest("비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            return responseHandler.badRequest("해당 Email 은 등록되지 않았습니다.");
+        }
     }
 
-    //회원 가입
-    public User join(RegisterDto dto) {
+    //기본 회원가입 (소셜 회원가입 X)
+    public ResponseEntity<?> basicSignup(RegisterDto dto) {
         User user = User.builder()
                 .email(dto.getEmail())
                 .nickname(dto.getNickname())
@@ -43,58 +61,97 @@ public class UserService {
                 .gender(Gender.valueOf(dto.getGender()))
                 .authority(Role.GENERAL)
                 .build();
+
         userRepository.save(user);
-        return user;
+
+        return responseHandler.userBasicInfo(UserBasicInfoResponse.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .nickname(user.getNickname())
+                        .gender(user.getGender().getValue())
+                        .stateMessage(user.getStateMessage())
+                        .profileImage(user.getProfileImage())
+                        .message("회원 가입에 성공했습니다.")
+                        .build());
     }
 
-    //Email 중복 체크
-    public boolean existEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()) {
-            return true;
+    //로그인 시 입력한 비밀번호가 맞는지 검증
+    public boolean passwordCheck(User user, String password) {
+        if (user.getPassword().equals(password)) return true;
+        else return false;
+    }
+
+    //Email 검증 결과에 따라 Response Entity 값 설정
+    public ResponseEntity emailCheck(EmailDto dto) {
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            return responseHandler.badRequest("이미 존재하는 이메일입니다.");
         } else {
-            return false;
+            return responseHandler.singleSuccessResponse("사용 가능한 이메일입니다.");
         }
     }
 
-    //Nickname 중복 체크
-    public boolean existNickname(String nickname) {
-        Optional<User> user = userRepository.findByNickname(nickname);
-        if (user.isPresent()) {
-            return true;
+    //닉네임 검증 결과에 따라 Response Entity 값 설정
+    public ResponseEntity nicknameCheck(NicknameDto dto) {
+        if (userRepository.findByNickname(dto.getNickname()).isPresent()) {
+            return responseHandler.badRequest("이미 존재하는 닉네임입니다.");
         } else {
-            return false;
+            return responseHandler.singleSuccessResponse("사용 가능한 이메일입니다.");
         }
     }
 
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).get();
+    //유저 기본 정보 받아오기
+    public ResponseEntity<?> getUserInfo(Long id) {
+        if (userRepository.findById(id).isPresent()) {
+            User user = userRepository.findById(id).get();
+
+            return responseHandler.userBasicInfo(UserBasicInfoResponse.builder()
+                            .id(user.getId())
+                            .email(user.getEmail())
+                            .nickname(user.getNickname())
+                            .gender(user.getGender().getValue())
+                            .stateMessage(user.getStateMessage())
+                            .profileImage(user.getProfileImage())
+                            .message("유저 정보가 성공적으로 조회되었습니다.")
+                            .build());
+        } else {
+            return responseHandler.badRequest("유저 정보 조회에 실패했습니다.");
+        }
     }
 
-    public User findUserById(Long id) {
-        return userRepository.findById(id).get();
-    }
+    //유저 정보 수정 및 Response Entity 반환
+    public ResponseEntity<?> editProfile(Long id, EditProfileDto dto) {
+        if (userRepository.findById(id).isPresent()) {
+            User user = userRepository.findById(id).get();
+            User updatedUser = User.builder()
+                    .id(id)
+                    .nickname(dto.getNickname())
+                    .password(dto.getPassword())
+                    .email(user.getEmail())
+                    .gender(user.getGender())
+                    .authority(Role.GENERAL)
+                    .stateMessage(dto.getStateMessage())
+                    .profileImage(dto.getProfile_image())
+                    .build();
+            userRepository.save(updatedUser);
 
-    //유저 정보 수정
-    public User editProfile(Long id, EditProfileDto dto) {
-        User userRepo = userRepository.findById(id).get();
-        User user = User.builder()
-                .id(id)
-                .nickname(dto.getNickname())
-                .password(dto.getPassword())
-                .email(userRepo.getEmail())
-                .gender(userRepo.getGender())
-                .authority(Role.GENERAL)
-                .stateMessage(dto.getStateMessage())
-                .profileImage(dto.getProfile_image())
-                .build();
-        userRepository.save(user);
-        return user;
+            return responseHandler.userBasicInfo(UserBasicInfoResponse.builder()
+                            .id(id)
+                            .email(updatedUser.getEmail())
+                            .nickname(updatedUser.getNickname())
+                            .gender(updatedUser.getGender().getValue())
+                            .stateMessage(updatedUser.getStateMessage())
+                            .profileImage(updatedUser.getProfileImage())
+                            .message("유저 정보가 수정되었습니다.")
+                            .build());
+        } else {
+            return responseHandler.badRequest("유저 정보를 찾아내지 못했습니다.");
+        }
     }
 
     //유저 삭제
-    public void deleteUser(Long id) {
+    public ResponseEntity deleteUser(Long id) {
         userRepository.deleteById(id);
+        return responseHandler.singleSuccessResponse("유저 정보가 삭제되었습니다.");
     }
 
     /**
@@ -111,7 +168,7 @@ public class UserService {
         ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(googleToken);
         GoogleUser googleUser = oAuthService.getUserInfo(userInfoResponse);
 
-        if (!existEmail(googleUser.getEmail())) {
+        if (userRepository.findByEmail(googleUser.getEmail()).isEmpty()) {
             googleSignUp(googleUser, googleToken);
         }
 
@@ -136,7 +193,7 @@ public class UserService {
 
         KakaoRegisterDto kakaoUserInfo = oAuthService.getKakaoUser(kakaoToken);
 
-        if (!existEmail(kakaoUserInfo.getEmail())) {
+        if (userRepository.findByEmail(kakaoUserInfo.getEmail()).isEmpty()) {
             kakaoSignUp(kakaoUserInfo);
         }
 
@@ -207,6 +264,14 @@ public class UserService {
                 kakaoLoginUser.getAccessToken(),
                 kakaoLoginUser.getRefreshToken(),
                 "Kakao Login 에 성공했습니다.");
+    }
+
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
     }
 
 }
