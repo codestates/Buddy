@@ -7,14 +7,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class UserBasicInfoResponse {
+public class GetEmailFromToken {
 
-    private Long id;
     private String email;
-    private String nickname;
-    private String gender;
-    private String stateMessage;
-    private String profileImage;
     private String message;
 
 }
