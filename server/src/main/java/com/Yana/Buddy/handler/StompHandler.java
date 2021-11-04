@@ -88,10 +88,11 @@ public class StompHandler implements ChannelInterceptor {
                     tokenService.checkJwtToken(accessor.getFirstNativeHeader("token")).get("email")
             ).getNickname();
 
-            /*
+            /** subscribe 와 동일한 이유로, 유저의 닉네임을 토큰을 통해 따로 가져옴
             String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser"))
                     .map(Principal::getName).orElse("Anonymous User");
              */
+
             chatMessageService.sendChatMessage(ChatMessage.builder()
                             .type(ChatMessage.MessageType.QUIT)
                             .roomId(roomId)
