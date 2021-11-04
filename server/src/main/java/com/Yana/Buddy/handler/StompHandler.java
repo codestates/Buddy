@@ -48,12 +48,15 @@ public class StompHandler implements ChannelInterceptor {
             String roomId = chatMessageService.getRoomId(Optional.ofNullable(
                     (String) message.getHeaders().get("simpDestination"))
                     .orElse("Anonymous User"));
+            log.info("SUBSCRIBE - 구독 요청 방 : {}", roomId);
 
             String sessionId = (String) message.getHeaders().get("simpSessionId");
+            log.info("SUBSCRIBE - 요청한 session id : {}", sessionId);
             chatRoomService.setUserEnterInfo(sessionId, roomId);
 
             String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser"))
                     .map(Principal::getName).orElse("Anonymous User");
+            log.info("SUBSCRIBE - 구독 요청한 유저 이름 : {}", name);
             chatMessageService.sendChatMessage(ChatMessage.builder()
                             .type(ChatMessage.MessageType.ENTER)
                             .roomId(roomId)
