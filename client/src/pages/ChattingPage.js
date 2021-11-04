@@ -191,13 +191,6 @@ export function ChattingPage(props) {
         setChattingLog([]);
 
         ws.unsubscribe('sub-0');
-        ws.subscribe(
-          `/sub/chat/room/${ele.roomId}`,
-          (data) => {
-            const newMessage = JSON.parse(data.body);
-          },
-          { token: token }
-        );
       }}
     >
       <div className="chattingroomlist__image">
