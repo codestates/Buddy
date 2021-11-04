@@ -5,7 +5,6 @@ import com.Yana.Buddy.entity.ChatMessage;
 import com.Yana.Buddy.entity.ChatRoom;
 import com.Yana.Buddy.service.ChatMessageService;
 import com.Yana.Buddy.service.ChatRoomService;
-import com.Yana.Buddy.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
