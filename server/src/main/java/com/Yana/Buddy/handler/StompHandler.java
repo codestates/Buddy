@@ -5,6 +5,7 @@ import com.Yana.Buddy.repository.ChatRoomRepository;
 import com.Yana.Buddy.service.ChatMessageService;
 import com.Yana.Buddy.service.ChatRoomService;
 import com.Yana.Buddy.service.TokenService;
+import com.Yana.Buddy.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.messaging.Message;
@@ -26,6 +27,7 @@ public class StompHandler implements ChannelInterceptor {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageService chatMessageService;
     private final ChatRoomService chatRoomService;
+    private final UserService userService;
 
     //WebSocket 을 통해 들어온 요청이 처리 되기전 실행
     @Override
@@ -54,8 +56,15 @@ public class StompHandler implements ChannelInterceptor {
             log.info("SUBSCRIBE - 요청한 session id : {}", sessionId);
             chatRoomService.setUserEnterInfo(sessionId, roomId);
 
+            String name = userService.findUserByEmail(
+                    tokenService.checkJwtToken(accessor.getFirstNativeHeader("token")).get("email")
+            ).getNickname();
+
+            /** 참조한 소스 코드에서는 아래의 코드를 사용했고 이를 똑같이 적용해보려 했지만 잘 적용되지 않아서 토큰에서 추출하는 방식으로 진행함
             String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser"))
                     .map(Principal::getName).orElse("Anonymous User");
+             */
+
             log.info("SUBSCRIBE - 구독 요청한 유저 이름 : {}", name);
             chatMessageService.sendChatMessage(ChatMessage.builder()
                             .type(ChatMessage.MessageType.ENTER)
