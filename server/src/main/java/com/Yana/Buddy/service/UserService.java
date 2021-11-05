@@ -168,7 +168,7 @@ public class UserService {
     유저 정보 반환
      */
     public OAuthLoginDto googleOAuthLogin(String code) {
-        ResponseEntity<String> accessTokenResponse = oAuthService.createPostRequest(code);
+        String accessTokenResponse = oAuthService.createPostRequest(code);
         GoogleToken googleToken = oAuthService.getAccessToken(accessTokenResponse);
 
         ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(googleToken);

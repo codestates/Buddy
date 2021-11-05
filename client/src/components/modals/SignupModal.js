@@ -205,12 +205,12 @@ export function SignupModal(props) {
     <div>
       {props.signupModalOn ? (
         <div className="signup__popup">
+          <div id="signup__close__btn">
+            <button className="signup__close" onClick={togglePopup}>
+              <img src="images/close_btn.png" alt="닫기 버튼" />
+            </button>
+          </div>
           <div className="signup__popup__inner">
-            <div id="signup__close__btn">
-              <button className="signup__close" onClick={togglePopup}>
-                <img src="images/close_btn.png" alt="닫기 버튼" />
-              </button>
-            </div>
             <div id="signup__contents">
               <img src="images/logo.png" alt="buddy_logo" />
               <span id="signup__title">회원가입</span>
