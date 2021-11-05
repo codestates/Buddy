@@ -39,8 +39,11 @@ public class OAuthService {
     @Value("${oauth.kakao.client-secret}") private String K_CLIENT_SECRET;
 
     //구글에서 받은 code 를 통해 token 받아오기 (JSON 타입으로 반환되기에, ResponseEntity 로 묶어줌)
-    public ResponseEntity<String> createPostRequest(String code) {
-        String url = "https://oauth2.googleapis.com/token";
+    public String createPostRequest(String code) {
+        String url = "https://oauth2.googleapis.com";
+        WebClient webClient = WebClient.builder()
+                .baseUrl(url)
+                .build();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
@@ -49,27 +52,20 @@ public class OAuthService {
         params.add("redirect_uri", REDIRECT_URI);
         params.add("grant_type", GRANT_TYPE);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded");
-
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
-
-        /*
-        return WebClient.builder()
-                .baseUrl("https://oauth2.googleapis.com")
-                .build()
-                .post()
-                .build();
-         */
-
-        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+        return webClient.post()
+                .uri("/token")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .body(BodyInserters.fromFormData(params))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 
     //JSON 타입의 token 정보를 dto 클래스를 활용하여 매핑 및 반환
-    public GoogleToken getAccessToken(ResponseEntity<String> response) {
+    public GoogleToken getAccessToken(String response) {
         GoogleToken googleToken = null;
         try {
-            googleToken = objectMapper.readValue(response.getBody(), GoogleToken.class);
+            googleToken = objectMapper.readValue(response, GoogleToken.class);
         } catch (JsonMappingException e) {
             log.error("get access token Exception : " + e);
         } catch (JsonProcessingException e) {
