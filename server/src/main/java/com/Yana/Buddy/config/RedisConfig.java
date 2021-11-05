@@ -35,7 +35,7 @@ public class RedisConfig {
     //단일 Topic 사용을 위한 설정
     @Bean
     public ChannelTopic channelTopic() {
-        return new ChannelTopic("chatroom");
+        return new ChannelTopic("chat/rooms");
     }
 
     @Bean
