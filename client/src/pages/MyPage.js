@@ -43,8 +43,8 @@ export function MyPage(props) {
         data: {
           nickname: props.userInfo.nickname,
           password: props.userInfo.password,
-          profile_image: `${process.env.REACT_APP_S3_IMAGE_URL}/${selectedFile.name}`,
-          state_message: props.userInfo.state_message,
+          profileImage: `${process.env.REACT_APP_S3_IMAGE_URL}/${selectedFile.name}`,
+          stateMessage: props.userInfo.stateMessage,
         },
         headers: AXIOS_DEFAULT_HEADER,
       })
@@ -132,8 +132,8 @@ export function MyPage(props) {
         data: {
           nickname: userNickname,
           password: props.userInfo.password,
-          profile_image: props.userInfo.profile_image,
-          state_message: props.userInfo.state_message,
+          profileImage: props.userInfo.profileImage,
+          stateMessage: props.userInfo.stateMessage,
         },
         headers: AXIOS_DEFAULT_HEADER,
       })
@@ -166,8 +166,8 @@ export function MyPage(props) {
         method: 'PUT',
         data: {
           password: userPassword,
-          profile_image: props.userInfo.profile_image,
-          state_message: props.userInfo.state_message,
+          profileImage: props.userInfo.profileImage,
+          stateMessage: props.userInfo.stateMessage,
           nickname: props.userInfo.nickname,
         },
         headers: AXIOS_DEFAULT_HEADER,
@@ -188,7 +188,7 @@ export function MyPage(props) {
         <div className="mypage__container">
           <div className="mypage__image__container">
             <label for="file-input">
-              <img src={props.userInfo.profile_image} alt="마이페이지 이미지" title="이미지를 수정합니다" />
+              <img src={props.userInfo.profileImage} alt="마이페이지 이미지" title="이미지를 수정합니다" />
             </label>
             <input id="file-input" type="file" onChange={handleFileInput} style={{ display: 'none' }} />
           </div>
