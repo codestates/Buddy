@@ -139,7 +139,7 @@ public class UserService {
             if (updatedUser.getGender() != null) {
                 gender = updatedUser.getGender().getValue();
             }
-
+          
             return responseHandler.userBasicInfo(UserBasicInfoResponse.builder()
                             .id(id)
                             .email(updatedUser.getEmail())
