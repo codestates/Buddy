@@ -5,11 +5,27 @@
   height: 100%;
   margin: 0 auto;
   background-color: rgba(0, 0, 0, 0.4);
-  z-index: 100000;
+  z-index: 10;
   display: flex;
   justify-content: center;
   animation: fadein 0.4s;
   -webkit-animation: fadein 0.4s;
+}
+
+/* 회원가입 모달 닫기 버튼 */
+#signup__close__btn {
+  position: absolute;
+  margin: 20px;
+  z-index: 10;
+  border: 10px;
+}
+
+#signup__close__btn > .signup__close {
+  all: unset;
+  cursor: pointer;
+  width: 10000px;
+  height: 10000px;
+  z-index: 500000;
 }
 
 /* 회원가입 모달 내부 흰색 배경 */
@@ -20,18 +36,7 @@
   border-radius: 15px;
   margin-top: 170px;
   box-shadow: 1px 3px 10px;
-}
-
-/* 회원가입 모달 닫기 버튼 */
-#signup__close__btn {
-  display: flex;
-  flex-direction: row-reverse;
-  margin: 20px;
-}
-
-#signup__close__btn > .signup__close {
-  all: unset;
-  cursor: pointer;
+  z-index: 5000;
 }
 
 /* 회원가입 모달 닫기 버튼 내 이미지 */

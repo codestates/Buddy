@@ -189,12 +189,12 @@ export function LoginModal(props) {
       <SignupModal signupModalOn={signupModalOn} setSignupModalOn={setSignupModalOn} />
       {props.modalOn ? (
         <div className="popup">
+          <div id="signin__close__btn">
+            <button className="close" onClick={togglePopup}>
+              안녕하세요
+            </button>
+          </div>
           <div className="popup__inner">
-            <div id="signin__close__btn">
-              <button className="close" onClick={togglePopup}>
-                <img src="images/close_btn.png" alt="닫기 버튼" />
-              </button>
-            </div>
             <div id="signin__contents">
               <img src="images/logo.png" alt="buddy_logo" />
               <span id="signin__title">로그인</span>

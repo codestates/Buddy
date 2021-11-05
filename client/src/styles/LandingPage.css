@@ -7,21 +7,31 @@
 /* 랜딩 페이지 소개 관련 CSS */
 
 #landing__introduce {
-  width: 60%;
-  height: 900px;
-  /* background-color: green; */
+  width: 100%;
+  height: 857px;
+  background-image: url('../background/introduce_back.jpg');
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 #introduce__wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  margin-top: 200px;
+  justify-content: center;
+  height: 100%;
+  width: 60%;
+}
+
+#introduce__image {
+  display: flex;
+  justify-content: center;
 }
 
 #introduce__image > img {
-  margin: 60px;
-  width: 70%;
+  width: 60%;
 }
 
 #introduce__text {
@@ -29,78 +39,269 @@
   flex-direction: column;
   align-items: center;
   font-family: 'Noto Sans KR';
+  width: 80%;
   color: black;
 }
 
 #introduce__text > h1 {
   font-size: 40px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   font-weight: 700;
+  text-align: center;
+}
+
+#introduce__text > span {
+  font-size: 18px;
+  margin-top: 10px;
   text-align: center;
 }
 
 /* 채팅 소개 관련 CSS */
 
 #chat__intro__introduce {
-  width: 60%;
-  height: 900px;
-  /* background-color: navy; */
+  width: 100%;
+  height: 857px;
+  background-image: url('../background/chatintro_back.jpg');
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 #chat__intro__wrapper {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  margin-top: 200px;
+  justify-content: center;
+  height: 100%;
+  width: 60%;
+}
+
+#chat__intro__image {
+  display: flex;
+  justify-content: center;
 }
 
 #chat__intro__image > img {
-  margin: 60px;
-  width: 70%;
+  width: 60%;
 }
 
 #chat__intro__text {
   display: flex;
   flex-direction: column;
+  align-items: center;
   font-family: 'Noto Sans KR';
+  width: 80%;
   color: black;
-  margin-right: 60px;
 }
 
 #chat__intro__text > h1 {
-  font-size: 32px;
-  margin-bottom: 30px;
+  font-size: 40px;
+  margin-bottom: 10px;
   font-weight: 700;
+  text-align: center;
+}
+
+#chat__intro__text > span {
+  font-size: 18px;
+  margin-top: 10px;
+  text-align: center;
 }
 
 /* 체험하기 관련 CSS */
 
 #demo__intro__introduce {
-  width: 60%;
-  height: 900px;
-  /* background-color: teal; */
+  width: 100%;
+  height: 857px;
+  background-image: url('../background/demointro_back.jpg');
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 #demo__intro__wrapper {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  margin-top: 200px;
+  justify-content: center;
+  height: 100%;
+  width: 60%;
+}
+
+#demo__intro__image {
+  display: flex;
+  justify-content: center;
 }
 
 #demo__intro__image > img {
-  margin: 60px;
-  width: 70%;
+  width: 60%;
 }
 
 #demo__intro__text {
   display: flex;
   flex-direction: column;
+  align-items: center;
   font-family: 'Noto Sans KR';
+  width: 80%;
   color: black;
-  margin-right: 60px;
 }
 
 #demo__intro__text > h1 {
-  font-size: 32px;
-  margin-bottom: 30px;
+  font-size: 40px;
+  margin-bottom: 10px;
   font-weight: 700;
+  text-align: center;
+}
+
+#demo__intro__text > span {
+  font-size: 18px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.demointro__button {
+  -webkit-appearance: none;
+  background: -webkit-gradient(to right, #23b353 0%, #fceeb5 50%, #c275f5 100%);
+  background: linear-gradient(to right, #23b353 0%, #fceeb5 50%, #c275f5 100%);
+  background-size: 500%;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  color: #fff;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.05em;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 130px;
+  height: 40px;
+  margin-top: 30px;
+  border-radius: 30px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.demointro__button:hover {
+  animation-name: gradient;
+  -webkit-animation-name: gradient;
+  animation-duration: 2s;
+  -webkit-animation-duration: s;
+  animation-iteration-count: 1;
+  -webkit-animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100%;
+  }
+}
+
+/* 해상도 1400px */
+@media all and (max-width: 1400px) {
+  #introduce__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 60%;
+  }
+
+  #chat__intro__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 60%;
+  }
+
+  #demo__intro__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 60%;
+  }
+
+  .demointro__button {
+    margin-bottom: 20px;
+  }
+}
+
+/* 해상도 900px */
+@media all and (max-width: 900px) {
+  #introduce__text > h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  #introduce__text > span {
+    font-size: 13px;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  #chat__intro__text > h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  #chat__intro__text > span {
+    font-size: 13px;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  #demo__intro__text > h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  #demo__intro__text > span {
+    font-size: 13px;
+    margin-top: 10px;
+    text-align: center;
+  }
+}
+
+/* 해상도 650px */
+@media all and (max-width: 650px) {
+  #introduce__text > h1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  #chat__intro__text > h1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  #demo__intro__text > h1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
 }

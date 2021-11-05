@@ -17,9 +17,7 @@ dotenv.config();
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
   // 상태관리(ChatDetail)
-  const [chattingMessage, setChattingMessage] = useState(''); // 채팅 메시지
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
-  const [tests, setTests] = useState(''); // 채팅 로그
 
   // 상태관리(ChattingPage)
   const [chatRoomInfo, setChatRoomInfo] = useState([]); // 채팅방 정보
@@ -39,11 +37,13 @@ export function ChattingPage(props) {
   const ws = Stomp.over(sock);
 
   useEffect(() => {
-    wsConnectSubscribe();
-    console.log(chatRoomInfo);
-    return () => {
-      wsDisConnectUnsubscribe();
-    };
+    if (currentRoomid !== '') {
+      wsConnectSubscribe();
+      console.log(chatRoomInfo);
+      return () => {
+        wsDisConnectUnsubscribe();
+      };
+    }
   }, [currentRoomid]);
 
   // 새로고침 시, 방 목록 가져오기
@@ -81,12 +81,6 @@ export function ChattingPage(props) {
       });
   };
 
-  // 채팅메시지 value값 저장
-  const handleChattingChange = (e) => {
-    setChattingMessage(e.target.value);
-    console.log(chattingMessage);
-  };
-
   // 방 목록 받아오기
   const getChattingRoomList = () => {
     axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
@@ -112,7 +106,7 @@ export function ChattingPage(props) {
             `/sub/chat/room/${currentRoomid}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
-              setTests(newMessage.message);
+              addMessage(newMessage);
             },
             { token: token }
           );
@@ -124,7 +118,7 @@ export function ChattingPage(props) {
   }
 
   const addMessage = (message) => {
-    setChattingLog(() => [message]);
+    setChattingLog((prev) => [...prev, message]);
   };
 
   // 연결해제, 구독해제
@@ -162,19 +156,21 @@ export function ChattingPage(props) {
     if (e.key === 'Enter') {
       try {
         // send할 데이터
-        const data = {
+        const newMessage = {
           type: 'TALK',
           roomId: currentRoomid,
           userId: props.userInfo.id,
           sender: props.userInfo.nickname,
-          message: chattingMessage,
+          message: e.target.value,
           createdAt: '',
         };
         waitForConnection(ws, function () {
-          ws.send('/pub/chat/message', { token: token }, JSON.stringify(data));
-          console.log(ws.ws.readyState);
-          setChattingMessage('');
-          setChattingLog([...chattingMessage]);
+          if (ws.ws.readyState === WebSocket.OPEN) {
+            ws.send('/pub/chat/message', { token: token }, JSON.stringify(newMessage));
+            console.log(ws.ws.readyState);
+
+            e.target.value = ''; // 입력 창 초기화
+          }
         });
       } catch (error) {
         console.log(error);
@@ -191,14 +187,10 @@ export function ChattingPage(props) {
         // 구독 채널 바꾸기
         setCurrentRoomId(ele.roomId);
 
+        // 채팅로그 초기화
+        setChattingLog([]);
+
         ws.unsubscribe('sub-0');
-        ws.subscribe(
-          `/sub/chat/room/${ele.roomId}`,
-          (data) => {
-            const newMessage = JSON.parse(data.body);
-          },
-          { token: token }
-        );
       }}
     >
       <div className="chattingroomlist__image">
@@ -227,13 +219,17 @@ export function ChattingPage(props) {
             <div className="chat__detail">
               <div className="chat__container">
                 <div className="chat__log">채팅로그박스</div>
-                <div>{tests}</div>
+                <div className="chat__contents">
+                  {chattingLog.map((message) => (
+                    <div>
+                      {message.sender} : {message.message}
+                    </div>
+                  ))}
+                </div>
               </div>
               <input
                 type="text"
                 onKeyPress={sendMessage}
-                onChange={handleChattingChange}
-                value={chattingMessage}
                 className="chat__input"
                 placeholder="메세지를 입력해주세요"
               ></input>
