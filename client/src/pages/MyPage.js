@@ -43,7 +43,7 @@ export function MyPage(props) {
         data: {
           nickname: props.userInfo.nickname,
           password: props.userInfo.password,
-          profileImage: `${process.env.REACT_APP_S3_IMAGE_URL}/${selectedFile.name}`,
+          profile_image: `${process.env.REACT_APP_S3_IMAGE_URL}/${selectedFile.name}`,
           stateMessage: props.userInfo.stateMessage,
         },
         headers: AXIOS_DEFAULT_HEADER,
