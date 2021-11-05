@@ -15,7 +15,7 @@ import SockJS from 'sockjs-client';
 import { AXIOS_DEFAULT_HEADER } from '../constants/constants';
 
 // CSS
-import '../styles/ChattingPage.css';
+import '../styles/pages/ChattingPage.css';
 
 // .env 환경변수 사용
 dotenv.config();

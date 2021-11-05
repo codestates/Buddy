@@ -10,7 +10,7 @@ import AWS from 'aws-sdk';
 import { PASSWORD_REGEXP, AXIOS_DEFAULT_HEADER } from '../constants/constants';
 
 // css
-import '../styles/MyPage.css';
+import '../styles/pages/MyPage.css';
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../../styles/Footer.css';
+import '../../styles/layout/Footer.css';
 
 export default function Footer() {
   const teamName = [
