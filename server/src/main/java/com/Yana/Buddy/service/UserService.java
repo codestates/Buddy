@@ -37,6 +37,7 @@ public class UserService {
                 String accessToken = tokenService.createJwtToken(user, 1L);
                 String refreshToken = tokenService.createJwtToken(user, 2L);
                 Cookie cookie = new Cookie("refreshToken", refreshToken);
+                cookie.setMaxAge(7200);
                 response.addCookie(cookie);
 
                 return responseHandler.loginSuccess(
@@ -129,16 +130,21 @@ public class UserService {
                     .email(user.getEmail())
                     .gender(user.getGender())
                     .authority(Role.GENERAL)
-                    .stateMessage(dto.getStateMessage())
+                    .stateMessage(dto.getState_message())
                     .profileImage(dto.getProfile_image())
                     .build();
             userRepository.save(updatedUser);
+
+            String gender = null;
+            if (updatedUser.getGender() != null) {
+                gender = updatedUser.getGender().getValue();
+            }
 
             return responseHandler.userBasicInfo(UserBasicInfoResponse.builder()
                             .id(id)
                             .email(updatedUser.getEmail())
                             .nickname(updatedUser.getNickname())
-                            .gender(updatedUser.getGender().getValue())
+                            .gender(gender)
                             .stateMessage(updatedUser.getStateMessage())
                             .profileImage(updatedUser.getProfileImage())
                             .message("유저 정보가 수정되었습니다.")
@@ -169,13 +175,14 @@ public class UserService {
         GoogleUser googleUser = oAuthService.getUserInfo(userInfoResponse);
 
         if (userRepository.findByEmail(googleUser.getEmail()).isEmpty()) {
-            googleSignUp(googleUser, googleToken);
+            googleSignUp(googleUser);
         }
 
         User user = userRepository.findByEmail(googleUser.getEmail()).orElseThrow();
         String accessToken = tokenService.createJwtToken(user, 1L);
         String refreshToken = tokenService.createJwtToken(user, 2L);
         Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setMaxAge(7200);
 
         return new OAuthLoginDto(user, accessToken, refreshToken, cookie);
     }
@@ -201,12 +208,13 @@ public class UserService {
         String accessToken = tokenService.createJwtToken(user, 1L);
         String refreshToken = tokenService.createJwtToken(user, 2L);
         Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setMaxAge(7200);
 
         return new OAuthLoginDto(user, accessToken, refreshToken, cookie);
     }
 
     //Google 전용 회원 가입 로직
-    private void googleSignUp(GoogleUser user, GoogleToken googleToken) {
+    private void googleSignUp(GoogleUser user) {
         User signUpUser = User.builder()
                 .email(user.getEmail())
                 .nickname(user.name)
@@ -268,10 +276,6 @@ public class UserService {
 
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
     }
 
 }
