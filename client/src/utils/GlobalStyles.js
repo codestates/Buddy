@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
-// 전역으로 css를 reset시키는 컴포넌트
+// 전체적으로 css를 reset시키는 컴포넌트
 const GlobalStyles = createGlobalStyle`
     ${reset};
   
