@@ -195,6 +195,7 @@ public class UserService {
      유저 정보 반환
      */
     public OAuthLoginDto kakaoOAuthLogin(String code) throws JsonProcessingException, ParseException {
+        log.info("카카오 로그인 로직 호출");
         ResponseEntity<String> kakaoTokenResponse = oAuthService.getTokenInfo(code);
         KakaoToken kakaoToken = oAuthService.getKakaoToken(kakaoTokenResponse);
 
@@ -227,18 +228,10 @@ public class UserService {
 
     //Kakao 전용 회원 가입 로직
     public User kakaoSignUp(KakaoRegisterDto dto) {
-        Gender gender = null;
-        if (dto.getGender().equals("MALE")) {
-            gender = Gender.MALE;
-        } else if (dto.getGender().equals("FEMALE")) {
-            gender = Gender.FEMALE;
-        }
-
         User signUpUser = User.builder()
                 .email(dto.getEmail())
                 .nickname(dto.getNickname())
                 .profileImage(dto.getProfile_image())
-                .gender(gender)
                 .authority(Role.GENERAL)
                 .build();
 

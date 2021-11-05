@@ -18,7 +18,7 @@ public class ChatRoomController {
     private final ChatMessageService chatMessageService;
 
     //모든 채팅방 조회
-    @GetMapping("room")
+    @GetMapping("rooms")
     public List<ChatRoom> allChatRoom() {
         return chatRoomService.findAllRooms();
     }
@@ -27,6 +27,13 @@ public class ChatRoomController {
     @PostMapping("/room")
     public ChatRoom createRoom() {
         return chatRoomService.createChatRoom();
+    }
+
+    //유저가 1명만 있는 방들 중에서 랜덤으로 채팅방 하나 뽑기
+    @GetMapping
+    public ChatRoom getAvailableRoom() {
+        //return chatRoomService.getAvailableRoom();
+        return null;
     }
 
     //채팅방 상세 조회
