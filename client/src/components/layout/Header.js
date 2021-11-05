@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
-import '../styles/Header.css';
+import '../../styles/layout/Header.css';
 
 export default function Header(props) {
   const history = useHistory();
