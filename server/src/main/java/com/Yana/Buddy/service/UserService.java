@@ -8,7 +8,7 @@ import com.Yana.Buddy.handler.ResponseEntityHandler;
 import com.Yana.Buddy.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-@Slf4j
+@Log4j2
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -66,14 +66,14 @@ public class UserService {
         userRepository.save(user);
 
         return responseHandler.userBasicInfo(UserBasicInfoResponse.builder()
-                        .id(user.getId())
-                        .email(user.getEmail())
-                        .nickname(user.getNickname())
-                        .gender(user.getGender().getValue())
-                        .stateMessage(user.getStateMessage())
-                        .profileImage(user.getProfileImage())
-                        .message("회원 가입에 성공했습니다.")
-                        .build());
+                .id(user.getId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .gender(user.getGender().getValue())
+                .stateMessage(user.getStateMessage())
+                .profileImage(user.getProfileImage())
+                .message("회원 가입에 성공했습니다.")
+                .build());
     }
 
     //로그인 시 입력한 비밀번호가 맞는지 검증
@@ -106,14 +106,14 @@ public class UserService {
             User user = userRepository.findById(id).get();
 
             return responseHandler.userBasicInfo(UserBasicInfoResponse.builder()
-                            .id(user.getId())
-                            .email(user.getEmail())
-                            .nickname(user.getNickname())
-                            .gender(user.getGender().getValue())
-                            .stateMessage(user.getStateMessage())
-                            .profileImage(user.getProfileImage())
-                            .message("유저 정보가 성공적으로 조회되었습니다.")
-                            .build());
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .nickname(user.getNickname())
+                    .gender(user.getGender().getValue())
+                    .stateMessage(user.getStateMessage())
+                    .profileImage(user.getProfileImage())
+                    .message("유저 정보가 성공적으로 조회되었습니다.")
+                    .build());
         } else {
             return responseHandler.badRequest("유저 정보 조회에 실패했습니다.");
         }
@@ -139,16 +139,16 @@ public class UserService {
             if (updatedUser.getGender() != null) {
                 gender = updatedUser.getGender().getValue();
             }
-          
+
             return responseHandler.userBasicInfo(UserBasicInfoResponse.builder()
-                            .id(id)
-                            .email(updatedUser.getEmail())
-                            .nickname(updatedUser.getNickname())
-                            .gender(gender)
-                            .stateMessage(updatedUser.getStateMessage())
-                            .profileImage(updatedUser.getProfileImage())
-                            .message("유저 정보가 수정되었습니다.")
-                            .build());
+                    .id(id)
+                    .email(updatedUser.getEmail())
+                    .nickname(updatedUser.getNickname())
+                    .gender(gender)
+                    .stateMessage(updatedUser.getStateMessage())
+                    .profileImage(updatedUser.getProfileImage())
+                    .message("유저 정보가 수정되었습니다.")
+                    .build());
         } else {
             return responseHandler.badRequest("유저 정보를 찾아내지 못했습니다.");
         }
@@ -161,17 +161,17 @@ public class UserService {
     }
 
     /**
-    Google로부터 받은 code를 받아와서 Google의 관련 API를 이용하여 구글 토큰을 받아옴
-    해당 구글 토큰을 통해 구글 유저 정보를 가져옴
-    유저의 이메일이 우리 서비스에 이미 가입된 계정이라면 회원 가입 진행
-    이후, 해당 이메일 계정 로그인 진행 및 토큰 생성
-    유저 정보 반환
+     Google로부터 받은 code를 받아와서 Google의 관련 API를 이용하여 구글 토큰을 받아옴
+     해당 구글 토큰을 통해 구글 유저 정보를 가져옴
+     유저의 이메일이 우리 서비스에 이미 가입된 계정이라면 회원 가입 진행
+     이후, 해당 이메일 계정 로그인 진행 및 토큰 생성
+     유저 정보 반환
      */
     public OAuthLoginDto googleOAuthLogin(String code) {
-        String accessTokenResponse = oAuthService.createPostRequest(code);
+        ResponseEntity<String> accessTokenResponse = oAuthService.createPostRequest(code);
         GoogleToken googleToken = oAuthService.getAccessToken(accessTokenResponse);
 
-        String userInfoResponse = oAuthService.createGetRequest(googleToken);
+        ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(googleToken);
         GoogleUser googleUser = oAuthService.getUserInfo(userInfoResponse);
 
         if (userRepository.findByEmail(googleUser.getEmail()).isEmpty()) {
@@ -188,14 +188,14 @@ public class UserService {
     }
 
     /**
-    Google과 똑같은 로직으로 code를 통해 토큰을 받아오고,
-    토큰을 통해 유저 정보를 가져오고,
-    유저 정보 안의 이메일이 우리 서비스에 가입되어 있지 않다면 회원 가입 진행 후,
-    해당 유저 계정으로 로그인까지 진행
-    유저 정보 반환
+     Google과 똑같은 로직으로 code를 통해 토큰을 받아오고,
+     토큰을 통해 유저 정보를 가져오고,
+     유저 정보 안의 이메일이 우리 서비스에 가입되어 있지 않다면 회원 가입 진행 후,
+     해당 유저 계정으로 로그인까지 진행
+     유저 정보 반환
      */
     public OAuthLoginDto kakaoOAuthLogin(String code) throws JsonProcessingException, ParseException {
-        String kakaoTokenResponse = oAuthService.getTokenInfo(code);
+        ResponseEntity<String> kakaoTokenResponse = oAuthService.getTokenInfo(code);
         KakaoToken kakaoToken = oAuthService.getKakaoToken(kakaoTokenResponse);
 
         KakaoRegisterDto kakaoUserInfo = oAuthService.getKakaoUser(kakaoToken);
