@@ -162,7 +162,7 @@ public class OAuthService {
         String nickname = profile.get("nickname").toString();
         String profile_image = profile.get("profile_image_url").toString();
         String gender = null;
-        if (kakao_account.get("gender").toString() != null) {
+        if (kakao_account.get("gender_needs_agreement").toString().equals("true")) {
             gender = kakao_account.get("gender").toString().toUpperCase();
         }
 
