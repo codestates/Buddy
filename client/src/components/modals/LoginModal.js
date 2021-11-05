@@ -62,7 +62,7 @@ export function LoginModal(props) {
     if (kakaoSearch) {
       const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
-      axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/callback?code=${kakaoCode}`, {
+      axios(`${process.env.REACT_APP_LOCAL_URL}/oauth/kakao/callback?code=${kakaoCode}`, {
         method: 'GET',
       })
         .then((res) => {
@@ -235,7 +235,7 @@ export function LoginModal(props) {
                   <a id="google__link" href={`${process.env.REACT_APP_API_URL}/login_google`}>
                     <img src="images/google_login.png" alt="구글 로그인" />
                   </a>
-                  <a id="kakao__link" href={`${process.env.REACT_APP_API_URL}/login_kakao`}>
+                  <a id="kakao__link" href={`${process.env.REACT_APP_LOCAL_URL}/login_kakao`}>
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </a>
                 </div>
