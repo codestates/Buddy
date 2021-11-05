@@ -29,12 +29,6 @@ public class ChatRoomController {
         return chatRoomService.createChatRoom();
     }
 
-    //채팅방 주제별 조회
-    @GetMapping("/room/subject/{subject}")
-    public List<ChatRoom> findRoomBySubject(@PathVariable String subject) {
-        return chatRoomService.findBySubject(subject);
-    }
-
     //채팅방 상세 조회
     @GetMapping("/room/{roomId}")
     public ChatRoom getRoomDetail(@PathVariable String roomId) {
