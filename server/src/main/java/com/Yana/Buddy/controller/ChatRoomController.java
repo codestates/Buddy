@@ -1,6 +1,5 @@
 package com.Yana.Buddy.controller;
 
-import com.Yana.Buddy.dto.ChatRoomRequestDto;
 import com.Yana.Buddy.entity.ChatMessage;
 import com.Yana.Buddy.entity.ChatRoom;
 import com.Yana.Buddy.service.ChatMessageService;
@@ -26,8 +25,8 @@ public class ChatRoomController {
 
     //채팅방 생성
     @PostMapping("/room")
-    public ChatRoom createRoom(@RequestBody ChatRoomRequestDto dto) {
-        return chatRoomService.createChatRoom(dto);
+    public ChatRoom createRoom() {
+        return chatRoomService.createChatRoom();
     }
 
     //채팅방 주제별 조회

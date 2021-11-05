@@ -1,5 +1,6 @@
 package com.Yana.Buddy.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,31 +22,14 @@ public class ChatRoom implements Serializable {
     @Column(name = "chat_room_id")
     private Long id;
 
-    private String name;
-
-    private String subject;
-
-    private String image;
-
-    @Column(columnDefinition = "integer default 0")
-    private int userCount;
-
     private String roomId;
 
-    @Builder
-    public ChatRoom(String name, String subject, String image, String roomId) {
-        this.name = name;
-        this.subject = subject;
-        this.image = image;
-        this.roomId = roomId;
-    }
+    private int userCount;
 
-    //테스트 전용 (추후 제거 예정)
-    public static ChatRoom Create(String name) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = UUID.randomUUID().toString();
-        chatRoom.name = name;
-        return chatRoom;
+    @Builder
+    public ChatRoom(String roomId, int userCount) {
+        this.roomId = roomId;
+        this.userCount = userCount;
     }
 
 }
