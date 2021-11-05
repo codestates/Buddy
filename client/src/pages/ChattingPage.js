@@ -200,7 +200,7 @@ export function ChattingPage(props) {
       }}
     >
       <div className="chattingroomlist__image">
-        <img src="images/github_icon.png" alt="Chatting Room Image" />
+        <img src="images/github_icon.png" alt="채팅방 리스트 이미지" />
       </div>
       <div className="chattingroomlist__description">
         <span className="chattingroomlist__name">{ele.name}</span>
@@ -242,7 +242,7 @@ export function ChattingPage(props) {
             </div>
           ) : (
             <div className="chat__detail">
-              <img src="images/chat_main_image.jpg" />
+              <img src="images/chat_main_image.jpg" alt="채팅방 메인 이미지" />
             </div>
           )}
         </section>
