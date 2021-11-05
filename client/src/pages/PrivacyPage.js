@@ -1,7 +1,7 @@
 import React from 'react';
 
 // css
-import '../styles/PrivacyPage.css';
+import '../styles/pages/PrivacyPage.css';
 
 export function PrivacyPage() {
   return (

@@ -10,7 +10,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 // css
-import '../styles/LandingPage.css';
+import '../styles/pages/LandingPage.css';
 
 export function LandingPage() {
   useEffect(() => {
