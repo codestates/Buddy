@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+
+// 라이브러리
 import axios from 'axios';
 import dotenv from 'dotenv';
 import AWS from 'aws-sdk';
+
+// Constants
 import { PASSWORD_REGEXP, AXIOS_DEFAULT_HEADER } from '../constants/constants';
+
+// css
 import '../styles/MyPage.css';
 
 AWS.config.update({

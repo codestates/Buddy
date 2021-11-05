@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
+
+// 라이브러리
 import { Link, useHistory } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
-import { AXIOS_DEFAULT_HEADER } from '../constants/constants';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import '../styles/ChattingPage.css';
 
 // 소켓 통신
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+
+// Constants
+import { AXIOS_DEFAULT_HEADER } from '../constants/constants';
+
+// CSS
+import '../styles/ChattingPage.css';
 
 // .env 환경변수 사용
 dotenv.config();
