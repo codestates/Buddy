@@ -132,7 +132,7 @@ export function MyPage(props) {
         data: {
           nickname: userNickname,
           password: props.userInfo.password,
-          profileImage: props.userInfo.profileImage,
+          profile_image: props.userInfo.profileImage,
           stateMessage: props.userInfo.stateMessage,
         },
         headers: AXIOS_DEFAULT_HEADER,
@@ -166,7 +166,7 @@ export function MyPage(props) {
         method: 'PUT',
         data: {
           password: userPassword,
-          profileImage: props.userInfo.profileImage,
+          profile_image: props.userInfo.profileImage,
           stateMessage: props.userInfo.stateMessage,
           nickname: props.userInfo.nickname,
         },
