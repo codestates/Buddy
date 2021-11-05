@@ -171,7 +171,7 @@ public class UserService {
         String accessTokenResponse = oAuthService.createPostRequest(code);
         GoogleToken googleToken = oAuthService.getAccessToken(accessTokenResponse);
 
-        ResponseEntity<String> userInfoResponse = oAuthService.createGetRequest(googleToken);
+        String userInfoResponse = oAuthService.createGetRequest(googleToken);
         GoogleUser googleUser = oAuthService.getUserInfo(userInfoResponse);
 
         if (userRepository.findByEmail(googleUser.getEmail()).isEmpty()) {
@@ -195,7 +195,7 @@ public class UserService {
     유저 정보 반환
      */
     public OAuthLoginDto kakaoOAuthLogin(String code) throws JsonProcessingException, ParseException {
-        ResponseEntity<String> kakaoTokenResponse = oAuthService.getTokenInfo(code);
+        String kakaoTokenResponse = oAuthService.getTokenInfo(code);
         KakaoToken kakaoToken = oAuthService.getKakaoToken(kakaoTokenResponse);
 
         KakaoRegisterDto kakaoUserInfo = oAuthService.getKakaoUser(kakaoToken);
