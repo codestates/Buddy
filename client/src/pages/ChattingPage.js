@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
+
+// 라이브러리
 import { Link, useHistory } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
-import { AXIOS_DEFAULT_HEADER } from '../constants/constants';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import '../styles/ChattingPage.css';
 
 // 소켓 통신
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+
+// Constants
+import { AXIOS_DEFAULT_HEADER } from '../constants/constants';
+
+// CSS
+import '../styles/pages/ChattingPage.css';
 
 // .env 환경변수 사용
 dotenv.config();
@@ -194,7 +200,7 @@ export function ChattingPage(props) {
       }}
     >
       <div className="chattingroomlist__image">
-        <img src="images/github_icon.png" alt="Chatting Room Image" />
+        <img src="images/github_icon.png" alt="채팅방 리스트 이미지" />
       </div>
       <div className="chattingroomlist__description">
         <span className="chattingroomlist__name">{ele.name}</span>
@@ -236,7 +242,7 @@ export function ChattingPage(props) {
             </div>
           ) : (
             <div className="chat__detail">
-              <img src="images/chat_main_image.jpg" />
+              <img src="images/chat_main_image.jpg" alt="채팅방 메인 이미지" />
             </div>
           )}
         </section>
