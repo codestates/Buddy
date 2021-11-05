@@ -161,12 +161,8 @@ public class OAuthService {
         JSONObject profile = (JSONObject) kakao_account.get("profile");
         String nickname = profile.get("nickname").toString();
         String profile_image = profile.get("profile_image_url").toString();
-        String gender = null;
-        if (kakao_account.get("gender_needs_agreement").toString().equals("true")) {
-            gender = kakao_account.get("gender").toString().toUpperCase();
-        }
 
-        return new KakaoRegisterDto(email, nickname, profile_image, gender);
+        return new KakaoRegisterDto(email, nickname, profile_image, null);
     }
 
 }
