@@ -37,11 +37,6 @@ public class ChatRoomService {
         return chatRoom;
     }
 
-    //채팅방 주제별 조회
-    public List<ChatRoom> findBySubject(String subject) {
-        return chatRoomRepository.findBySubject(subject);
-    }
-
     //채팅방 상세 조회
     public ChatRoom getRoomInfo(Long roomId) {
         return chatRoomRepository.findById(roomId).orElseThrow(
