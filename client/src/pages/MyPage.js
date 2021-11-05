@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+
+// 라이브러리
 import axios from 'axios';
 import dotenv from 'dotenv';
 import AWS from 'aws-sdk';
+
+// Constants
 import { PASSWORD_REGEXP, AXIOS_DEFAULT_HEADER } from '../constants/constants';
-import '../styles/MyPage.css';
+
+// css
+import '../styles/pages/MyPage.css';
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -44,7 +50,7 @@ export function MyPage(props) {
           nickname: props.userInfo.nickname,
           password: props.userInfo.password,
           profile_image: `${process.env.REACT_APP_S3_IMAGE_URL}/${selectedFile.name}`,
-          state_message: props.userInfo.state_message,
+          stateMessage: props.userInfo.stateMessage,
         },
         headers: AXIOS_DEFAULT_HEADER,
       })
@@ -132,8 +138,8 @@ export function MyPage(props) {
         data: {
           nickname: userNickname,
           password: props.userInfo.password,
-          profile_image: props.userInfo.profile_image,
-          state_message: props.userInfo.state_message,
+          profile_image: props.userInfo.profileImage,
+          stateMessage: props.userInfo.stateMessage,
         },
         headers: AXIOS_DEFAULT_HEADER,
       })
@@ -166,8 +172,8 @@ export function MyPage(props) {
         method: 'PUT',
         data: {
           password: userPassword,
-          profile_image: props.userInfo.profile_image,
-          state_message: props.userInfo.state_message,
+          profile_image: props.userInfo.profileImage,
+          stateMessage: props.userInfo.stateMessage,
           nickname: props.userInfo.nickname,
         },
         headers: AXIOS_DEFAULT_HEADER,
@@ -188,7 +194,7 @@ export function MyPage(props) {
         <div className="mypage__container">
           <div className="mypage__image__container">
             <label for="file-input">
-              <img src={props.userInfo.profile_image} alt="마이페이지 이미지" title="이미지를 수정합니다" />
+              <img src={props.userInfo.profileImage} alt="마이페이지 이미지" title="이미지를 수정합니다" />
             </label>
             <input id="file-input" type="file" onChange={handleFileInput} style={{ display: 'none' }} />
           </div>

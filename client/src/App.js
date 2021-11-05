@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
+
+// 라이브러리
+import { Cookies } from 'react-cookie';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import GlobalStyles from './styles/globalStyles';
+import axios from 'axios';
+
+// 컴포넌트
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import { LoginModal } from './components/modals/LoginModal';
+
+// 페이지
+import { MyPage } from './pages/MyPage';
 import { LandingPage } from './pages/LandingPage';
 import { TermPage } from './pages/TermPage';
 import { PrivacyPage } from './pages/PrivacyPage';
-import { LoginModal } from './components/modals/LoginModal';
 import { ChattingPage } from './pages/ChattingPage';
 import { DemoPage } from './pages/DemoPage';
+
+// 유틸
 import ScrollToTop from './utils/ScrollToTop';
-import { MyPage } from './pages/MyPage';
-import { Cookies } from 'react-cookie';
+import GlobalStyles from './utils/GlobalStyles';
+
+// Constants
 import { AXIOS_DEFAULT_HEADER } from './constants/constants';
-import axios from 'axios';
 
 // 도메인간 쿠키 전송을 하기 위해서는 true로 해야 함.
 axios.defaults.withCredentials = true;
