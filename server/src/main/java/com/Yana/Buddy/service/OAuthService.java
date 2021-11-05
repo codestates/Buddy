@@ -10,7 +10,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -53,14 +56,6 @@ public class OAuthService {
         headers.add("Content-Type", "application/x-www-form-urlencoded");
 
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
-
-        /*
-        return WebClient.builder()
-                .baseUrl("https://oauth2.googleapis.com")
-                .build()
-                .post()
-                .build();
-         */
 
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
     }
@@ -167,7 +162,7 @@ public class OAuthService {
         String nickname = profile.get("nickname").toString();
         String profile_image = profile.get("profile_image_url").toString();
         String gender = null;
-        if (kakao_account.get("gender").toString() != null) {
+        if (kakao_account.get("gender_needs_agreement").toString().equals("true")) {
             gender = kakao_account.get("gender").toString().toUpperCase();
         }
 

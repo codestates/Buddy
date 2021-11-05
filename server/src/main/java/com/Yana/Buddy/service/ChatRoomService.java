@@ -1,6 +1,5 @@
 package com.Yana.Buddy.service;
 
-import com.Yana.Buddy.dto.ChatRoomRequestDto;
 import com.Yana.Buddy.entity.ChatRoom;
 import com.Yana.Buddy.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +28,10 @@ public class ChatRoomService {
     }
 
     //채팅방 생성
-    public ChatRoom createChatRoom(ChatRoomRequestDto dto) {
+    public ChatRoom createChatRoom() {
         ChatRoom chatRoom = ChatRoom.builder()
-                .name(dto.getName())
-                .subject(dto.getSubject())
-                .image(dto.getImage())
                 .roomId(UUID.randomUUID().toString())
+                .userCount(0)
                 .build();
         chatRoomRepository.save(chatRoom);
         return chatRoom;
@@ -65,12 +62,6 @@ public class ChatRoomService {
     //유저 세션 정보와 매핑된 채팅방 id 삭제
     public void removeUserEnterInfo(String sessionID) {
         hashOperations.delete(ENTER_INFO, sessionID);
-    }
-
-    public ChatRoom testChatRoom(String name) {
-        ChatRoom chatRoom = ChatRoom.Create(name);
-        chatRoomRepository.save(chatRoom);
-        return chatRoom;
     }
 
     public ChatRoom getRoomInfoByRoomId(String roomId) {
