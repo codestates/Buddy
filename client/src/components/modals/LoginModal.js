@@ -7,6 +7,9 @@ import { SignupModal } from './SignupModal';
 import { AXIOS_DEFAULT_HEADER } from '../../constants/constants';
 import '../../styles/modal/LoginModal.css';
 
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/dist/sweetalert2.css';
+
 // .env 환경변수 사용
 dotenv.config();
 
@@ -48,7 +51,7 @@ export function LoginModal(props) {
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
-          alert('로그인에 성공했습니다.');
+          Swal.fire('로그인에 성공했습니다.');
         })
         .catch((err) => {});
     }
@@ -74,7 +77,7 @@ export function LoginModal(props) {
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
-          alert('로그인에 성공했습니다.');
+          Swal.fire('로그인에 성공했습니다.');
         })
         .catch((err) => {});
     }
@@ -106,7 +109,7 @@ export function LoginModal(props) {
         props.setLoginOn(true);
         props.setModalOn(false);
         props.accessTokenCheck();
-        alert('로그인에 성공했습니다.');
+        Swal.fire('로그인에 성공했습니다.');
       })
       .catch((err) => {
         console.log(`email = ${userData.email}, password = ${userData.password}`);
