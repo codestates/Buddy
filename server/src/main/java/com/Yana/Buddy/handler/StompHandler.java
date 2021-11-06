@@ -2,7 +2,9 @@ package com.Yana.Buddy.handler;
 
 import com.Yana.Buddy.entity.ChatMessage;
 import com.Yana.Buddy.entity.ChatRoom;
+import com.Yana.Buddy.entity.EnterInfo;
 import com.Yana.Buddy.repository.ChatRoomRepository;
+import com.Yana.Buddy.repository.EnterInfoRepository;
 import com.Yana.Buddy.service.ChatMessageService;
 import com.Yana.Buddy.service.ChatRoomService;
 import com.Yana.Buddy.service.TokenService;
@@ -29,6 +31,7 @@ public class StompHandler implements ChannelInterceptor {
     private final ChatMessageService chatMessageService;
     private final ChatRoomService chatRoomService;
     private final UserService userService;
+    private final EnterInfoRepository enterInfoRepository;
 
     //WebSocket 을 통해 들어온 요청이 처리 되기전 실행
     @Override
@@ -55,7 +58,11 @@ public class StompHandler implements ChannelInterceptor {
 
             String sessionId = (String) message.getHeaders().get("simpSessionId");
             log.info("SUBSCRIBE - 요청한 session id : {}", sessionId);
-            chatRoomService.setUserEnterInfo(sessionId, roomId);
+            //chatRoomService.setUserEnterInfo(sessionId, roomId);
+            enterInfoRepository.save(EnterInfo.builder()
+                            .sessionId(sessionId)
+                            .roomId(roomId)
+                            .build());
 
             ChatRoom room = chatRoomRepository.findByRoomId(roomId);
             ChatRoom updatedRoom = ChatRoom.builder()
@@ -86,7 +93,8 @@ public class StompHandler implements ChannelInterceptor {
          */
         else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             String sessionId = (String) message.getHeaders().get("simpSessionId");
-            String roomId = chatRoomService.getUserEnterRoomId(sessionId);
+            //String roomId = chatRoomService.getUserEnterRoomId(sessionId);
+            String roomId = enterInfoRepository.findBySessionId(sessionId).get().getRoomId();
 
             String name = userService.findUserByEmail(
                     tokenService.checkJwtToken(accessor.getFirstNativeHeader("token")).getEmail()
@@ -112,7 +120,8 @@ public class StompHandler implements ChannelInterceptor {
                 chatRoomRepository.save(updatedRoom);
             }
 
-            chatRoomService.removeUserEnterInfo(sessionId);
+            //chatRoomService.removeUserEnterInfo(sessionId);
+            enterInfoRepository.deleteBySessionId(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, roomId);
         }
 
