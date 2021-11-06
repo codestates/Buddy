@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { PASSWORD_REGEXP, EMAIL_REGEXP, AXIOS_DEFAULT_HEADER } from '../../constants/constants';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/dist/sweetalert2.css';
 import '../../styles/modal/SignupModal.css';
 import dotenv from 'dotenv';
 import { PASSWORD_REGEXP, EMAIL_REGEXP } from '../../constants/constants';
@@ -40,11 +43,16 @@ export function SignupModal(props) {
         .then((res) => {
           console.log(res.data);
           props.setSignupModalOn(false);
+<<<<<<< HEAD
           setSignupUserEmail('');
           setSignupUserPassword('');
           setSignupUserPasswordValid('');
           setSignupUserNickname('');
           setSignupUserGender('MALE');
+=======
+          resetSignupInput();
+          Swal.fire('회원가입이 완료되었습니다.');
+>>>>>>> 63d9ddd304ae8b8af3af0d3498fcafeddc09cb48
           history.push('/');
         })
         .catch((err) => {
@@ -152,12 +160,29 @@ export function SignupModal(props) {
 
   // 회원가입 버튼 이벤트
   function handleSignup() {
+<<<<<<< HEAD
     setSignupUserinfo({
       email: signupUserEmail,
       password: signupUserPassword,
       nickname: signupUserNickname,
       gender: signupUserGender,
     });
+=======
+    if (signupUserEmailCodeCheck === 0) {
+      Swal.fire('이메일을 인증해주세요.');
+    } else if (signupUserPassword !== signupUserPasswordValid || signupUserPassword === '') {
+      Swal.fire('입력된 비밀번호가 일치해야 합니다.');
+    } else if (signupUserNicknameCheck === 0) {
+      Swal.fire('닉네임을 인증해주세요.');
+    } else {
+      setSignupUserinfo({
+        email: signupUserEmail,
+        password: signupUserPassword,
+        nickname: signupUserNickname,
+        gender: signupUserGender,
+      });
+    }
+>>>>>>> 63d9ddd304ae8b8af3af0d3498fcafeddc09cb48
 
     console.log(signupUserEmailCheck);
     console.log(signupUserNicknameCheck);

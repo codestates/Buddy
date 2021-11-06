@@ -5,6 +5,8 @@ import '../styles/MyPage.css';
 import { PASSWORD_REGEXP } from '../constants/constants';
 import dotenv from 'dotenv';
 import AWS from 'aws-sdk';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/dist/sweetalert2.css';
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -56,7 +58,9 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
-          window.location.replace('/mypage'); // mypage 새로고침
+          Swal.fire('프로필 이미지가 변경되었습니다.').then(function () {
+            window.location.replace('/mypage'); // mypage 새로고침
+          });
         })
         .catch((err) => {});
     }
@@ -86,24 +90,29 @@ export function MyPage(props) {
   //? 업로드 로직 //
 
   const handleUnregister = () => {
-    axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'DELETE',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
-    })
-      .then((res) => {
-        console.log(res.data); // 회원정보 삭제 완료
-        props.setLoginOn(false); // 로그인 상태 false
-        history.push('/'); // 루트 경로로 이동
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    Swal.fire({
+      title: '회원탈퇴를 하시겠습니까?',
+      text: '탈퇴가 진행되면 저장된 모든 정보를 잃게됩니다.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: '네',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
+          method: 'DELETE',
+          headers: AXIOS_DEFAULT_HEADER,
+        })
+          .then((res) => {
+            console.log(res.data); // 회원정보 삭제 완료
+            props.setLoginOn(false); // 로그인 상태 false
+            history.push('/'); // 루트 경로로 이동
+            Swal.fire('회원탈퇴가 완료되었습니다.');
+          })
+          .catch((err) => {});
+      }
+    });
   };
 
   // 닉네임 입력 상태관리
@@ -158,7 +167,9 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
-          window.location.replace('/mypage'); // mypage 새로고침
+          Swal.fire('닉네임이 변경되었습니다.').then(function () {
+            window.location.replace('/mypage'); // mypage 새로고침
+          });
         })
         .catch((err) => {});
     } else {
@@ -198,7 +209,9 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
-          window.location.replace('/mypage'); // mypage 새로고침
+          Swal.fire('비밀번호가 변경되었습니다.').then(function () {
+            window.location.replace('/mypage'); // mypage 새로고침
+          });
         })
         .catch((err) => {});
     } else {
@@ -209,17 +222,27 @@ export function MyPage(props) {
     <div className="my__page">
       <section className="mypage__wrapper">
         <div className="mypage__container">
-          <div className="mypage__image__container">
-            <label for="file-input">
-              <img src={props.userInfo.profile_image} alt="마이페이지 이미지" title="이미지를 수정합니다" />
-            </label>
-            <input id="file-input" type="file" onChange={handleFileInput} style={{ display: 'none' }} />
-          </div>
-          <div className="mypage__basicinfo">
-            <span className="mypage__nickname">{props.userInfo.nickname}</span>
-            <span className="mypage__email">{props.userInfo.email}</span>
-            <span className="mypage__role">{props.userInfo.authority}</span>
-            <span className="mypage__gender">{props.userInfo.gender}</span>
+          <div className="mypage__firstinfo">
+            <div className="mypage__image__container">
+              <label for="file-input">
+                <img src={props.userInfo.profileImage} alt="마이페이지 이미지" title="이미지를 수정합니다" />
+              </label>
+              <input id="file-input" type="file" onChange={handleFileInput} style={{ display: 'none' }} />
+            </div>
+            <div className="mypage__basicinfo">
+              <span className="mypage__nickname">{`${props.userInfo.nickname} 님`}</span>
+              <span className="mypage__email">{props.userInfo.email}</span>
+              {props.userInfo.authority === 'GENERAL' ? (
+                <span className="mypage__role">일반회원</span>
+              ) : props.userInfo.authority === 'ADMIN' ? (
+                <span className="mypage__role">관리자</span>
+              ) : null}
+              {props.userInfo.gender === 'MALE' ? (
+                <span className="mypage__gender">남자</span>
+              ) : props.userInfo.gender === 'FEMALE' ? (
+                <span className="mypage__gender">여자</span>
+              ) : null}
+            </div>
           </div>
           <div className="mypage__modifyinfo">
             <div className="mypage__modifyinfo__container">
