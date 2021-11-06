@@ -46,7 +46,7 @@ export function ChattingPage(props) {
   const ws = Stomp.over(sock);
 
   useEffect(() => {
-    if (cookies.get('chatRoomid') !== '') {
+    if (currentRoomid !== '') {
       wsConnectSubscribe();
       console.log(chatRoomInfo);
       return () => {
