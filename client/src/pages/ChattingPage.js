@@ -20,6 +20,9 @@ import '../styles/pages/ChattingPage.css';
 // .env 환경변수 사용
 dotenv.config();
 
+// 쿠키 생성
+const cookies = new Cookies();
+
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
   // 상태관리(ChatDetail)
@@ -43,7 +46,7 @@ export function ChattingPage(props) {
   const ws = Stomp.over(sock);
 
   useEffect(() => {
-    if (currentRoomid !== '') {
+    if (cookies.get('chatRoomid') !== '') {
       wsConnectSubscribe();
       console.log(chatRoomInfo);
       return () => {
@@ -70,7 +73,10 @@ export function ChattingPage(props) {
       .then((res) => {
         console.log(res.data);
         alert('대기 중인 방이 없으므로 새로운 방을 생성했습니다.');
-        setCurrentRoomId(res.data.roomId);
+
+        // 쿠키에 생성된 방 id 넣기
+        cookies.set('chatRoomid', res.data.roomId);
+
         window.location.replace('/chat');
       })
       .catch((err) => {
@@ -87,7 +93,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/room/${currentRoomid}`,
+            `/sub/chat/room/${cookies.get('chatRoomid')}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
               addMessage(newMessage);
