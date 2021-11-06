@@ -76,6 +76,12 @@ public class ChatRoomService {
         );
     }
 
+    //roomId를 통해 채팅방 삭제
+    public ResponseEntity deleteRoomByRoomId(String roomId) {
+        chatRoomRepository.deleteByRoomId(roomId);
+        return responseHandler.singleSuccessResponse("채팅방이 삭제되었습니다.");
+    }
+
     //유저가 입장한 채팅방 id 및 유저 세션 id 정보 저장
     public void setUserEnterInfo(String sessionId, String roomId) {
         hashOperations.put(ENTER_INFO, sessionId, roomId);
