@@ -1,0 +1,180 @@
+/* 로그인 모달 전체 회색 배경 */
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  animation: fadein 0.4s;
+  -webkit-animation: fadein 0.4s;
+}
+
+/* 로그인 모달 내부 흰색 배경 */
+.popup__inner {
+  width: 400px;
+  height: 600px;
+  background: white;
+  border-radius: 15px;
+  margin-top: 170px;
+  box-shadow: 1px 3px 10px;
+}
+
+/* 로그인 모달 닫기 버튼 */
+#signin__close__btn {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 20px;
+}
+
+#signin__close__btn > .close {
+  all: unset;
+  cursor: pointer;
+}
+
+/* 로그인 모달 닫기 버튼 내 이미지 */
+.close > img {
+  width: 18px;
+}
+
+/* 로그인 회원가입 컨텐츠 박스 */
+#signin__contents {
+  font-family: 'Noto Sans KR';
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+/* 로그인 회원가입 컨텐츠 박스 내부 로고 이미지 */
+#signin__contents > img {
+  width: 90px;
+  margin-bottom: 30px;
+}
+
+/* 로그인 회원가입 컨텐츠 '로그인' 글씨 */
+#signin__title {
+  font-size: 25px;
+  color: black;
+  margin-bottom: 50px;
+}
+
+/* 로그인 컨텐츠 이메일, 비번 입력 input */
+.signin__input {
+  margin-bottom: 35px;
+  outline: none;
+  font-size: 13px;
+  color: black;
+  width: 260px;
+  border: none;
+  border-bottom: 1px solid rgb(180, 180, 180);
+}
+
+.signin__input::placeholder {
+  color: rgb(180, 180, 180);
+  font-size: 12px;
+}
+
+#login__error {
+  margin-top: 10px;
+  color: red;
+}
+
+/* 회원가입 버튼 */
+#signin__btn {
+  margin-top: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+
+#signin__btn > .signin__btn__contents {
+  width: 270px;
+  height: 40px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #22cc88;
+  cursor: pointer;
+}
+
+#signin__btn > .signin__btn__contents:hover {
+  background-color: #27e99b;
+}
+
+#not__user {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+#signup__link {
+  margin-left: 10px;
+  color: #22cc88;
+  text-decoration: none;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-family: 'Noto Sans KR';
+  cursor: pointer;
+}
+
+#signup__link:hover {
+  color: #27e99b;
+}
+
+#social__login {
+  margin-top: 30px;
+}
+
+#google__link {
+  margin-right: 15px;
+}
+
+#google__link > img {
+  width: 40px;
+}
+
+#google__link > img:hover {
+  opacity: 0.5;
+}
+
+#kakao__link > img {
+  width: 40px;
+}
+
+#kakao__link > img:hover {
+  opacity: 0.5;
+}
+
+#login__error {
+  margin-top: -23px;
+  color: red;
+}
+
+/* 모달 창 페이드 인 애니메이션 */
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadein {
+  /* Safari and Chrome */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
