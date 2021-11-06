@@ -77,4 +77,8 @@ public class ChatMessageService {
         return chatMessageRepository.findByRoomId(roomId);
     }
 
+    public void deleteByRoomId(String roomId) {
+        chatMessageRepository.deleteByRoomId(roomId);
+    }
+
 }

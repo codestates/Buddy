@@ -1,6 +1,7 @@
 package com.Yana.Buddy.handler;
 
 import com.Yana.Buddy.entity.ChatMessage;
+import com.Yana.Buddy.entity.ChatRoom;
 import com.Yana.Buddy.repository.ChatRoomRepository;
 import com.Yana.Buddy.service.ChatMessageService;
 import com.Yana.Buddy.service.ChatRoomService;
@@ -56,14 +57,16 @@ public class StompHandler implements ChannelInterceptor {
             log.info("SUBSCRIBE - 요청한 session id : {}", sessionId);
             chatRoomService.setUserEnterInfo(sessionId, roomId);
 
+            ChatRoom room = chatRoomRepository.findByRoomId(roomId);
+            ChatRoom updatedRoom = ChatRoom.builder()
+                    .roomId(room.getRoomId())
+                    .userCount(room.getUserCount() + 1)
+                    .build();
+            chatRoomRepository.save(updatedRoom);
+
             String name = userService.findUserByEmail(
                     tokenService.checkJwtToken(accessor.getFirstNativeHeader("token")).getEmail()
             ).get().getNickname();
-
-            /** 참조한 소스 코드에서는 아래의 코드를 사용했고 이를 똑같이 적용해보려 했지만 잘 적용되지 않아서 토큰에서 추출하는 방식으로 진행함
-            String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser"))
-                    .map(Principal::getName).orElse("Anonymous User");
-             */
 
             log.info("SUBSCRIBE - 구독 요청한 유저 이름 : {}", name);
             chatMessageService.sendChatMessage(ChatMessage.builder()
@@ -88,17 +91,24 @@ public class StompHandler implements ChannelInterceptor {
                     tokenService.checkJwtToken(accessor.getFirstNativeHeader("token")).getEmail()
             ).get().getNickname();
 
-            /** subscribe 와 동일한 이유로, 유저의 닉네임을 토큰을 통해 따로 가져옴
-            String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser"))
-                    .map(Principal::getName).orElse("Anonymous User");
-             */
-
             chatMessageService.sendChatMessage(ChatMessage.builder()
                             .type(ChatMessage.MessageType.QUIT)
                             .roomId(roomId)
                             .sender(name)
                             .build());
             chatRoomService.removeUserEnterInfo(sessionId);
+
+            ChatRoom room = chatRoomRepository.findByRoomId(roomId);
+            if (room.getUserCount() - 1 == 0) {
+                chatRoomRepository.delete(room);
+                chatMessageService.deleteByRoomId(roomId);
+            } else {
+                ChatRoom updatedRoom = ChatRoom.builder()
+                        .roomId(room.getRoomId())
+                        .userCount(room.getUserCount() - 1)
+                        .build();
+                chatRoomRepository.save(updatedRoom);
+            }
 
             log.info("DISCONNECTED {}, {}", sessionId, roomId);
         }
