@@ -44,7 +44,7 @@ public class ChatRoomController {
     }
 
     //roomId를 통해 채팅방 삭제
-    @DeleteMapping("/room")
+    @DeleteMapping("/room/{roomId}")
     public ResponseEntity deleteRoomByRoomId(@PathVariable String roomId) {
         return chatRoomService.deleteRoomByRoomId(roomId);
     }
