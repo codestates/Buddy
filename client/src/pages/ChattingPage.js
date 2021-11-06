@@ -61,7 +61,7 @@ export function ChattingPage(props) {
   useEffect(() => {
     // token이 없으면 로그인 페이지로 이동
     if (!token) {
-      Swal.fire('회원 전용 페이지입니다. 로그인해 주세요.');
+      Swal.fire({ title: '회원 전용 페이지입니다. 로그인 해주세요.', confirmButtonText: '확인' });
       history.push('/');
     }
   }, []);
@@ -74,7 +74,7 @@ export function ChattingPage(props) {
     })
       .then((res) => {
         console.log(res.data);
-        Swal.fire(`${res.data.message}`).then(function () {
+        Swal.fire({ title: `${res.data.message}`, confirmButtonText: '확인' }).then(function () {
           window.location.replace('/chat');
         });
 

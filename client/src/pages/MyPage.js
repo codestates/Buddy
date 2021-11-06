@@ -58,7 +58,7 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
-          Swal.fire('프로필 이미지가 변경되었습니다.').then(function () {
+          Swal.fire({ title: '프로필 이미지가 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
             window.location.replace('/mypage'); // mypage 새로고침
           });
         })
@@ -99,6 +99,7 @@ export function MyPage(props) {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       confirmButtonText: '네',
+      cancelButtonText: '아니오',
     }).then((result) => {
       if (result.isConfirmed) {
         axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
@@ -109,7 +110,7 @@ export function MyPage(props) {
             console.log(res.data); // 회원정보 삭제 완료
             props.setLoginOn(false); // 로그인 상태 false
             history.push('/'); // 루트 경로로 이동
-            Swal.fire('회원탈퇴가 완료되었습니다.');
+            Swal.fire({ title: '회원 탈퇴가 완료되었습니다.', confirmButtonText: '확인' });
           })
           .catch((err) => {});
       }
@@ -158,7 +159,7 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
-          Swal.fire('닉네임이 변경되었습니다.').then(function () {
+          Swal.fire({ title: '닉네임이 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
             window.location.replace('/mypage'); // mypage 새로고침
           });
         })
@@ -194,7 +195,7 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
-          Swal.fire('비밀번호가 변경되었습니다.').then(function () {
+          Swal.fire({ title: '비밀번호가 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
             window.location.replace('/mypage'); // mypage 새로고침
           });
         })

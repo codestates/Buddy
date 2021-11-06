@@ -53,6 +53,33 @@ const GlobalStyles = createGlobalStyle`
         url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),
         url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');
     }
+
+    /* sweetalert2 */
+    .swal2-title {
+      font-family: 'Noto Sans KR';
+      position: relative;
+      max-width: 100%;
+      margin: 0;
+      margin-top: 10px;
+      padding: 0.8em 1em 0;
+      color: #595959;
+      font-size: 1.1em;
+      font-weight: 600;
+      text-align: center;
+      text-transform: none;
+      word-wrap: break-word;
+    }
+
+    .swal2-styled.swal2-confirm {
+      border: 0;
+      border-radius: 0.25em;
+      background: initial;
+      background-color: #56bb67;
+      color: #fff;
+      font-size: 0.9em;
+    }
+    
+
 `;
 
 export default GlobalStyles;
