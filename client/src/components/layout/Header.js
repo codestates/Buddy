@@ -25,13 +25,13 @@ export default function Header(props) {
   const handleSignOut = () => {
     cookies.remove('refreshToken');
     history.push('/');
-    Swal.fire('정상적으로 로그아웃되었습니다.');
+    Swal.fire({ title: '정상적으로 로그아웃되었습니다.', confirmButtonText: '확인' });
     props.setLoginOn(false);
     props.setUserInfo({});
   };
 
   const handleOnlyUserError = () => {
-    Swal.fire('로그인 후 사용가능합니다. 로그인 해주세요.');
+    Swal.fire({ title: '로그인 후 사용가능합니다. 로그인 해주세요.', confirmButtonText: '확인' });
   };
 
   return (

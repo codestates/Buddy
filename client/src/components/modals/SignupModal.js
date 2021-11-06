@@ -39,7 +39,7 @@ export function SignupModal(props) {
           console.log(res.data);
           props.setSignupModalOn(false);
           resetSignupInput();
-          Swal.fire('회원가입이 완료되었습니다.');
+          Swal.fire({ title: '회원가입이 완료되었습니다.', confirmButtonText: '확인' });
           history.push('/');
         })
         .catch((err) => {});
@@ -185,11 +185,11 @@ export function SignupModal(props) {
   // 회원가입 버튼 이벤트
   function handleSignup() {
     if (signupUserEmailCodeCheck === 0) {
-      Swal.fire('이메일을 인증해주세요.');
+      Swal.fire({ title: '이메일을 인증해주세요.', confirmButtonText: '확인' });
     } else if (signupUserPassword !== signupUserPasswordValid || signupUserPassword === '') {
-      Swal.fire('입력된 비밀번호가 일치해야 합니다.');
+      Swal.fire({ title: '입력된 비밀번호가 일치해야 합니다.', confirmButtonText: '확인' });
     } else if (signupUserNicknameCheck === 0) {
-      Swal.fire('닉네임을 인증해주세요.');
+      Swal.fire({ title: '닉네임을 인증해주세요.', confirmButtonText: '확인' });
     } else {
       setSignupUserinfo({
         email: signupUserEmail,

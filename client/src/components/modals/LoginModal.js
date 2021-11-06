@@ -51,7 +51,7 @@ export function LoginModal(props) {
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
-          Swal.fire('로그인에 성공했습니다.');
+          Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
         })
         .catch((err) => {});
     }
@@ -77,7 +77,7 @@ export function LoginModal(props) {
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
-          Swal.fire('로그인에 성공했습니다.');
+          Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
         })
         .catch((err) => {});
     }
@@ -109,7 +109,7 @@ export function LoginModal(props) {
         props.setLoginOn(true);
         props.setModalOn(false);
         props.accessTokenCheck();
-        Swal.fire('로그인에 성공했습니다.');
+        Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
       })
       .catch((err) => {
         console.log(`email = ${userData.email}, password = ${userData.password}`);
