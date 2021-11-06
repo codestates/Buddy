@@ -1,15 +1,18 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+
+// 라이브러리
 import { Cookies } from 'react-cookie';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/dist/sweetalert2.css';
+
+// css
 import '../../styles/layout/Header.css';
 
 export default function Header(props) {
   const history = useHistory();
 
   const cookies = new Cookies();
-
-  // 토큰
-  const token = cookies.get('refreshToken');
 
   const loginModalOpen = () => {
     props.setModalOn(true);
@@ -19,13 +22,13 @@ export default function Header(props) {
   const handleSignOut = () => {
     cookies.remove('refreshToken');
     history.push('/');
-    alert('정상적으로 로그아웃되었습니다.');
+    Swal.fire('정상적으로 로그아웃되었습니다.');
     props.setLoginOn(false);
     props.setUserInfo({});
   };
 
   const handleOnlyUserError = () => {
-    alert('회원 전용 페이지입니다. 로그인해 주세요.');
+    Swal.fire('로그인 후 사용가능합니다. 로그인 해주세요.');
   };
 
   return (
@@ -37,15 +40,9 @@ export default function Header(props) {
         <nav id="nav">
           <ul id="ul">
             <li>
-              {!token ? (
-                <Link className="header__link" to="/" onClick={handleOnlyUserError}>
-                  채팅
-                </Link>
-              ) : (
-                <Link className="header__link" to="/chat">
-                  채팅
-                </Link>
-              )}
+              <Link className="header__link" to="/chat">
+                채팅
+              </Link>
             </li>
             <li>
               <Link className="header__link" to="/demo">
@@ -63,14 +60,13 @@ export default function Header(props) {
                 </button>
               )}
             </li>
-
-            {props.loginOn === true ? (
-              <li>
+            <li>
+              {props.loginOn === true ? (
                 <Link className="header__link" to="/mypage">
                   마이페이지
                 </Link>
-              </li>
-            ) : null}
+              ) : null}
+            </li>
           </ul>
         </nav>
       </header>
