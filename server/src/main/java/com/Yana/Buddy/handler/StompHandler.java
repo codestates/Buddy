@@ -86,10 +86,7 @@ public class StompHandler implements ChannelInterceptor {
          */
         else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             String sessionId = (String) message.getHeaders().get("simpSessionId");
-            String roomId = chatMessageService.getRoomId(Optional.ofNullable(
-                            (String) message.getHeaders().get("simpDestination"))
-                    .orElse("Anonymous User"));
-            //String roomId = chatRoomService.getUserEnterRoomId(sessionId);
+            String roomId = chatRoomService.getUserEnterRoomId(sessionId);
 
             String name = userService.findUserByEmail(
                     tokenService.checkJwtToken(accessor.getFirstNativeHeader("token")).getEmail()
@@ -115,6 +112,7 @@ public class StompHandler implements ChannelInterceptor {
                 chatRoomRepository.save(updatedRoom);
             }
 
+            chatRoomService.removeUserEnterInfo(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, roomId);
         }
 
