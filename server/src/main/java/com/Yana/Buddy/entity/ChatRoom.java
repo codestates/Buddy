@@ -14,6 +14,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ChatRoom implements Serializable {
 
     private static final long serialVersionUID = 6494678977089006639L;
@@ -25,11 +27,5 @@ public class ChatRoom implements Serializable {
     private String roomId;
 
     private int userCount;
-
-    @Builder
-    public ChatRoom(String roomId, int userCount) {
-        this.roomId = roomId;
-        this.userCount = userCount;
-    }
 
 }
