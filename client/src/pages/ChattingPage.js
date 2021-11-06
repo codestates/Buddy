@@ -88,19 +88,18 @@ export function ChattingPage(props) {
   const handleExitRoom = () => {
     alert('채팅을 종료합니다.');
     cookies.remove('chatRoomid');
-    wsDisConnectUnsubscribe();
 
-    // // DELETE 만들어진 UUID 방 삭제
-    // axios(`${process.env.REACT_APP_API_URL}/chat/room/${currentRoomid}`, {
-    //   method: 'DELETE',
-    //   headers: AXIOS_DEFAULT_HEADER,
-    // })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     alert('채팅방이 삭제되었습니다.');
-    //     window.location.replace('/chat');
-    //   })
-    //   .catch((err) => {});
+    // DELETE 만들어진 UUID 방 삭제
+    axios(`${process.env.REACT_APP_API_URL}/chat/room/${currentRoomid}`, {
+      method: 'DELETE',
+      headers: AXIOS_DEFAULT_HEADER,
+    })
+      .then((res) => {
+        console.log(res.data);
+        alert('채팅방이 삭제되었습니다.');
+        window.location.replace('/chat');
+      })
+      .catch((err) => {});
   };
 
   // 웹소켓 연결, 구독
