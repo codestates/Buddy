@@ -46,7 +46,7 @@ export function ChattingPage(props) {
   const ws = Stomp.over(sock);
 
   useEffect(() => {
-    if (currentRoomid !== '') {
+    if (cookies.get('chatRoomid')) {
       wsConnectSubscribe();
       console.log(chatRoomInfo);
       return () => {
@@ -82,6 +82,13 @@ export function ChattingPage(props) {
       .catch((err) => {
         alert('방 생성에 실패하였습니다');
       });
+  };
+
+  // 방 나가기
+  const handleExitRoom = () => {
+    alert('채팅을 종료합니다.');
+    cookies.remove('chatRoomid');
+    window.location.replace('/chat');
   };
 
   // 웹소켓 연결, 구독
@@ -174,7 +181,7 @@ export function ChattingPage(props) {
     <>
       <div className="chatting__page">
         <section className="chatting__wrapper">
-          {currentRoomid !== '' ? (
+          {cookies.get('chatRoomid') ? (
             <div className="chat__detail">
               <div className="chat__container">
                 <div className="chat__log">채팅로그박스</div>
@@ -199,7 +206,11 @@ export function ChattingPage(props) {
             </div>
           )}
         </section>
-        <button onClick={handleCreateRoom}>대기 중인 방 찾기</button>
+        {!cookies.get('chatRoomid') ? (
+          <button onClick={handleCreateRoom}>대기 중인 방 찾기</button>
+        ) : (
+          <button onClick={handleExitRoom}>방 나가기</button>
+        )}
       </div>
     </>
   );
