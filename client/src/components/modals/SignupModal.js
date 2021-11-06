@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { PASSWORD_REGEXP, EMAIL_REGEXP, AXIOS_DEFAULT_HEADER } from '../../constants/constants';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/dist/sweetalert2.css';
 import '../../styles/modal/SignupModal.css';
 
 export function SignupModal(props) {
@@ -37,7 +39,7 @@ export function SignupModal(props) {
           console.log(res.data);
           props.setSignupModalOn(false);
           resetSignupInput();
-          alert('회원가입이 완료되었습니다.');
+          Swal.fire('회원가입이 완료되었습니다.');
           history.push('/');
         })
         .catch((err) => {});
@@ -183,11 +185,11 @@ export function SignupModal(props) {
   // 회원가입 버튼 이벤트
   function handleSignup() {
     if (signupUserEmailCodeCheck === 0) {
-      alert('이메일을 인증해주세요.');
+      Swal.fire('이메일을 인증해주세요.');
     } else if (signupUserPassword !== signupUserPasswordValid || signupUserPassword === '') {
-      alert('입력된 비밀번호가 일치해야 합니다.');
+      Swal.fire('입력된 비밀번호가 일치해야 합니다.');
     } else if (signupUserNicknameCheck === 0) {
-      alert('닉네임을 인증해주세요.');
+      Swal.fire('닉네임을 인증해주세요.');
     } else {
       setSignupUserinfo({
         email: signupUserEmail,

@@ -11,37 +11,90 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 60%;
+  width: 500px;
   background-color: rgb(247, 247, 247);
   margin: 30px;
 }
 
 .mypage__container {
-  width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
   /* background-color: aquamarine; */
+}
+
+.mypage__firstinfo {
+  display: flex;
+  align-items: center;
+  height: 150px;
+  width: 95%;
+  border-bottom: 1px solid rgb(231, 231, 231);
+}
+
+.mypage__image__container > label > img {
+  width: 100px;
+  height: auto;
+  border-radius: 230px;
+  overflow: hidden;
+  background-color: rgb(215, 215, 215);
+  margin-left: 40px;
+}
+
+.mypage__image__container > label > img:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.mypage__image__container > button {
+  width: 100px;
+  height: 40px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #22cc88;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.mypage__image__container > button:hover {
+  background-color: #27e99b;
 }
 
 .mypage__basicinfo {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  margin-top: 20px;
   /* background-color: rgb(201, 157, 241); */
 }
 
 .mypage__nickname {
-  font-size: 30px;
-  margin-bottom: 10px;
+  font-size: 20px;
+  margin-bottom: 5px;
+  margin-left: 20px;
+  font-weight: 500;
 }
 
 .mypage__email {
-  font-size: 15x;
-  margin-bottom: 10px;
+  font-size: 13px;
+  margin-bottom: 5px;
+  margin-left: 20px;
 }
 
 .mypage__role {
-  margin-bottom: 8px;
+  font-size: 13px;
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+
+.mypage__gender {
+  font-size: 13px;
+  margin-bottom: 5px;
+  margin-left: 20px;
 }
 
 .mypage__modifyinfo {
@@ -80,44 +133,6 @@
 }
 
 .mypage__modifyinfo__container > button:hover {
-  background-color: #27e99b;
-}
-
-.mypage__image__container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 40px;
-}
-
-.mypage__image__container > label > img {
-  width: 150px;
-  height: auto;
-  border-radius: 230px;
-  overflow: hidden;
-  background-color: rgb(215, 215, 215);
-}
-
-.mypage__image__container > label > img:hover {
-  cursor: pointer;
-  opacity: 0.5;
-}
-
-.mypage__image__container > button {
-  width: 100px;
-  height: 40px;
-  border: none;
-  border-radius: 30px;
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
-  background-color: #22cc88;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.mypage__image__container > button:hover {
   background-color: #27e99b;
 }
 
