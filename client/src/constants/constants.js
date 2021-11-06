@@ -13,3 +13,10 @@ export const AXIOS_DEFAULT_HEADER = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Credentials': 'true',
 };
+
+// 팀원
+export const TEAM_NAME = [
+  { name: '황재성', src: 'https://github.com/shreder0804' },
+  { name: '남궁민', src: 'https://github.com/nmin11' },
+  { name: '남수연', src: 'https://github.com/namtndus' },
+];
