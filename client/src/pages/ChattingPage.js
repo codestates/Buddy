@@ -6,6 +6,8 @@ import { Cookies } from 'react-cookie';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/dist/sweetalert2.css';
 
 // 소켓 통신
 import Stomp from 'stompjs';
@@ -59,7 +61,7 @@ export function ChattingPage(props) {
   useEffect(() => {
     // token이 없으면 로그인 페이지로 이동
     if (!token) {
-      alert('회원 전용 페이지입니다. 로그인해 주세요.');
+      Swal.fire('회원 전용 페이지입니다. 로그인해 주세요.');
       history.push('/');
     }
   }, []);
@@ -72,16 +74,14 @@ export function ChattingPage(props) {
     })
       .then((res) => {
         console.log(res.data);
-        alert(res.data.message);
+        Swal.fire(`${res.data.message}`).then(function () {
+          window.location.replace('/chat');
+        });
 
         // 쿠키에 생성된 방 id 넣기
         cookies.set('chatRoomid', res.data.roomId);
-
-        window.location.replace('/chat');
       })
-      .catch((err) => {
-        alert('방 생성에 실패하였습니다');
-      });
+      .catch((err) => {});
   };
 
   // 방 나가기

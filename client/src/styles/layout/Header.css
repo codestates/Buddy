@@ -102,12 +102,12 @@
 
   #nav > #ul {
     margin-top: 10px;
-    margin-left: 35px;
+    margin-left: 36px;
     font-size: 15px;
   }
 }
 
-/* 해상도 1400px */
+/* 해상도 750px */
 @media all and (max-width: 750px) {
   #header__wrapper {
     display: flex;
@@ -124,7 +124,7 @@
     display: flex;
     font-size: 14px;
     margin-top: 8px;
-    margin-left: 25px;
+    margin-left: 36px;
     white-space: nowrap; /* 글씨 줄바꿈 방지 */
   }
 

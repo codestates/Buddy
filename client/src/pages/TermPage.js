@@ -1,7 +1,5 @@
 import React from 'react';
-
-// css
-import '../styles/pages/TermPage.css';
+import '../styles/TermPage.css';
 
 export function TermPage() {
   return (
