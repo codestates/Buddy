@@ -88,6 +88,7 @@ export function ChattingPage(props) {
   const handleExitRoom = () => {
     alert('채팅을 종료합니다.');
     cookies.remove('chatRoomid');
+    wsDisConnectUnsubscribe(); // 연결 해제 및 구독 해제
     window.location.replace('/chat');
   };
 
