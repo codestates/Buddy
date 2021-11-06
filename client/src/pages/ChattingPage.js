@@ -20,6 +20,9 @@ import '../styles/pages/ChattingPage.css';
 // .env 환경변수 사용
 dotenv.config();
 
+// 쿠키 생성
+const cookies = new Cookies();
+
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
   // 상태관리(ChatDetail)
@@ -43,7 +46,7 @@ export function ChattingPage(props) {
   const ws = Stomp.over(sock);
 
   useEffect(() => {
-    if (currentRoomid !== '') {
+    if (cookies.get('chatRoomid')) {
       wsConnectSubscribe();
       console.log(chatRoomInfo);
       return () => {
@@ -59,27 +62,21 @@ export function ChattingPage(props) {
       alert('회원 전용 페이지입니다. 로그인해 주세요.');
       history.push('/');
     }
-    getChattingRoomList();
   }, []);
 
-  // 방 만들기
+  // 방 만들기(대기 중인 방 찾기)
   const handleCreateRoom = () => {
-    const createRoomUserInfo = {
-      name: '채팅방 테스트',
-      image: '#',
-      subject: '일상생활',
-      userId: props.userInfo.id,
-    };
-
     axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
-      method: 'POST',
-      data: createRoomUserInfo,
+      method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
-        alert('방이 생성되었습니다');
         console.log(res.data);
-        setChatRoomInfo(res.data);
+        alert(res.data.message);
+
+        // 쿠키에 생성된 방 id 넣기
+        cookies.set('chatRoomid', res.data.roomId);
+
         window.location.replace('/chat');
       })
       .catch((err) => {
@@ -87,22 +84,31 @@ export function ChattingPage(props) {
       });
   };
 
-  // 방 목록 받아오기
-  const getChattingRoomList = () => {
-    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
-      method: 'GET',
-      headers: AXIOS_DEFAULT_HEADER,
-    })
-      .then((res) => {
-        console.log(res.data);
-        setChattingRoomList(res.data);
-      })
-      .catch((err) => {});
+  // 방 나가기
+  const handleExitRoom = () => {
+    cookies.remove('chatRoomid');
+    wsDisConnectUnsubscribe();
+    window.location.replace('/chat');
+
+    // alert('채팅을 종료합니다.');
+
+    // // DELETE 만들어진 UUID 방 삭제
+    // axios(`${process.env.REACT_APP_API_URL}/chat/room/${currentRoomid}`, {
+    //   method: 'DELETE',
+    //   headers: AXIOS_DEFAULT_HEADER,
+    // })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     alert('채팅방이 삭제되었습니다.');
+
+    //   })
+    //   .catch((err) => {});
   };
 
   // 웹소켓 연결, 구독
   function wsConnectSubscribe() {
     try {
+      setCurrentRoomId(cookies.get('chatRoomid'));
       ws.connect(
         {
           token: token,
@@ -185,43 +191,11 @@ export function ChattingPage(props) {
     }
   }
 
-  const ChattingList = chattingRoomList.map((ele) => (
-    <Link
-      className="chattingroomlist__link"
-      to={`/chat?roomid=${ele.roomId}`}
-      onClick={() => {
-        // 구독 채널 바꾸기
-        setCurrentRoomId(ele.roomId);
-
-        // 채팅로그 초기화
-        setChattingLog([]);
-
-        ws.unsubscribe('sub-0');
-      }}
-    >
-      <div className="chattingroomlist__image">
-        <img src="images/github_icon.png" alt="채팅방 리스트 이미지" />
-      </div>
-      <div className="chattingroomlist__description">
-        <span className="chattingroomlist__name">{ele.name}</span>
-        <span className="chattingroomlist__subject">{ele.subject}</span>
-        <span className="chattingroomlist__nickname">{ele.subject}</span>
-      </div>
-    </Link>
-  ));
-
   return (
     <>
       <div className="chatting__page">
         <section className="chatting__wrapper">
-          <div>
-            <div className="chat__list__maintitle">Room List</div>
-            <ScrollContainer className="chat__list">{ChattingList}</ScrollContainer>
-            <div className="chat__list__btnlist">
-              <button onClick={handleCreateRoom}>방 만들기</button>
-            </div>
-          </div>
-          {currentRoomid !== '' ? (
+          {cookies.get('chatRoomid') ? (
             <div className="chat__detail">
               <div className="chat__container">
                 <div className="chat__log">채팅로그박스</div>
@@ -246,6 +220,11 @@ export function ChattingPage(props) {
             </div>
           )}
         </section>
+        {!cookies.get('chatRoomid') ? (
+          <button onClick={handleCreateRoom}>대기 중인 방 찾기</button>
+        ) : (
+          <button onClick={handleExitRoom}>방 나가기</button>
+        )}
       </div>
     </>
   );
