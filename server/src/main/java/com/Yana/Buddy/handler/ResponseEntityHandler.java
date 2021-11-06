@@ -1,5 +1,6 @@
 package com.Yana.Buddy.handler;
 
+import com.Yana.Buddy.dto.ChatRoomResponse;
 import com.Yana.Buddy.dto.LoginSuccessResponse;
 import com.Yana.Buddy.dto.UserBasicInfoResponse;
 import com.Yana.Buddy.entity.User;
@@ -26,6 +27,10 @@ public class ResponseEntityHandler {
     }
 
     public ResponseEntity<UserBasicInfoResponse> userBasicInfo(UserBasicInfoResponse dto) {
+        return ResponseEntity.status(200).body(dto);
+    }
+
+    public ResponseEntity<ChatRoomResponse> chatRoomInfo(ChatRoomResponse dto) {
         return ResponseEntity.status(200).body(dto);
     }
 

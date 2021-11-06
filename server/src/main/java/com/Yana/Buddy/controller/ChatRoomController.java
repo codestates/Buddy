@@ -1,10 +1,12 @@
 package com.Yana.Buddy.controller;
 
+import com.Yana.Buddy.dto.ChatRoomResponse;
 import com.Yana.Buddy.entity.ChatMessage;
 import com.Yana.Buddy.entity.ChatRoom;
 import com.Yana.Buddy.service.ChatMessageService;
 import com.Yana.Buddy.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,11 +31,10 @@ public class ChatRoomController {
         return chatRoomService.createChatRoom();
     }
 
-    //유저가 1명만 있는 방들 중에서 랜덤으로 채팅방 하나 뽑기
-    @GetMapping
-    public ChatRoom getAvailableRoom() {
-        //return chatRoomService.getAvailableRoom();
-        return null;
+    //유저가 1명만 있는 방들 중에서 랜덤으로 채팅방 하나 뽑거나, 해당하는 방이 없을 경우 새로운 채팅방 배정
+    @GetMapping("/room")
+    public ResponseEntity<ChatRoomResponse> getAvailableRoom() {
+        return chatRoomService.getAvailableRoom();
     }
 
     //채팅방 상세 조회
