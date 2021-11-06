@@ -72,7 +72,7 @@ export function ChattingPage(props) {
     })
       .then((res) => {
         console.log(res.data);
-        alert('대기 중인 방이 없으므로 새로운 방을 생성했습니다.');
+        alert(res.data.message);
 
         // 쿠키에 생성된 방 id 넣기
         cookies.set('chatRoomid', res.data.roomId);
