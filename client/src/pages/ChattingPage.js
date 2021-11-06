@@ -173,7 +173,7 @@ export function ChattingPage(props) {
     <>
       <div className="chatting__page">
         <section className="chatting__wrapper">
-          {currentRoomid !== '' ? (
+          {cookies.get('chatRoomid') !== '' ? (
             <div className="chat__detail">
               <div className="chat__container">
                 <div className="chat__log">채팅로그박스</div>
