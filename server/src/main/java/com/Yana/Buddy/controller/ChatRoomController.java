@@ -43,12 +43,6 @@ public class ChatRoomController {
         return chatRoomService.getRoomInfoByRoomId(roomId);
     }
 
-    //roomId를 통해 채팅방 삭제
-    @DeleteMapping("/room/{roomId}")
-    public ResponseEntity deleteRoomByRoomId(@PathVariable String roomId) {
-        return chatRoomService.deleteRoomByRoomId(roomId);
-    }
-
     //채팅방 메시지 전체 조회
     @GetMapping("/room/{roomId}/message")
     public List<ChatMessage> getAllMessageOfRoom(@PathVariable Long roomId) {
