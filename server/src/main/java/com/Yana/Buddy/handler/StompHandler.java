@@ -59,6 +59,7 @@ public class StompHandler implements ChannelInterceptor {
 
             ChatRoom room = chatRoomRepository.findByRoomId(roomId);
             ChatRoom updatedRoom = ChatRoom.builder()
+                    .id(room.getId())
                     .roomId(room.getRoomId())
                     .userCount(room.getUserCount() + 1)
                     .build();
@@ -104,6 +105,7 @@ public class StompHandler implements ChannelInterceptor {
                 chatMessageService.deleteByRoomId(roomId);
             } else {
                 ChatRoom updatedRoom = ChatRoom.builder()
+                        .id(room.getId())
                         .roomId(room.getRoomId())
                         .userCount(room.getUserCount() - 1)
                         .build();
