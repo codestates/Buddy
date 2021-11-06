@@ -53,7 +53,7 @@ export function ChattingPage(props) {
         wsDisConnectUnsubscribe();
       };
     }
-  }, [cookies.get('chatRoomid')]);
+  }, [currentRoomid]);
 
   // 새로고침 시, 방 목록 가져오기
   useEffect(() => {
@@ -87,13 +87,14 @@ export function ChattingPage(props) {
   // 웹소켓 연결, 구독
   function wsConnectSubscribe() {
     try {
+      setCurrentRoomId(cookies.get('chatRoomid'));
       ws.connect(
         {
           token: token,
         },
         () => {
           ws.subscribe(
-            `/sub/chat/room/${cookies.get('chatRoomid')}`,
+            `/sub/chat/room/${currentRoomid}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
               addMessage(newMessage);
@@ -173,7 +174,7 @@ export function ChattingPage(props) {
     <>
       <div className="chatting__page">
         <section className="chatting__wrapper">
-          {cookies.get('chatRoomid') !== '' ? (
+          {currentRoomid !== '' ? (
             <div className="chat__detail">
               <div className="chat__container">
                 <div className="chat__log">채팅로그박스</div>
