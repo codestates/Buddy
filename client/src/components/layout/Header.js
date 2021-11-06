@@ -63,13 +63,14 @@ export default function Header(props) {
                 </button>
               )}
             </li>
-            <li>
-              {props.loginOn === true ? (
+
+            {props.loginOn === true ? (
+              <li>
                 <Link className="header__link" to="/mypage">
                   마이페이지
                 </Link>
-              ) : null}
-            </li>
+              </li>
+            ) : null}
           </ul>
         </nav>
       </header>
