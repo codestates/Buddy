@@ -54,7 +54,7 @@ export function LoginModal(props) {
     }
   };
 
-  // kakao oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
+  // kakao oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기 //
   const kakaoCodeOauth = () => {
     const kakaoUrl = new URL(window.location.href); // 주소창 값 가져오기
     const kakaoSearch = kakaoUrl.search; // 쿼리 스크링 가져오기
