@@ -53,7 +53,7 @@ export function ChattingPage(props) {
         wsDisConnectUnsubscribe();
       };
     }
-  }, [currentRoomid]);
+  }, [cookies.get('chatRoomid')]);
 
   // 새로고침 시, 방 목록 가져오기
   useEffect(() => {
