@@ -86,7 +86,10 @@ public class StompHandler implements ChannelInterceptor {
          */
         else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             String sessionId = (String) message.getHeaders().get("simpSessionId");
-            String roomId = chatRoomService.getUserEnterRoomId(sessionId);
+            String roomId = chatMessageService.getRoomId(Optional.ofNullable(
+                            (String) message.getHeaders().get("simpDestination"))
+                    .orElse("Anonymous User"));
+            //String roomId = chatRoomService.getUserEnterRoomId(sessionId);
 
             String name = userService.findUserByEmail(
                     tokenService.checkJwtToken(accessor.getFirstNativeHeader("token")).getEmail()
