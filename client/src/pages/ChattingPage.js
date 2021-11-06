@@ -86,10 +86,11 @@ export function ChattingPage(props) {
 
   // 방 나가기
   const handleExitRoom = () => {
-    alert('채팅을 종료합니다.');
     cookies.remove('chatRoomid');
     wsDisConnectUnsubscribe();
     window.location.replace('/chat');
+
+    // alert('채팅을 종료합니다.');
 
     // // DELETE 만들어진 UUID 방 삭제
     // axios(`${process.env.REACT_APP_API_URL}/chat/room/${currentRoomid}`, {
