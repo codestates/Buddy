@@ -12,51 +12,59 @@
   flex-direction: row;
   width: 60%;
   margin: 10px;
-  background-color: white;
+  background-color: rgb(148, 47, 47);
   box-shadow: 3px 3px 3px rgb(37, 37, 37);
 }
 
-.chat__container {
-  height: 95%;
-  width: 100%;
+/* 메세지 레이아웃 */
+
+.chat__messages__container__left {
+  display: flex;
+  justify-content: flex-start;
 }
 
-.chat__log {
-  border: 1px solid black;
+.chat__messages__container__center {
+  display: flex;
+  justify-content: center;
 }
 
-.chat__contents {
-  width: 100%;
+.chat__messages__container__right {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .chat__messages__left {
   color: rgb(32, 109, 25);
-  text-align: left;
 }
 
-.chat__messages__center {
-  color: rgb(15, 65, 204);
-  text-align: center;
+.chat__messages__center__enter {
+  color: white;
+  width: 400px;
+  height: 30px;
+  background-color: #27e99b;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.chat__messages__center__quit {
+  color: white;
+  width: 400px;
+  height: 30px;
+  background-color: rgb(218, 146, 51);
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .chat__messages__right {
   color: rgb(241, 75, 228);
-  text-align: right;
-}
-
-.chat__input {
-  border: none;
-  border-radius: 20px;
-  height: 5%;
-  box-shadow: -3px -6px 6px -8px #333;
-  background-color: rgb(247, 247, 247);
-  text-indent: 10px;
-  margin-left: 7px;
-  margin-bottom: 10px;
-}
-
-.chat__input::placeholder {
-  color: rgb(131, 130, 130);
 }
 
 .chat__list {
@@ -151,11 +159,12 @@
 }
 
 /* 채팅 박스 */
+
 .chat__detail {
   display: flex;
   flex-direction: column;
   background-color: white;
-  width: 70%;
+  width: 100%;
   height: 700px;
 }
 
@@ -163,4 +172,33 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.chat__container {
+  width: 100%;
+  height: 600px;
+}
+
+.chat__log {
+  border: 1px solid black;
+}
+
+.chat__contents {
+  width: 100%;
+}
+
+.chat__input {
+  border: none;
+  border-radius: 20px;
+  height: 5%;
+  box-shadow: -3px -6px 6px -8px #333;
+  background-color: rgb(247, 247, 247);
+  text-indent: 10px;
+  margin-left: 7px;
+  margin-bottom: 10px;
+  margin-top: 50px;
+}
+
+.chat__input::placeholder {
+  color: rgb(131, 130, 130);
 }
