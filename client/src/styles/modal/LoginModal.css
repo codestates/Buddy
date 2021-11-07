@@ -5,39 +5,33 @@
   height: 100%;
   margin: 0 auto;
   background-color: rgba(0, 0, 0, 0.4);
-  z-index: 10;
+  z-index: 100000;
   display: flex;
   justify-content: center;
   animation: fadein 0.4s;
   -webkit-animation: fadein 0.4s;
 }
 
-/* 로그인 모달 닫기 버튼 */
-#signin__close__btn {
-  position: absolute;
-  margin: 20px;
-  z-index: 10;
-  border: 10px;
-}
-
-#signin__close__btn > .close {
-  all: unset;
-  cursor: pointer;
-  width: 10000px;
-  height: 10000px;
-  z-index: 500000;
-}
-
 /* 로그인 모달 내부 흰색 배경 */
 .popup__inner {
-  position: absolute;
   width: 400px;
   height: 600px;
   background: white;
   border-radius: 15px;
   margin-top: 170px;
   box-shadow: 1px 3px 10px;
-  z-index: 5000;
+}
+
+/* 로그인 모달 닫기 버튼 */
+#signin__close__btn {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 20px;
+}
+
+#signin__close__btn > .close {
+  all: unset;
+  cursor: pointer;
 }
 
 /* 로그인 모달 닫기 버튼 내 이미지 */
