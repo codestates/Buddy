@@ -30,7 +30,7 @@ export function SignupModal(props) {
       signupUserPassword === signupUserPasswordValid &&
       signupUserPasswordValid !== ''
     ) {
-      axios(`${process.env.REACT_APP_LOCAL_URL}/signup`, {
+      axios(`${process.env.REACT_APP_API_URL}/signup`, {
         method: 'POST',
         data: signupUserinfo,
         headers: AXIOS_DEFAULT_HEADER,
@@ -91,7 +91,7 @@ export function SignupModal(props) {
   // 이메일 중복 체크
   const handleEmailValidCheck = () => {
     if (EMAIL_REGEXP.test(signupUserEmail)) {
-      axios(`${process.env.REACT_APP_LOCAL_URL}/email_check`, {
+      axios(`${process.env.REACT_APP_API_URL}/email_check`, {
         method: 'POST',
         data: { email: signupUserEmail },
         headers: AXIOS_DEFAULT_HEADER,
@@ -102,7 +102,7 @@ export function SignupModal(props) {
           console.log('사용 가능한 이메일입니다.');
 
           // 이메일 인증 코드 보내기
-          axios(`${process.env.REACT_APP_LOCAL_URL}/email_confirm`, {
+          axios(`${process.env.REACT_APP_API_URL}/email_confirm`, {
             method: 'POST',
             data: { email: signupUserEmail },
             headers: AXIOS_DEFAULT_HEADER,
@@ -122,7 +122,7 @@ export function SignupModal(props) {
   // 이메일 인증코드 체크
   const handleEmailCodeCheck = () => {
     // 이메일 코드 일치 확인
-    axios(`${process.env.REACT_APP_LOCAL_URL}/email_code_check`, {
+    axios(`${process.env.REACT_APP_API_URL}/email_code_check`, {
       method: 'POST',
       data: { code: signupUserEmailCode },
       headers: AXIOS_DEFAULT_HEADER,
@@ -159,7 +159,7 @@ export function SignupModal(props) {
   // 닉네임 중복 체크
   const handleNicknameValidCheck = () => {
     if (signupUserNickname !== '') {
-      axios(`${process.env.REACT_APP_LOCAL_URL}/nickname_check`, {
+      axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
         method: 'POST',
         data: { nickname: signupUserNickname },
         headers: AXIOS_DEFAULT_HEADER,
