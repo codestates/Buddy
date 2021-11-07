@@ -40,7 +40,7 @@ export function MyPage(props) {
     if (selectedFile !== null) {
       uploadFile(selectedFile);
 
-      axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
+      axios(`${process.env.REACT_APP_LOCAL_URL}/profile/${props.userInfo.id}`, {
         method: 'PUT',
         data: {
           nickname: props.userInfo.nickname,
@@ -58,7 +58,7 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
-          Swal.fire('프로필 이미지가 변경되었습니다.').then(function () {
+          Swal.fire({ title: '프로필 이미지가 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
             window.location.replace('/mypage'); // mypage 새로고침
           });
         })
@@ -98,9 +98,10 @@ export function MyPage(props) {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       confirmButtonText: '네',
+      cancelButtonText: '아니오',
     }).then((result) => {
       if (result.isConfirmed) {
-        axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
+        axios(`${process.env.REACT_APP_LOCAL_URL}/user/${props.userInfo.id}`, {
           method: 'DELETE',
           headers: AXIOS_DEFAULT_HEADER,
         })
@@ -108,7 +109,7 @@ export function MyPage(props) {
             console.log(res.data); // 회원정보 삭제 완료
             props.setLoginOn(false); // 로그인 상태 false
             history.push('/'); // 루트 경로로 이동
-            Swal.fire('회원탈퇴가 완료되었습니다.');
+            Swal.fire({ title: '회원 탈퇴가 완료되었습니다.', confirmButtonText: '확인' });
           })
           .catch((err) => {});
       }
@@ -123,6 +124,9 @@ export function MyPage(props) {
 
   // 닉네임 체크 이벤트 함수
   const handleCheckNickname = () => {
+
+    if (userNickname !== '') {
+
     axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
       method: 'POST',
       data: { nickname: userNickname },
@@ -138,6 +142,7 @@ export function MyPage(props) {
         console.log(res.data);
         setUserNicknameCheck(1);
         console.log('사용 가능한 닉네임입니다.');
+
       })
       .catch((err) => {
         console.error(err);
@@ -149,7 +154,7 @@ export function MyPage(props) {
   // 닉네임 변경 이벤트 함수
   const handleModifyNickname = () => {
     if (userNickname !== '' && userNicknameCheck === 1) {
-      axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
+      axios(`${process.env.REACT_APP_LOCAL_URL}/profile/${props.userInfo.id}`, {
         method: 'PUT',
         data: {
           nickname: userNickname,
@@ -167,7 +172,7 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
-          Swal.fire('닉네임이 변경되었습니다.').then(function () {
+          Swal.fire({ title: '닉네임이 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
             window.location.replace('/mypage'); // mypage 새로고침
           });
         })
@@ -190,6 +195,7 @@ export function MyPage(props) {
 
   // 비밀번호 변경 이벤트 함수
   const handleModifyPassword = () => {
+
     if (userPassword === userPasswordCheck) {
       axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
         method: 'PUT',
@@ -209,7 +215,7 @@ export function MyPage(props) {
       })
         .then((res) => {
           console.log(res.data);
-          Swal.fire('비밀번호가 변경되었습니다.').then(function () {
+          Swal.fire({ title: '비밀번호가 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
             window.location.replace('/mypage'); // mypage 새로고침
           });
         })

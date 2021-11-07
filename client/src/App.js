@@ -34,7 +34,7 @@ function App() {
 
     // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
-    axios(`${process.env.REACT_APP_API_URL}/token_check`, {
+    axios(`${process.env.REACT_APP_LOCAL_URL}/token_check`, {
       method: 'GET',
       headers: {
         'Access-Control-Allow-Headers': 'Content-Type',
