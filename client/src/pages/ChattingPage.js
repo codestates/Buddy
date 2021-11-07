@@ -14,6 +14,7 @@ import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 
 // Constants
+// 주석
 import { AXIOS_DEFAULT_HEADER } from '../constants/constants';
 
 // CSS
