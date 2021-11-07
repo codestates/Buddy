@@ -54,6 +54,7 @@ const globalStyles = createGlobalStyle`
         url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');
     }
 
+
     /* sweetalert2 */
     .swal2-title {
       font-family: 'Noto Sans KR';
@@ -78,7 +79,7 @@ const globalStyles = createGlobalStyle`
       color: #fff;
       font-size: 0.9em;
     }
-    
+
 
 `;
 

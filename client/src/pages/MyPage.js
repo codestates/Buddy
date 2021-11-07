@@ -124,13 +124,9 @@ export function MyPage(props) {
 
   // 닉네임 체크 이벤트 함수
   const handleCheckNickname = () => {
-<<<<<<< HEAD
+
     if (userNickname !== '') {
-      axios(`${process.env.REACT_APP_LOCAL_URL}/nickname_check`, {
-        method: 'POST',
-        data: { nickname: userNickname },
-        headers: AXIOS_DEFAULT_HEADER,
-=======
+
     axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
       method: 'POST',
       data: { nickname: userNickname },
@@ -146,7 +142,7 @@ export function MyPage(props) {
         console.log(res.data);
         setUserNicknameCheck(1);
         console.log('사용 가능한 닉네임입니다.');
->>>>>>> af7224d54eb528186ae6440b4a80e56f8297d98a
+
       })
       .catch((err) => {
         console.error(err);
@@ -199,13 +195,9 @@ export function MyPage(props) {
 
   // 비밀번호 변경 이벤트 함수
   const handleModifyPassword = () => {
-<<<<<<< HEAD
-    if (userPassword === userPasswordCheck && userPassword !== '') {
-      axios(`${process.env.REACT_APP_LOCAL_URL}/profile/${props.userInfo.id}`, {
-=======
+
     if (userPassword === userPasswordCheck) {
       axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
->>>>>>> af7224d54eb528186ae6440b4a80e56f8297d98a
         method: 'PUT',
         data: {
           password: userPassword,
