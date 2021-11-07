@@ -95,10 +95,12 @@ public class StompHandler implements ChannelInterceptor {
             String sessionId = (String) message.getHeaders().get("simpSessionId");
             //String roomId = chatRoomService.getUserEnterRoomId(sessionId);
             String roomId = enterInfoRepository.findBySessionId(sessionId).get().getRoomId();
+            log.info("DISCONNECT - 나가는 방의 room id : {}", roomId);
 
             String name = userService.findUserByEmail(
                     tokenService.checkJwtToken(accessor.getFirstNativeHeader("token")).getEmail()
             ).get().getNickname();
+            log.info("DISCONNECT - 나가는 유저 이름 : {}", name);
 
             chatMessageService.sendChatMessage(ChatMessage.builder()
                             .type(ChatMessage.MessageType.QUIT)
@@ -109,7 +111,9 @@ public class StompHandler implements ChannelInterceptor {
             ChatRoom room = chatRoomRepository.findByRoomId(roomId);
             if (room.getUserCount() - 1 == 0) {
                 chatRoomRepository.delete(room);
+                log.info("DISCONNECT - 채팅방 삭제 {}", room.getRoomId());
                 chatMessageService.deleteByRoomId(roomId);
+                log.info("DISCONNECT - 채팅 메시지들 삭제");
             } else {
                 ChatRoom updatedRoom = ChatRoom.builder()
                         .id(room.getId())
