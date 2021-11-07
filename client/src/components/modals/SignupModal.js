@@ -29,7 +29,7 @@ export function SignupModal(props) {
       signupUserPassword === signupUserPasswordValid &&
       signupUserPasswordValid !== ''
     ) {
-      axios(`${process.env.REACT_APP_API_URL}/signup`, {
+      axios(`${process.env.REACT_APP_LOCAL_URL}/signup`, {
         method: 'POST',
         data: signupUserinfo,
         headers: {
@@ -42,17 +42,16 @@ export function SignupModal(props) {
       })
         .then((res) => {
           console.log(res.data);
-          props.setSignupModalOn(false);
-<<<<<<< HEAD
+
           setSignupUserEmail('');
           setSignupUserPassword('');
           setSignupUserPasswordValid('');
           setSignupUserNickname('');
-          setSignupUserGender('MALE');
-=======
+
           resetSignupInput();
-          Swal.fire('회원가입이 완료되었습니다.');
->>>>>>> 63d9ddd304ae8b8af3af0d3498fcafeddc09cb48
+
+          Swal.fire({ title: '회원가입이 완료되었습니다.', confirmButtonText: '확인' });
+
           history.push('/');
         })
         .catch((err) => {
@@ -84,7 +83,42 @@ export function SignupModal(props) {
 
   // 이메일 중복 체크
   const handleEmailValidCheck = () => {
+
+    if (EMAIL_REGEXP.test(signupUserEmail)) {
+      axios(`${process.env.REACT_APP_LOCAL_URL}/email_check`, {
+        method: 'POST',
+        data: { email: signupUserEmail },
+        headers: AXIOS_DEFAULT_HEADER,
+      })
+        .then((res) => {
+          console.log(res.data);
+          setSignupUserEmailCheck(1);
+          console.log('사용 가능한 이메일입니다.');
+
+          // 이메일 인증 코드 보내기
+          axios(`${process.env.REACT_APP_LOCAL_URL}/email_confirm`, {
+            method: 'POST',
+            data: { email: signupUserEmail },
+            headers: AXIOS_DEFAULT_HEADER,
+          })
+            .then((res) => {
+              console.log(res.data);
+            })
+            .catch((err) => {});
+        })
+        .catch((err) => {
+          setSignupUserEmailCheck(2);
+          console.log('이미 존재하는 이메일입니다!');
+        });
+    }
+  };
+
+  // 이메일 인증코드 체크
+  const handleEmailCodeCheck = () => {
+    // 이메일 코드 일치 확인
+
     axios(`${process.env.REACT_APP_API_URL}/email_check`, {
+
       method: 'POST',
       data: { email: signupUserEmail },
       headers: {
@@ -129,6 +163,10 @@ export function SignupModal(props) {
 
   // 닉네임 중복 체크
   const handleNicknameValidCheck = () => {
+
+    if (signupUserNickname !== '') {
+
+
     axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
       method: 'POST',
       data: { nickname: signupUserNickname },
@@ -144,6 +182,7 @@ export function SignupModal(props) {
         console.log(res.data);
         setSignupUserNicknameCheck(1);
         console.log('사용 가능한 닉네임입니다.');
+
       })
       .catch((err) => {
         console.error(err);
@@ -160,20 +199,20 @@ export function SignupModal(props) {
 
   // 회원가입 버튼 이벤트
   function handleSignup() {
-<<<<<<< HEAD
+
     setSignupUserinfo({
       email: signupUserEmail,
       password: signupUserPassword,
       nickname: signupUserNickname,
       gender: signupUserGender,
     });
-=======
+
     if (signupUserEmailCodeCheck === 0) {
-      Swal.fire('이메일을 인증해주세요.');
+      Swal.fire({ title: '이메일을 인증해주세요.', confirmButtonText: '확인' });
     } else if (signupUserPassword !== signupUserPasswordValid || signupUserPassword === '') {
-      Swal.fire('입력된 비밀번호가 일치해야 합니다.');
+      Swal.fire({ title: '입력된 비밀번호가 일치해야 합니다.', confirmButtonText: '확인' });
     } else if (signupUserNicknameCheck === 0) {
-      Swal.fire('닉네임을 인증해주세요.');
+      Swal.fire({ title: '닉네임을 인증해주세요.', confirmButtonText: '확인' });
     } else {
       setSignupUserinfo({
         email: signupUserEmail,
@@ -182,7 +221,7 @@ export function SignupModal(props) {
         gender: signupUserGender,
       });
     }
->>>>>>> 63d9ddd304ae8b8af3af0d3498fcafeddc09cb48
+
 
     console.log(signupUserEmailCheck);
     console.log(signupUserNicknameCheck);

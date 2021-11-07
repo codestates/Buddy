@@ -34,7 +34,7 @@ export function ChattingPage(props) {
   const [chatRoomInfo, setChatRoomInfo] = useState([]); // 채팅방 정보
   const [currentRoomid, setCurrentRoomId] = useState(''); // 현재 방 id
 
-  // 상태관리(ChatList)
+  // 상태관리(ChatList) //
   const [chattingRoomList, setChattingRoomList] = useState([]); // 채팅 리스트
 
   const history = useHistory();
@@ -44,7 +44,7 @@ export function ChattingPage(props) {
   const token = cookies.get('refreshToken');
 
   // 소켓 통신 객체
-  const sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
+  const sock = new SockJS(`${process.env.REACT_APP_LOCAL_URL}/chatting`);
   const ws = Stomp.over(sock);
 
   useEffect(() => {
@@ -61,20 +61,20 @@ export function ChattingPage(props) {
   useEffect(() => {
     // token이 없으면 로그인 페이지로 이동
     if (!token) {
-      Swal.fire('회원 전용 페이지입니다. 로그인해 주세요.');
+      Swal.fire({ title: '회원 전용 페이지입니다. 로그인 해주세요.', confirmButtonText: '확인' });
       history.push('/');
     }
   }, []);
 
   // 방 만들기(대기 중인 방 찾기)
   const handleCreateRoom = () => {
-    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
+    axios(`${process.env.REACT_APP_LOCAL_URL}/chat/room`, {
       method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
         console.log(res.data);
-        Swal.fire(`${res.data.message}`).then(function () {
+        Swal.fire({ title: `${res.data.message}`, confirmButtonText: '확인' }).then(function () {
           window.location.replace('/chat');
         });
 
@@ -87,22 +87,7 @@ export function ChattingPage(props) {
   // 방 나가기
   const handleExitRoom = () => {
     cookies.remove('chatRoomid');
-    wsDisConnectUnsubscribe();
-    window.location.replace('/chat');
-
-    // alert('채팅을 종료합니다.');
-
-    // // DELETE 만들어진 UUID 방 삭제
-    // axios(`${process.env.REACT_APP_API_URL}/chat/room/${currentRoomid}`, {
-    //   method: 'DELETE',
-    //   headers: AXIOS_DEFAULT_HEADER,
-    // })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     alert('채팅방이 삭제되었습니다.');
-
-    //   })
-    //   .catch((err) => {});
+    window.location.replace('/');
   };
 
   // 웹소켓 연결, 구독

@@ -40,7 +40,7 @@ export function LoginModal(props) {
     if (googleSearch) {
       const googleCode = googleSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
-      axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${googleCode}`, {
+      axios(`${process.env.REACT_APP_LOCAL_URL}/oauth/google/callback?code=${googleCode}`, {
         method: 'GET',
       })
         .then((res) => {
@@ -52,10 +52,9 @@ export function LoginModal(props) {
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
-<<<<<<< HEAD
-=======
-          Swal.fire('로그인에 성공했습니다.');
->>>>>>> 63d9ddd304ae8b8af3af0d3498fcafeddc09cb48
+
+          Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+
         })
         .catch((err) => {});
     }
@@ -69,7 +68,7 @@ export function LoginModal(props) {
     if (kakaoSearch) {
       const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
-      axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/callback?code=${kakaoCode}`, {
+      axios(`${process.env.REACT_APP_LOCAL_URL}/oauth/kakao/callback?code=${kakaoCode}`, {
         method: 'GET',
       })
         .then((res) => {
@@ -81,7 +80,7 @@ export function LoginModal(props) {
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
-          Swal.fire('로그인에 성공했습니다.');
+          Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
         })
         .catch((err) => {});
     }
@@ -101,7 +100,7 @@ export function LoginModal(props) {
     console.log(userData);
 
     // 로그인 JWT 인증 처리 (API POST : /login)
-    await axios(`${process.env.REACT_APP_API_URL}/login`, {
+    await axios(`${process.env.REACT_APP_LOCAL_URL}/login`, {
       method: 'POST',
       data: userData,
       headers: {
@@ -119,10 +118,9 @@ export function LoginModal(props) {
         props.setLoginOn(true);
         props.setModalOn(false);
         props.accessTokenCheck();
-<<<<<<< HEAD
-=======
-        Swal.fire('로그인에 성공했습니다.');
->>>>>>> 63d9ddd304ae8b8af3af0d3498fcafeddc09cb48
+
+        Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+
       })
       .catch((err) => {
         console.error(err);
@@ -147,7 +145,7 @@ export function LoginModal(props) {
 
     // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
-    axios(`${process.env.REACT_APP_API_URL}/token_check`, {
+    axios(`${process.env.REACT_APP_LOCAL_URL}/token_check`, {
       method: 'GET',
       headers: {
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -257,10 +255,10 @@ export function LoginModal(props) {
                   </button>
                 </span>
                 <div id="social__login">
-                  <a id="google__link" href={`${process.env.REACT_APP_API_URL}/login_google`}>
+                  <a id="google__link" href={`${process.env.REACT_APP_LOCAL_URL}/login_google`}>
                     <img src="images/google_login.png" alt="구글 로그인" />
                   </a>
-                  <a id="kakao__link" href={`${process.env.REACT_APP_API_URL}/login_kakao`}>
+                  <a id="kakao__link" href={`${process.env.REACT_APP_LOCAL_URL}/login_kakao`}>
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </a>
                 </div>
