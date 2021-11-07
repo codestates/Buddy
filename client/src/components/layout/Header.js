@@ -28,10 +28,16 @@ export default function Header(props) {
     Swal.fire({ title: '정상적으로 로그아웃되었습니다.', confirmButtonText: '확인' });
     props.setLoginOn(false);
     props.setUserInfo({});
+    cookies.remove('chatRoomid');
   };
 
   const handleOnlyUserError = () => {
     Swal.fire({ title: '로그인 후 사용가능합니다. 로그인 해주세요.', confirmButtonText: '확인' });
+    cookies.remove('chatRoomid');
+  };
+
+  const chatroomidDelete = () => {
+    cookies.remove('chatRoomid');
   };
 
   return (
@@ -48,13 +54,13 @@ export default function Header(props) {
                   채팅
                 </Link>
               ) : (
-                <Link className="header__link" to="/chat">
+                <Link className="header__link" to="/chat" onClick={chatroomidDelete}>
                   채팅
                 </Link>
               )}
             </li>
             <li>
-              <Link className="header__link" to="/demo">
+              <Link className="header__link" to="/demo" onClick={chatroomidDelete}>
                 체험하기
               </Link>
             </li>
@@ -72,7 +78,7 @@ export default function Header(props) {
 
             {props.loginOn === true ? (
               <li>
-                <Link className="header__link" to="/mypage">
+                <Link className="header__link" to="/mypage" onClick={chatroomidDelete}>
                   마이페이지
                 </Link>
               </li>

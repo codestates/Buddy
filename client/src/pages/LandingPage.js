@@ -8,6 +8,7 @@ import { DemoIntro } from '../components/pages/Landing/DemoIntro';
 // 라이브러리
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { Cookies } from 'react-cookie';
 
 // css
 import '../styles/pages/LandingPage.css';

@@ -44,7 +44,7 @@ export function ChattingPage(props) {
   const token = cookies.get('refreshToken');
 
   // 소켓 통신 객체
-  let sock = new SockJS(`${process.env.REACT_APP_LOCAL_URL}/chatting`);
+  let sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
   let ws = Stomp.over(sock);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export function ChattingPage(props) {
 
   // 방 만들기(대기 중인 방 찾기)
   const handleCreateRoom = () => {
-    axios(`${process.env.REACT_APP_LOCAL_URL}/chat/room`, {
+    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
       method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
     })
@@ -86,9 +86,9 @@ export function ChattingPage(props) {
 
   // 방 나가기
   const handleExitRoom = () => {
-    cookies.remove('chatRoomid');
+    cookies.set('chatRoomid', '');
     Swal.fire({ title: `채팅방을 종료합니다.`, confirmButtonText: '확인' }).then(function () {
-      window.location.replace('/chat');
+      history.push('/');
     });
   };
 
