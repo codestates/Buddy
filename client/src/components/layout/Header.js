@@ -14,6 +14,9 @@ export default function Header(props) {
 
   const cookies = new Cookies();
 
+  // 토큰
+  const token = cookies.get('refreshToken');
+
   const loginModalOpen = () => {
     props.setModalOn(true);
     console.log(props.modalOn);
@@ -40,9 +43,15 @@ export default function Header(props) {
         <nav id="nav">
           <ul id="ul">
             <li>
-              <Link className="header__link" to="/chat">
-                채팅
-              </Link>
+              {!token ? (
+                <Link className="header__link" to="/" onClick={handleOnlyUserError}>
+                  채팅
+                </Link>
+              ) : (
+                <Link className="header__link" to="/chat">
+                  채팅
+                </Link>
+              )}
             </li>
             <li>
               <Link className="header__link" to="/demo">
@@ -60,13 +69,14 @@ export default function Header(props) {
                 </button>
               )}
             </li>
-            <li>
-              {props.loginOn === true ? (
+
+            {props.loginOn === true ? (
+              <li>
                 <Link className="header__link" to="/mypage">
                   마이페이지
                 </Link>
-              ) : null}
-            </li>
+              </li>
+            ) : null}
           </ul>
         </nav>
       </header>

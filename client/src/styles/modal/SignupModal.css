@@ -5,11 +5,27 @@
   height: 100%;
   margin: 0 auto;
   background-color: rgba(0, 0, 0, 0.4);
-  z-index: 100000;
+  z-index: 10;
   display: flex;
   justify-content: center;
   animation: fadein 0.4s;
   -webkit-animation: fadein 0.4s;
+}
+
+/* 회원가입 모달 닫기 버튼 */
+#signup__close__btn {
+  position: absolute;
+  margin: 20px;
+  z-index: 10;
+  border: 10px;
+}
+
+#signup__close__btn > .signup__close {
+  all: unset;
+  cursor: pointer;
+  width: 10000px;
+  height: 10000px;
+  z-index: 500000;
 }
 
 /* 회원가입 모달 내부 흰색 배경 */
@@ -20,18 +36,7 @@
   border-radius: 15px;
   margin-top: 170px;
   box-shadow: 1px 3px 10px;
-}
-
-/* 회원가입 모달 닫기 버튼 */
-#signup__close__btn {
-  display: flex;
-  flex-direction: row-reverse;
-  margin: 20px;
-}
-
-#signup__close__btn > .signup__close {
-  all: unset;
-  cursor: pointer;
+  z-index: 5000;
 }
 
 /* 회원가입 모달 닫기 버튼 내 이미지 */
@@ -46,7 +51,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 /* 로그인 회원가입 컨텐츠 박스 내부 로고 이미지 */
@@ -79,6 +84,38 @@
   margin-top: 10px;
   margin-bottom: 10px;
   font-size: 14px;
+}
+
+/* 이메일 인증번호 */
+.signup__emailcheck__wrappers {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 400px;
+  margin-left: 90px;
+  margin-bottom: 13px;
+}
+
+.signup__emailcheck__container {
+  display: flex;
+  align-items: center;
+}
+
+.signup__emailcheck__btn {
+  border: none;
+  margin-left: 20px;
+  border-radius: 20px;
+  width: 80px;
+  height: 20px;
+  font-size: 13px;
+  background-color: #22cc88;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
+.signup__emailcheck__btn:hover {
+  background-color: #27e99b;
 }
 
 /* 회원가입 컨텐츠 이메일, 비번 입력 input */
@@ -132,7 +169,16 @@
   height: 30px;
   font-size: 12px;
   color: #22cc88;
-  margin-bottom: 5px;
+}
+
+.signup__emailcode__correct {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 305px;
+  margin-top: -10px;
+  font-size: 12px;
+  color: #22cc88;
 }
 
 .signup__error__message {
@@ -171,29 +217,19 @@
   color: #27e99b;
 }
 
-#social__signup {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 30px;
+#signup__term__agree {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-#google__link__signup {
-  margin-right: 15px;
+.signup__term__link {
+  text-decoration: none;
+  color: #22cc88;
 }
 
-#google__link__signup > img {
-  width: 40px;
-}
-
-#google__link__signup > img:hover {
-  opacity: 0.5;
-}
-
-#kakao__link__signup > img {
-  width: 40px;
-}
-
-#kakao__link__signup > img:hover {
-  opacity: 0.5;
+.signup__term__link:hover {
+  text-decoration: none;
+  color: #27e99b;
 }
