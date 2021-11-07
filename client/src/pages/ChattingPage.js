@@ -34,7 +34,7 @@ export function ChattingPage(props) {
   const [chatRoomInfo, setChatRoomInfo] = useState([]); // 채팅방 정보
   const [currentRoomid, setCurrentRoomId] = useState(''); // 현재 방 id
 
-  // 상태관리(ChatList)
+  // 상태관리(ChatList) //
   const [chattingRoomList, setChattingRoomList] = useState([]); // 채팅 리스트
 
   const history = useHistory();
