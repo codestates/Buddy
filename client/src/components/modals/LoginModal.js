@@ -52,14 +52,9 @@ export function LoginModal(props) {
           history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
-<<<<<<< HEAD
+
           Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
-=======
-<<<<<<< HEAD
-=======
-          Swal.fire('로그인에 성공했습니다.');
->>>>>>> 63d9ddd304ae8b8af3af0d3498fcafeddc09cb48
->>>>>>> af7224d54eb528186ae6440b4a80e56f8297d98a
+
         })
         .catch((err) => {});
     }
@@ -123,14 +118,9 @@ export function LoginModal(props) {
         props.setLoginOn(true);
         props.setModalOn(false);
         props.accessTokenCheck();
-<<<<<<< HEAD
+
         Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
-=======
-<<<<<<< HEAD
-=======
-        Swal.fire('로그인에 성공했습니다.');
->>>>>>> 63d9ddd304ae8b8af3af0d3498fcafeddc09cb48
->>>>>>> af7224d54eb528186ae6440b4a80e56f8297d98a
+
       })
       .catch((err) => {
         console.error(err);
