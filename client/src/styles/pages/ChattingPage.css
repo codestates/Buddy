@@ -29,6 +29,21 @@
   width: 100%;
 }
 
+.chat__messages__left {
+  color: rgb(32, 109, 25);
+  text-align: left;
+}
+
+.chat__messages__center {
+  color: rgb(15, 65, 204);
+  text-align: center;
+}
+
+.chat__messages__right {
+  color: rgb(241, 75, 228);
+  text-align: right;
+}
+
 .chat__input {
   border: none;
   border-radius: 20px;

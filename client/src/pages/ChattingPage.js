@@ -180,11 +180,15 @@ export function ChattingPage(props) {
                 <div className="chat__contents">
                   {chattingLog.map((message) =>
                     message.type === 'ENTER' ? (
-                      <div className="chat__messages" style={{ 'text-align': 'center' }}>
+                      <div className="chat__messages__center">
+                        {message.sender} : {message.message}
+                      </div>
+                    ) : message.sender === props.userInfo.nickname ? (
+                      <div className="chat__messages__right">
                         {message.sender} : {message.message}
                       </div>
                     ) : (
-                      <div className="chat__messages" style={{ 'text-align': 'right' }}>
+                      <div className="chat__messages__left">
                         {message.sender} : {message.message}
                       </div>
                     )
