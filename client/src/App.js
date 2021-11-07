@@ -1,31 +1,19 @@
 import React, { useState, useEffect } from 'react';
-
-// 라이브러리
-import { Cookies } from 'react-cookie';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import axios from 'axios';
-
-// 컴포넌트
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
-import { LoginModal } from './components/modals/LoginModal';
-
-// 페이지
-import { MyPage } from './pages/MyPage';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import GlobalStyles from './styles/globalStyles';
 import { LandingPage } from './pages/LandingPage';
 import { TermPage } from './pages/TermPage';
 import { PrivacyPage } from './pages/PrivacyPage';
-import { ChattingPage } from './pages/ChattingPage';
+import { LoginModal } from './components/modals/LoginModal';
+import { ChatingPage } from './pages/ChatingPage';
 import { DemoPage } from './pages/DemoPage';
-
-// 유틸
 import ScrollToTop from './utils/ScrollToTop';
-import GlobalStyles from './utils/GlobalStyles';
+import { MyPage } from './pages/MyPage';
+import { Cookies } from 'react-cookie';
+import axios from 'axios';
 
-// Constants
-import { AXIOS_DEFAULT_HEADER } from './constants/constants';
-
-// 도메인간 쿠키 전송을 하기 위해서는 true로 해야 함.
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -48,7 +36,13 @@ function App() {
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
     axios(`${process.env.REACT_APP_API_URL}/token_check`, {
       method: 'GET',
-      headers: AXIOS_DEFAULT_HEADER,
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+      withCredentials: true,
     })
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
@@ -60,7 +54,9 @@ function App() {
         setModalOn(false);
         setLoginOn(true);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
@@ -89,7 +85,7 @@ function App() {
           </Route>
           <Route exact path="/"></Route>
           <Route exact path="/chat">
-            <ChattingPage userInfo={userInfo} />
+            <ChatingPage />
           </Route>
           <Route exact path="/demo">
             <DemoPage />

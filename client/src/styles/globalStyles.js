@@ -1,8 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
-// 전체적으로 css를 reset시키는 컴포넌트
-const GlobalStyles = createGlobalStyle`
+// 전역으로 css를 reset시키는 컴포넌트
+const globalStyles = createGlobalStyle`
     ${reset};
   
     @font-face {
@@ -55,4 +55,4 @@ const GlobalStyles = createGlobalStyle`
     }
 `;
 
-export default GlobalStyles;
+export default globalStyles;

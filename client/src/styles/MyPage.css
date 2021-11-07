@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: 'Noto Sans KR';
+  font-family: "Noto Sans KR";
 }
 
 .mypage__wrapper {
@@ -156,6 +156,7 @@
   font-weight: bold;
   background-color: #eb1515;
   cursor: pointer;
+  margin-top: 20px;
 }
 
 .mypage__unregister__container > button:hover {
