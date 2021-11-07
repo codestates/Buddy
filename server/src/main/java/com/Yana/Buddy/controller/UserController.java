@@ -6,6 +6,7 @@ import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
