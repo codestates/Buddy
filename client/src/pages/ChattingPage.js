@@ -78,7 +78,7 @@ export function ChattingPage(props) {
   // 방 나가기
   const handleExitRoom = () => {
     cookies.set('chatRoomid', '');
-    Swal.fire({ title: `채팅방을 종료합니다.`, confirmButtonText: '확인' }).then(function () {
+    Swal.fire({ title: `채팅을 종료하였습니다.`, confirmButtonText: '확인' }).then(function () {
       history.push('/');
     });
   };
