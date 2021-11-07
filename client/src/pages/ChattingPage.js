@@ -175,22 +175,46 @@ export function ChattingPage(props) {
         <section className="chatting__wrapper">
           {cookies.get('chatRoomid') ? (
             <div className="chat__detail">
-              <div className="chat__container">
-                <div className="chat__log">채팅로그박스</div>
-                <div className="chat__contents">
-                  {chattingLog.map((message) =>
-                    message.type === 'ENTER' ? (
-                      <div className="chat__messages" style={{ 'text-align': 'center' }}>
-                        {message.sender} : {message.message}
-                      </div>
-                    ) : (
-                      <div className="chat__messages" style={{ 'text-align': 'right' }}>
-                        {message.sender} : {message.message}
-                      </div>
-                    )
-                  )}
+              <ScrollContainer className="scroll__container" horizontal={false}>
+                <div className="chat__container">
+                  <div className="chat__log">채팅로그박스</div>
+                  <div className="chat__contents">
+                    {chattingLog.map((message) =>
+                      message.type === 'ENTER' ? (
+                        <div className="chat__messages__container__center">
+                          <div className="chat__messages__center__enter">
+                            <span>
+                              {message.sender} {message.message}
+                            </span>
+                          </div>
+                        </div>
+                      ) : message.type === 'QUIT' ? (
+                        <div className="chat__messages__container__center">
+                          <div className="chat__messages__center__quit">
+                            <span>
+                              {message.sender} : {message.message}
+                            </span>
+                          </div>
+                        </div>
+                      ) : message.sender === props.userInfo.nickname ? (
+                        <div className="chat__messages__container__right">
+                          <div className="chat__messages__right">
+                            <div className="chat__messages__right__contents">
+                              {message.sender} : {message.message}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="chat__messages__container__left">
+                          <div className="chat__messages__left">
+                            {message.sender} : {message.message}
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
                 </div>
-              </div>
+              </ScrollContainer>
               <input
                 type="text"
                 onKeyPress={sendMessage}
@@ -204,6 +228,7 @@ export function ChattingPage(props) {
             </div>
           )}
         </section>
+
         {!cookies.get('chatRoomid') ? (
           <button onClick={handleCreateRoom}>대기 중인 방 찾기</button>
         ) : (
