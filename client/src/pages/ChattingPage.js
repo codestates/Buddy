@@ -30,13 +30,6 @@ export function ChattingPage(props) {
   // 상태관리(ChatDetail)
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
 
-  // 상태관리(ChattingPage)
-  const [chatRoomInfo, setChatRoomInfo] = useState([]); // 채팅방 정보
-  const [currentRoomid, setCurrentRoomId] = useState(''); // 현재 방 id
-
-  // 상태관리(ChatList)
-  const [chattingRoomList, setChattingRoomList] = useState([]); // 채팅 리스트
-
   const history = useHistory();
   const cookies = new Cookies();
 
@@ -50,12 +43,11 @@ export function ChattingPage(props) {
   useEffect(() => {
     if (cookies.get('chatRoomid')) {
       wsConnectSubscribe(); // 연결 함수
-      console.log(chatRoomInfo);
       return () => {
         wsDisConnectUnsubscribe(); // 연결 해제 함수
       };
     }
-  }, [currentRoomid]);
+  }, [cookies.get('chatRoomid')]);
 
   // 새로고침 시, 방 목록 가져오기
   useEffect(() => {
@@ -75,11 +67,10 @@ export function ChattingPage(props) {
       .then((res) => {
         console.log(res.data);
         Swal.fire({ title: `${res.data.message}`, confirmButtonText: '확인' }).then(function () {
+          // 쿠키에 생성된 방 id user count 넣기
+          cookies.set('chatRoomid', res.data.roomId);
           window.location.replace('/chat');
         });
-
-        // 쿠키에 생성된 방 id 넣기
-        cookies.set('chatRoomid', res.data.roomId);
       })
       .catch((err) => {});
   };
@@ -87,7 +78,7 @@ export function ChattingPage(props) {
   // 방 나가기
   const handleExitRoom = () => {
     cookies.set('chatRoomid', '');
-    Swal.fire({ title: `채팅방을 종료합니다.`, confirmButtonText: '확인' }).then(function () {
+    Swal.fire({ title: `채팅을 종료하였습니다.`, confirmButtonText: '확인' }).then(function () {
       history.push('/');
     });
   };
@@ -95,14 +86,13 @@ export function ChattingPage(props) {
   // 웹소켓 연결, 구독
   function wsConnectSubscribe() {
     try {
-      setCurrentRoomId(cookies.get('chatRoomid'));
       ws.connect(
         {
           token: token,
         },
         () => {
           ws.subscribe(
-            `/sub/chat/room/${currentRoomid}`,
+            `/sub/chat/room/${cookies.get('chatRoomid')}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
               addMessage(newMessage);
@@ -158,7 +148,7 @@ export function ChattingPage(props) {
         // send할 데이터
         const newMessage = {
           type: 'TALK',
-          roomId: currentRoomid,
+          roomId: cookies.get('chatRoomid'),
           userId: props.userInfo.id,
           sender: props.userInfo.nickname,
           message: e.target.value,
@@ -188,11 +178,17 @@ export function ChattingPage(props) {
               <div className="chat__container">
                 <div className="chat__log">채팅로그박스</div>
                 <div className="chat__contents">
-                  {chattingLog.map((message) => (
-                    <div>
-                      {message.sender} : {message.message}
-                    </div>
-                  ))}
+                  {chattingLog.map((message) =>
+                    message.type === 'ENTER' ? (
+                      <div className="chat__messages" style={{ 'text-align': 'center' }}>
+                        {message.sender} : {message.message}
+                      </div>
+                    ) : (
+                      <div className="chat__messages" style={{ 'text-align': 'right' }}>
+                        {message.sender} : {message.message}
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
               <input
