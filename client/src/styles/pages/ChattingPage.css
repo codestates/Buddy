@@ -10,7 +10,6 @@
 .chatting__wrapper {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   width: 60%;
   margin: 10px;
   background-color: white;
@@ -19,10 +18,15 @@
 
 .chat__container {
   height: 95%;
+  width: 100%;
 }
 
 .chat__log {
   border: 1px solid black;
+}
+
+.chat__contents {
+  width: 100%;
 }
 
 .chat__input {
