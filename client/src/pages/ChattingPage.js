@@ -178,11 +178,17 @@ export function ChattingPage(props) {
               <div className="chat__container">
                 <div className="chat__log">채팅로그박스</div>
                 <div className="chat__contents">
-                  {chattingLog.map((message) => (
-                    <div>
-                      {message.sender} : {message.message}
-                    </div>
-                  ))}
+                  {chattingLog.map((message) =>
+                    message.type === 'ENTER' ? (
+                      <div className="chat__messages" style={{ 'text-align': 'center' }}>
+                        {message.sender} : {message.message}
+                      </div>
+                    ) : (
+                      <div className="chat__messages" style={{ 'text-align': 'right' }}>
+                        {message.sender} : {message.message}
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
               <input
