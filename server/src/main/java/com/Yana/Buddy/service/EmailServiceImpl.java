@@ -50,7 +50,6 @@ public class EmailServiceImpl implements EmailService{
 
     private static String createKey() {
         StringBuffer key = new StringBuffer();
-
         SecureRandom rnd  = null;
         try{
             rnd = SecureRandom.getInstance("SHA1PRNG");
