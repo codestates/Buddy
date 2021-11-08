@@ -9,6 +9,8 @@ import static javax.persistence.EnumType.*;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ChatMessage {
 
     @Id @GeneratedValue
@@ -33,13 +35,6 @@ public class ChatMessage {
 
     private String roomId;
 
-    @Builder
-    public ChatMessage(MessageType type, String sender, String message, String createdAt, String roomId) {
-        this.type = type;
-        this.sender = sender;
-        this.message = message;
-        this.createdAt = createdAt;
-        this.roomId = roomId;
-    }
+    private String profileImage;
 
 }

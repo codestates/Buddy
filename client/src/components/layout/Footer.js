@@ -1,19 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+// Constants
+import { TEAM_NAME } from '../../constants/constants';
+
+// CSS
 import '../../styles/layout/Footer.css';
 
 export default function Footer() {
-  const teamName = [
-    { name: '황재성', src: 'https://github.com/shreder0804' },
-    { name: '남궁민', src: 'https://github.com/nmin11' },
-    { name: '남수연', src: 'https://github.com/namtndus' },
-  ];
-
-  const githubLink = teamName.map((el) => {
+  const githubLink = TEAM_NAME.map((el) => {
     return (
-      <div className="github" key={el.name}>
+      <div className="githubsssss" key={el.name}>
         <a className="github__link" href={el.src} target="_blank">
-          <img src="/images/github_icon.png" alt="github icon" />
+          <img src="/images/github_icon.png" alt="팀명" />
           <span>{el.name}</span>
         </a>
       </div>

@@ -6,6 +6,8 @@ import { Cookies } from 'react-cookie';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/dist/sweetalert2.css';
 
 // 소켓 통신
 import Stomp from 'stompjs';
@@ -20,84 +22,65 @@ import '../styles/pages/ChattingPage.css';
 // .env 환경변수 사용
 dotenv.config();
 
+// 쿠키 생성
+const cookies = new Cookies();
+
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
   // 상태관리(ChatDetail)
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
 
-  // 상태관리(ChattingPage)
-  const [chatRoomInfo, setChatRoomInfo] = useState([]); // 채팅방 정보
-  const [currentRoomid, setCurrentRoomId] = useState(''); // 현재 방 id
-
-  // 상태관리(ChatList)
-  const [chattingRoomList, setChattingRoomList] = useState([]); // 채팅 리스트
-
   const history = useHistory();
   const cookies = new Cookies();
+
+  // 소켓 통신 객체
+  const sock = new SockJS(`${process.env.REACT_APP_LOCAL_URL}/chatting`);
+  const ws = Stomp.over(sock);
 
   // 토큰
   const token = cookies.get('refreshToken');
 
-  // 소켓 통신 객체
-  const sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
-  const ws = Stomp.over(sock);
-
   useEffect(() => {
-    if (currentRoomid !== '') {
-      wsConnectSubscribe();
-      console.log(chatRoomInfo);
-      return () => {
-        wsDisConnectUnsubscribe();
-      };
+    if (cookies.get('chatRoomid')) {
+      wsConnectSubscribe(); // 연결 함수
     }
-  }, [currentRoomid]);
+    return () => {
+      wsDisConnectUnsubscribe();
+    };
+  }, [cookies.get('chatRoomid')]);
 
   // 새로고침 시, 방 목록 가져오기
   useEffect(() => {
     // token이 없으면 로그인 페이지로 이동
     if (!token) {
-      alert('회원 전용 페이지입니다. 로그인해 주세요.');
+      Swal.fire({ title: '회원 전용 페이지입니다. 로그인 해주세요.', confirmButtonText: '확인' });
       history.push('/');
     }
-    getChattingRoomList();
   }, []);
 
-  // 방 만들기
+  // 방 만들기(대기 중인 방 찾기)
   const handleCreateRoom = () => {
-    const createRoomUserInfo = {
-      name: '채팅방 테스트',
-      image: '#',
-      subject: '일상생활',
-      userId: props.userInfo.id,
-    };
-
-    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
-      method: 'POST',
-      data: createRoomUserInfo,
-      headers: AXIOS_DEFAULT_HEADER,
-    })
-      .then((res) => {
-        alert('방이 생성되었습니다');
-        console.log(res.data);
-        setChatRoomInfo(res.data);
-        window.location.replace('/chat');
-      })
-      .catch((err) => {
-        alert('방 생성에 실패하였습니다');
-      });
-  };
-
-  // 방 목록 받아오기
-  const getChattingRoomList = () => {
-    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
+    axios(`${process.env.REACT_APP_LOCAL_URL}/chat/room`, {
       method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
         console.log(res.data);
-        setChattingRoomList(res.data);
+        Swal.fire({ title: `${res.data.message}`, confirmButtonText: '확인' }).then(function () {
+          // 쿠키에 생성된 방 id user count 넣기
+          cookies.set('chatRoomid', res.data.roomId);
+          window.location.replace(`/chat/?roomid=${cookies.get('chatRoomid')}`);
+        });
       })
       .catch((err) => {});
+  };
+
+  // 방 나가기
+  const handleExitRoom = () => {
+    cookies.set('chatRoomid', '');
+    Swal.fire({ title: `채팅을 종료하였습니다.`, confirmButtonText: '확인' }).then(function () {
+      history.push('/');
+    });
   };
 
   // 웹소켓 연결, 구독
@@ -109,7 +92,7 @@ export function ChattingPage(props) {
         },
         () => {
           ws.subscribe(
-            `/sub/chat/room/${currentRoomid}`,
+            `/sub/chat/room/${cookies.get('chatRoomid')}`,
             (data) => {
               const newMessage = JSON.parse(data.body);
               addMessage(newMessage);
@@ -123,6 +106,7 @@ export function ChattingPage(props) {
     }
   }
 
+  // 메시지 추가
   const addMessage = (message) => {
     setChattingLog((prev) => [...prev, message]);
   };
@@ -164,7 +148,7 @@ export function ChattingPage(props) {
         // send할 데이터
         const newMessage = {
           type: 'TALK',
-          roomId: currentRoomid,
+          roomId: cookies.get('chatRoomid'),
           userId: props.userInfo.id,
           sender: props.userInfo.nickname,
           message: e.target.value,
@@ -185,54 +169,52 @@ export function ChattingPage(props) {
     }
   }
 
-  const ChattingList = chattingRoomList.map((ele) => (
-    <Link
-      className="chattingroomlist__link"
-      to={`/chat?roomid=${ele.roomId}`}
-      onClick={() => {
-        // 구독 채널 바꾸기
-        setCurrentRoomId(ele.roomId);
-
-        // 채팅로그 초기화
-        setChattingLog([]);
-
-        ws.unsubscribe('sub-0');
-      }}
-    >
-      <div className="chattingroomlist__image">
-        <img src="images/github_icon.png" alt="채팅방 리스트 이미지" />
-      </div>
-      <div className="chattingroomlist__description">
-        <span className="chattingroomlist__name">{ele.name}</span>
-        <span className="chattingroomlist__subject">{ele.subject}</span>
-        <span className="chattingroomlist__nickname">{ele.subject}</span>
-      </div>
-    </Link>
-  ));
-
   return (
     <>
       <div className="chatting__page">
         <section className="chatting__wrapper">
-          <div>
-            <div className="chat__list__maintitle">Room List</div>
-            <ScrollContainer className="chat__list">{ChattingList}</ScrollContainer>
-            <div className="chat__list__btnlist">
-              <button onClick={handleCreateRoom}>방 만들기</button>
-            </div>
-          </div>
-          {currentRoomid !== '' ? (
+          {cookies.get('chatRoomid') ? (
             <div className="chat__detail">
-              <div className="chat__container">
-                <div className="chat__log">채팅로그박스</div>
-                <div className="chat__contents">
-                  {chattingLog.map((message) => (
-                    <div>
-                      {message.sender} : {message.message}
-                    </div>
-                  ))}
+              <ScrollContainer className="scroll__container" horizontal={false}>
+                <div className="chat__container">
+                  <div className="chat__log">채팅로그박스</div>
+                  <div className="chat__contents">
+                    {chattingLog.map((message) =>
+                      message.type === 'ENTER' ? (
+                        <div className="chat__messages__container__center">
+                          <div className="chat__messages__center__enter">
+                            <span>
+                              {message.sender} {message.message}
+                            </span>
+                          </div>
+                        </div>
+                      ) : message.type === 'QUIT' ? (
+                        <div className="chat__messages__container__center">
+                          <div className="chat__messages__center__quit">
+                            <span>
+                              {message.sender} : {message.message}
+                            </span>
+                          </div>
+                        </div>
+                      ) : message.sender === props.userInfo.nickname ? (
+                        <div className="chat__messages__container__right">
+                          <div className="chat__messages__right">
+                            <div className="chat__messages__right__contents">
+                              {message.sender} : {message.message}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="chat__messages__container__left">
+                          <div className="chat__messages__left">
+                            {message.sender} : {message.message}
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
                 </div>
-              </div>
+              </ScrollContainer>
               <input
                 type="text"
                 onKeyPress={sendMessage}
@@ -246,6 +228,12 @@ export function ChattingPage(props) {
             </div>
           )}
         </section>
+
+        {!cookies.get('chatRoomid') ? (
+          <button onClick={handleCreateRoom}>대기 중인 방 찾기</button>
+        ) : (
+          <button onClick={handleExitRoom}>방 나가기</button>
+        )}
       </div>
     </>
   );
