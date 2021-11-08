@@ -24,12 +24,10 @@ import java.util.Optional;
 public class StompHandler implements ChannelInterceptor {
 
     private final TokenService tokenService;
-    private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageService chatMessageService;
     private final ChatRoomService chatRoomService;
     private final UserService userService;
     private final EnterInfoService enterInfoService;
-    private final EnterInfoRepository enterInfoRepository;
 
     //WebSocket 을 통해 들어온 요청이 처리 되기전 실행
     @Override
@@ -114,7 +112,7 @@ public class StompHandler implements ChannelInterceptor {
             if (room.getUserCount() - 1 == 0) {
                 chatMessageService.deleteByRoomId(roomId);
                 log.info("DISCONNECT - 채팅 메시지들 삭제");
-                chatRoomRepository.delete(room);
+                chatRoomService.delete(room);
                 log.info("DISCONNECT - 채팅방 삭제 {}", room.getRoomId());
             } else {
                 ChatRoom updatedRoom = ChatRoom.builder()
