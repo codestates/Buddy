@@ -5,6 +5,8 @@
   justify-content: center;
   font-family: 'Noto Sans KR';
   background-color: #33344a;
+  background-image: url('../../backgrounds/chat_patt.png');
+  background-size: 20%;
 }
 
 .chatting__wrapper {
@@ -12,7 +14,7 @@
   flex-direction: row;
   width: 60%;
   margin: 10px;
-  box-shadow: 3px 3px 3px rgb(37, 37, 37);
+  box-shadow: -5px -5px 10px 10px rgb(37, 37, 37);
 }
 
 /* 메세지 레이아웃 */
