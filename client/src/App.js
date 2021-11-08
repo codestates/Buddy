@@ -91,7 +91,7 @@ function App() {
           <Route exact path="/chat">
             <ChattingPage userInfo={userInfo} />
           </Route>
-          <Route exact path="/demo">
+          <Route exact path="/tutorial">
             <DemoPage />
           </Route>
           <Route exact path="/term">

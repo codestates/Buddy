@@ -60,8 +60,8 @@ export default function Header(props) {
               )}
             </li>
             <li>
-              <Link className="header__link" to="/demo" onClick={chatroomidDelete}>
-                체험하기
+              <Link className="header__link" to="/tutorial" onClick={chatroomidDelete}>
+                튜토리얼
               </Link>
             </li>
             <li>
