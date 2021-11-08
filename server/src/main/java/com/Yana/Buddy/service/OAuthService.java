@@ -32,7 +32,7 @@ public class OAuthService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
+    private static final String REDIRECT_URI = "https://yana-buddy.com";
     private static final String GRANT_TYPE = "authorization_code";
 
     @Value("${oauth.google.client-id}") private String G_CLIENT_ID;
