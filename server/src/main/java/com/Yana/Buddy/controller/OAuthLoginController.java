@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class OAuthLoginController {
 
-    private final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
+    private final String REDIRECT_URI = "https://yana-buddy.com";
     private final String RESPONSE_TYPE = "code";
     private final String ACCESS_TYPE = "offline";
     private final String SCOPE = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
