@@ -90,8 +90,9 @@ public class ChatRoomService {
         return responseHandler.singleSuccessResponse("채팅방이 삭제되었습니다.");
     }
 
-    public ChatRoom getRoomInfoByRoomId(String roomId) {
-        return chatRoomRepository.findByRoomId(roomId);
+    //entity 자체를 통해 채팅방 삭제
+    public void delete(ChatRoom room) {
+        chatRoomRepository.delete(room);
     }
 
 }
