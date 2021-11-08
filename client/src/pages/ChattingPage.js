@@ -152,7 +152,7 @@ export function ChattingPage(props) {
           userId: props.userInfo.id,
           sender: props.userInfo.nickname,
           message: e.target.value,
-          createdAt: '',
+          profileImage: props.userInfo.profileImage,
         };
         waitForConnection(ws, function () {
           if (ws.ws.readyState === WebSocket.OPEN) {
@@ -200,7 +200,12 @@ export function ChattingPage(props) {
                         <div className="chat__messages__container__right">
                           <div className="chat__messages__right">
                             <div className="chat__messages__right__contents">
-                              {message.sender} : {message.message}
+                              <div className="chat__messages__image__contents">
+                                <img src={props.userInfo.profileImage} alt="user images" />
+                              </div>
+                              <div className="chat__messages__describe__contents"></div>
+                              {message.sender} : {message.message} :
+                              {message.createdAt.slice(11, message.createdAt.length)}
                             </div>
                           </div>
                         </div>
@@ -209,6 +214,7 @@ export function ChattingPage(props) {
                           <div className="chat__messages__left">
                             {message.sender} : {message.message}
                           </div>
+                          <img src={message.profileImage} alt="leftuser image" />
                         </div>
                       )
                     )}
