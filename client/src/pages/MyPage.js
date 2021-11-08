@@ -46,7 +46,7 @@ export function MyPage(props) {
     if (selectedFile !== null) {
       uploadFile(selectedFile);
 
-      axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
+      axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${props.userInfo.id}`, {
         method: 'PUT',
         data: {
           nickname: props.userInfo.nickname,
@@ -102,7 +102,7 @@ export function MyPage(props) {
       cancelButtonText: '아니오',
     }).then((result) => {
       if (result.isConfirmed) {
-        axios(`${process.env.REACT_APP_API_URL}/user/${props.userInfo.id}`, {
+        axios(`${process.env.REACT_APP_HTTPS_URL}/user/${props.userInfo.id}`, {
           method: 'DELETE',
           headers: AXIOS_DEFAULT_HEADER,
         })
@@ -127,7 +127,7 @@ export function MyPage(props) {
   // 닉네임 체크 이벤트 함수
   const handleCheckNickname = () => {
     if (userNickname !== '') {
-      axios(`${process.env.REACT_APP_API_URL}/nickname_check`, {
+      axios(`${process.env.REACT_APP_HTTPS_URL}/nickname_check`, {
         method: 'POST',
         data: { nickname: userNickname },
         headers: AXIOS_DEFAULT_HEADER,
@@ -147,7 +147,7 @@ export function MyPage(props) {
   // 닉네임 변경 이벤트 함수
   const handleModifyNickname = () => {
     if (userNickname !== '' && userNicknameCheck === 1) {
-      axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
+      axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${props.userInfo.id}`, {
         method: 'PUT',
         data: {
           nickname: userNickname,
@@ -183,7 +183,7 @@ export function MyPage(props) {
   // 비밀번호 변경 이벤트 함수
   const handleModifyPassword = () => {
     if (userPassword === userPasswordCheck && userPassword !== '') {
-      axios(`${process.env.REACT_APP_API_URL}/profile/${props.userInfo.id}`, {
+      axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${props.userInfo.id}`, {
         method: 'PUT',
         data: {
           password: userPassword,
