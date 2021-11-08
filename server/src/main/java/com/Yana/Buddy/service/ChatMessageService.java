@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.TimeZone;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ChatMessageService {
 
     private final ChannelTopic channelTopic;
@@ -50,13 +52,11 @@ public class ChatMessageService {
                 .sender(dto.getSender())
                 .message(dto.getMessage())
                 .createdAt(dto.getCreatedAt())
+                .profileImage(dto.getProfileImage())
                 .build();
 
         //WebSocket 을 통해 채팅방 구독자들에게 메시지 전송
         sendChatMessage(message);
-
-        //DB 에도 채팅 메시지 저장
-        chatMessageRepository.save(message);
     }
 
     public void sendChatMessage(ChatMessage message) {

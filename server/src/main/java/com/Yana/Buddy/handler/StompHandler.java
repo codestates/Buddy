@@ -5,10 +5,7 @@ import com.Yana.Buddy.entity.ChatRoom;
 import com.Yana.Buddy.entity.EnterInfo;
 import com.Yana.Buddy.repository.ChatRoomRepository;
 import com.Yana.Buddy.repository.EnterInfoRepository;
-import com.Yana.Buddy.service.ChatMessageService;
-import com.Yana.Buddy.service.ChatRoomService;
-import com.Yana.Buddy.service.TokenService;
-import com.Yana.Buddy.service.UserService;
+import com.Yana.Buddy.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.messaging.Message;
@@ -27,11 +24,10 @@ import java.util.Optional;
 public class StompHandler implements ChannelInterceptor {
 
     private final TokenService tokenService;
-    private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageService chatMessageService;
     private final ChatRoomService chatRoomService;
     private final UserService userService;
-    private final EnterInfoRepository enterInfoRepository;
+    private final EnterInfoService enterInfoService;
 
     //WebSocket 을 통해 들어온 요청이 처리 되기전 실행
     @Override
@@ -59,18 +55,18 @@ public class StompHandler implements ChannelInterceptor {
             String sessionId = (String) message.getHeaders().get("simpSessionId");
             log.info("SUBSCRIBE - 요청한 session id : {}", sessionId);
             //chatRoomService.setUserEnterInfo(sessionId, roomId);
-            enterInfoRepository.save(EnterInfo.builder()
+            enterInfoService.save(EnterInfo.builder()
                             .sessionId(sessionId)
                             .roomId(roomId)
                             .build());
 
-            ChatRoom room = chatRoomRepository.findByRoomId(roomId);
+            ChatRoom room = chatRoomService.findByRoomId(roomId);
             ChatRoom updatedRoom = ChatRoom.builder()
                     .id(room.getId())
                     .roomId(room.getRoomId())
                     .userCount(room.getUserCount() + 1)
                     .build();
-            chatRoomRepository.save(updatedRoom);
+            chatRoomService.save(updatedRoom);
 
             String name = userService.findUserByEmail(
                     tokenService.checkJwtToken(accessor.getFirstNativeHeader("token")).getEmail()
@@ -93,8 +89,12 @@ public class StompHandler implements ChannelInterceptor {
          */
         else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             String sessionId = (String) message.getHeaders().get("simpSessionId");
+            log.info("DISCONNECT - 나가는 유저의 session id : {}", sessionId);
             //String roomId = chatRoomService.getUserEnterRoomId(sessionId);
-            String roomId = enterInfoRepository.findBySessionId(sessionId).get().getRoomId();
+            if (enterInfoService.findBySessionId(sessionId).isEmpty()) {
+                return message;
+            }
+            String roomId = enterInfoService.findBySessionId(sessionId).get().getRoomId();
             log.info("DISCONNECT - 나가는 방의 room id : {}", roomId);
 
             String name = userService.findUserByEmail(
@@ -108,23 +108,23 @@ public class StompHandler implements ChannelInterceptor {
                             .sender(name)
                             .build());
 
-            ChatRoom room = chatRoomRepository.findByRoomId(roomId);
+            ChatRoom room = chatRoomService.findByRoomId(roomId);
             if (room.getUserCount() - 1 == 0) {
-                chatRoomRepository.delete(room);
-                log.info("DISCONNECT - 채팅방 삭제 {}", room.getRoomId());
                 chatMessageService.deleteByRoomId(roomId);
                 log.info("DISCONNECT - 채팅 메시지들 삭제");
+                chatRoomService.delete(room);
+                log.info("DISCONNECT - 채팅방 삭제 {}", room.getRoomId());
             } else {
                 ChatRoom updatedRoom = ChatRoom.builder()
                         .id(room.getId())
                         .roomId(room.getRoomId())
                         .userCount(room.getUserCount() - 1)
                         .build();
-                chatRoomRepository.save(updatedRoom);
+                chatRoomService.save(updatedRoom);
             }
 
             //chatRoomService.removeUserEnterInfo(sessionId);
-            enterInfoRepository.deleteBySessionId(sessionId);
+            enterInfoService.deleteBySessionId(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, roomId);
         }
 
