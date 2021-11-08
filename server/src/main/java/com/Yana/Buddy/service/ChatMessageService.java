@@ -52,13 +52,11 @@ public class ChatMessageService {
                 .sender(dto.getSender())
                 .message(dto.getMessage())
                 .createdAt(dto.getCreatedAt())
+                .profileImage(dto.getProfileImage())
                 .build();
 
         //WebSocket 을 통해 채팅방 구독자들에게 메시지 전송
         sendChatMessage(message);
-
-        //DB 에도 채팅 메시지 저장
-        chatMessageRepository.save(message);
     }
 
     public void sendChatMessage(ChatMessage message) {
