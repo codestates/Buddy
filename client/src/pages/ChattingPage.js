@@ -33,20 +33,20 @@ export function ChattingPage(props) {
   const history = useHistory();
   const cookies = new Cookies();
 
+  // 소켓 통신 객체
+  const sock = new SockJS(`${process.env.REACT_APP_LOCAL_URL}/chatting`);
+  const ws = Stomp.over(sock);
+
   // 토큰
   const token = cookies.get('refreshToken');
-
-  // 소켓 통신 객체
-  let sock = new SockJS(`${process.env.REACT_APP_API_URL}/chatting`);
-  let ws = Stomp.over(sock);
 
   useEffect(() => {
     if (cookies.get('chatRoomid')) {
       wsConnectSubscribe(); // 연결 함수
-      return () => {
-        wsDisConnectUnsubscribe(); // 연결 해제 함수
-      };
     }
+    return () => {
+      wsDisConnectUnsubscribe();
+    };
   }, [cookies.get('chatRoomid')]);
 
   // 새로고침 시, 방 목록 가져오기
@@ -60,7 +60,7 @@ export function ChattingPage(props) {
 
   // 방 만들기(대기 중인 방 찾기)
   const handleCreateRoom = () => {
-    axios(`${process.env.REACT_APP_API_URL}/chat/room`, {
+    axios(`${process.env.REACT_APP_HTTPS_URL}/chat/room`, {
       method: 'GET',
       headers: AXIOS_DEFAULT_HEADER,
     })
@@ -69,7 +69,7 @@ export function ChattingPage(props) {
         Swal.fire({ title: `${res.data.message}`, confirmButtonText: '확인' }).then(function () {
           // 쿠키에 생성된 방 id user count 넣기
           cookies.set('chatRoomid', res.data.roomId);
-          window.location.replace('/chat');
+          window.location.replace(`/chat/?roomid=${cookies.get('chatRoomid')}`);
         });
       })
       .catch((err) => {});
