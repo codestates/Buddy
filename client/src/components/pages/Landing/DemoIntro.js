@@ -1,4 +1,12 @@
+import { useHistory } from 'react-router-dom';
+
 export function DemoIntro() {
+  const history = useHistory();
+
+  function moveDemopage() {
+    history.push('/demo');
+  }
+
   return (
     <>
       {/* 데모 관련 기능 소개  */}
@@ -9,7 +17,9 @@ export function DemoIntro() {
             <h1>직접 체험해보세요</h1>
             <span>회원 가입없이 버디의 채팅을</span>
             <span>체험해볼 수 있습니다.</span>
-            <button className="demointro__button">체험하기</button>
+            <button className="demointro__button" onClick={moveDemopage}>
+              체험하기
+            </button>
           </div>
           <div id="demo__intro__image">
             <img src="images/demo_char_img.png" alt="introduce_image" />

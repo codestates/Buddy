@@ -12,6 +12,7 @@
   font-size: 11px;
   width: 60%;
   height: 250px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,26 +20,29 @@
 }
 
 #footer__wrapper {
+  display: flex;
+  flex-direction: row;
   margin-left: 20px;
 }
 
 #footer__menu {
   display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 18px;
 }
 
-#footer__ul {
+#footer__menu > #footer__ul {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 13px;
-  margin-left: -20px;
+  margin-left: -26px;
   list-style: none;
 }
 
 .footer__li {
   margin-right: 20px;
-  text-align: center;
 }
 
 .footer__link {
@@ -55,27 +59,20 @@
 
 #footer__description > span {
   font-size: 14px;
+
   margin-bottom: 10px;
 }
 
 #github__container {
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
-
-.githubsssss {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.github {
   margin-left: -1px;
 }
 
 .github__link {
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
   margin-right: 25px;
   margin-bottom: 10px;
@@ -96,12 +93,4 @@
 
 #footer__copyright {
   margin-left: -15px;
-}
-
-/* 해상도 1400px */
-@media all and (max-width: 850px) {
-  #footer__description > span {
-    white-space: nowrap; /* 글씨 줄바꿈 방지 */
-    font-size: 12px;
-  }
 }

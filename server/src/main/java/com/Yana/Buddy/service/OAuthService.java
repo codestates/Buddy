@@ -32,7 +32,7 @@ public class OAuthService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    private static final String REDIRECT_URI = "http://bucket-yana-buddy.s3-website.ap-northeast-2.amazonaws.com";
+    private static final String REDIRECT_URI = "https://yana-buddy.com";
     private static final String GRANT_TYPE = "authorization_code";
 
     @Value("${oauth.google.client-id}") private String G_CLIENT_ID;
@@ -161,12 +161,8 @@ public class OAuthService {
         JSONObject profile = (JSONObject) kakao_account.get("profile");
         String nickname = profile.get("nickname").toString();
         String profile_image = profile.get("profile_image_url").toString();
-        String gender = null;
-        if (kakao_account.get("gender_needs_agreement").toString().equals("true")) {
-            gender = kakao_account.get("gender").toString().toUpperCase();
-        }
 
-        return new KakaoRegisterDto(email, nickname, profile_image, gender);
+        return new KakaoRegisterDto(email, nickname, profile_image, null);
     }
 
 }
