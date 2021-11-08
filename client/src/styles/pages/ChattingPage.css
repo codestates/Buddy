@@ -67,6 +67,14 @@
   color: rgb(241, 75, 228);
 }
 
+.chat__messages__right__contents {
+  margin-right: 20px;
+}
+
+.chat__messages__image__contents > img {
+  width: 40px;
+}
+
 .chat__list {
   background-color: white;
   width: 99%;
