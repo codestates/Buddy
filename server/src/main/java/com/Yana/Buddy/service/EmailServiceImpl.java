@@ -1,11 +1,13 @@
 package com.Yana.Buddy.service;
 
-import lombok.NoArgsConstructor;
+import static org.apache.commons.text.CharacterPredicates.DIGITS;
+import static org.apache.commons.text.CharacterPredicates.LETTERS;
+
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -13,7 +15,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Random;
 
 @Log4j2
 @Service
@@ -49,28 +50,21 @@ public class EmailServiceImpl implements EmailService{
     }
 
     private static String createKey() {
-        StringBuffer key = new StringBuffer();
+        //StringBuffer key = new StringBuffer();
         SecureRandom rnd  = null;
         try{
             rnd = SecureRandom.getInstance("SHA1PRNG");
         }catch (NoSuchAlgorithmException e){
             e.printStackTrace();
         }
+        char [] chars = {'0','1','2','3','4','5','6','7','8','9','q','w','e','r','t','y','u','i','o','p',
+        'a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P',
+        'A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M'};
 
-        for(int i = 0; i< 8; i++){
-            int index = rnd.nextInt(3);
+        StringBuilder key = new StringBuilder();
 
-            switch (index) {
-                case 0:
-                    key.append((char) ((int)(rnd.nextInt(26)) + 97));
-                    break;
-                case 1:
-                    key.append((char) ((int) (rnd.nextInt(26)) + 64));
-                    break;
-                case 2:
-                    key.append((rnd.nextInt(10)));
-                    break;
-            }
+        for(int i = 0; i<6; i++){
+            key.append(chars[rnd.nextInt(chars.length)]);
         }
         return key.toString();
     }
