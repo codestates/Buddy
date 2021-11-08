@@ -19,12 +19,6 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
 
-    //모든 채팅방 조회
-    @GetMapping("rooms")
-    public List<ChatRoom> allChatRoom() {
-        return chatRoomService.findAllRooms();
-    }
-
     //채팅방 생성
     @PostMapping("/room")
     public ChatRoom createRoom() {
