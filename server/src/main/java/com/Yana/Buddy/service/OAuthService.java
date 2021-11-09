@@ -10,10 +10,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -42,7 +39,7 @@ public class OAuthService {
     @Value("${oauth.kakao.client-secret}") private String K_CLIENT_SECRET;
 
     //구글에서 받은 code 를 통해 token 받아오기 (JSON 타입으로 반환되기에, ResponseEntity 로 묶어줌)
-    public ResponseEntity<String> createPostRequest(String code) {
+    public String createPostRequest(String code) {
         String url = "https://oauth2.googleapis.com/token";
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -57,14 +54,23 @@ public class OAuthService {
 
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
-        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+        return WebClient.create()
+                .post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(params))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        //return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
     }
 
     //JSON 타입의 token 정보를 dto 클래스를 활용하여 매핑 및 반환
-    public GoogleToken getAccessToken(ResponseEntity<String> response) {
+    public GoogleToken getAccessToken(String response) {
         GoogleToken googleToken = null;
         try {
-            googleToken = objectMapper.readValue(response.getBody(), GoogleToken.class);
+            googleToken = objectMapper.readValue(response, GoogleToken.class);
         } catch (JsonMappingException e) {
             log.error("get access token Exception : " + e);
         } catch (JsonProcessingException e) {
@@ -75,7 +81,7 @@ public class OAuthService {
     }
 
     //구글의 access token 을 활용하여 구글 유저 정보 받아오기(JSON 타입을 ResponseEntity로 묶어줌)
-    public ResponseEntity<String> createGetRequest(GoogleToken googleToken) {
+    public String createGetRequest(GoogleToken googleToken) {
         String url = "https://www.googleapis.com/oauth2/v1/userinfo";
 
         HttpHeaders headers = new HttpHeaders();
@@ -83,14 +89,22 @@ public class OAuthService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
-        return restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+        return WebClient.create()
+                .get()
+                .uri(url)
+                .header("Authorization", "Bearer " + googleToken.getAccess_token())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        //return restTemplate.exchange(url, HttpMethod.GET, request, String.class);
     }
 
     //JSON 타입으로 전달받은 유저 정보를 dto 클래스를 활용하여 매핑 및 반환
-    public GoogleUser getUserInfo(ResponseEntity<String> response) {
+    public GoogleUser getUserInfo(String response) {
         GoogleUser user = null;
         try {
-            user = objectMapper.readValue(response.getBody(), GoogleUser.class);
+            user = objectMapper.readValue(response, GoogleUser.class);
         } catch (JsonMappingException e) {
             e.printStackTrace();
         } catch (JsonProcessingException e) {
@@ -133,7 +147,7 @@ public class OAuthService {
         return kakaoToken;
     }
 
-    /*
+    /**
     카카오의 access token 을 활용하여 카카오 유저 정보 받아옴
     카카오의 유저 정보는 JSON 형태가 다소 복잡하기 때문에 JSONParser 를 활용하여 필요한 정보들만 가져온 뒤,
     카카오 전용 회원가입 dto 를 통해 전달

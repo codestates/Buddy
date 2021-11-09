@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // 라이브러리
 import { Link, useHistory } from 'react-router-dom';
@@ -32,6 +32,7 @@ export function ChattingPage(props) {
 
   const history = useHistory();
   const cookies = new Cookies();
+  const scrollRef = useRef();
 
   // 소켓 통신 객체
   const sock = new SockJS(`${process.env.REACT_APP_HTTPS_URL}/chatting`);
@@ -58,6 +59,15 @@ export function ChattingPage(props) {
     }
   }, []);
 
+  // 채팅로그가 변할 때 스크롤 맨 아래로 이동
+  useEffect(() => {
+    scrollBottom();
+  }, [chattingLog]);
+
+  const scrollBottom = () => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  };
+
   // 방 만들기(대기 중인 방 찾기)
   const handleCreateRoom = () => {
     axios(`${process.env.REACT_APP_HTTPS_URL}/chat/room`, {
@@ -69,7 +79,7 @@ export function ChattingPage(props) {
         Swal.fire({ title: `${res.data.message}`, confirmButtonText: '확인' }).then(function () {
           // 쿠키에 생성된 방 id user count 넣기
           cookies.set('chatRoomid', res.data.roomId);
-          window.location.replace(`/chat/?roomid=${cookies.get('chatRoomid')}`);
+          window.location.replace(`/chat`);
         });
       })
       .catch((err) => {});
@@ -175,10 +185,9 @@ export function ChattingPage(props) {
         <section className="chatting__wrapper">
           {cookies.get('chatRoomid') ? (
             <div className="chat__detail">
-              <ScrollContainer className="scroll__container" horizontal={false}>
+              <ScrollContainer className="scroll__container" horizontal={false} hideScrollbars>
                 <div className="chat__container">
-                  <div className="chat__log">채팅로그박스</div>
-                  <div className="chat__contents">
+                  <div className="chat__contents" ref={scrollRef}>
                     {chattingLog.map((message) =>
                       message.type === 'ENTER' ? (
                         <div className="chat__messages__container__center">
@@ -192,7 +201,7 @@ export function ChattingPage(props) {
                         <div className="chat__messages__container__center">
                           <div className="chat__messages__center__quit">
                             <span>
-                              {message.sender} : {message.message}
+                              {message.sender} {message.message}
                             </span>
                           </div>
                         </div>
@@ -200,21 +209,37 @@ export function ChattingPage(props) {
                         <div className="chat__messages__container__right">
                           <div className="chat__messages__right">
                             <div className="chat__messages__right__contents">
-                              <div className="chat__messages__image__contents">
-                                <img src={props.userInfo.profileImage} alt="user images" />
+                              <div className="chat__messages__right__image__contents">
+                                <img src={props.userInfo.profileImage} alt="user images right" />
                               </div>
-                              <div className="chat__messages__describe__contents"></div>
-                              {message.sender} : {message.message} :
-                              {message.createdAt.slice(11, message.createdAt.length)}
+                              <div className="chat__messages__right__describe__contents">
+                                <div className="chat__messages__right__describe__message">
+                                  <span>{message.message}</span>
+                                </div>
+                                <div className="chat__messages__right__describe__createdat">
+                                  <span>{message.createdAt.slice(11, message.createdAt.length)}</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       ) : (
                         <div className="chat__messages__container__left">
                           <div className="chat__messages__left">
-                            {message.sender} : {message.message}
+                            <div className="chat__messages__left__contents">
+                              <div className="chat__messages__left__image__contents">
+                                <img src={message.profileImage} alt="user images left" />
+                              </div>
+                              <div className="chat__messages__left__describe__contents">
+                                <div className="chat__messages__left__describe__message">
+                                  <span>{message.message}</span>
+                                </div>
+                                <div className="chat__messages__left__describe__createdat">
+                                  <span>{message.createdAt.slice(11, message.createdAt.length)}</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <img src={message.profileImage} alt="leftuser image" />
                         </div>
                       )
                     )}
@@ -236,9 +261,13 @@ export function ChattingPage(props) {
         </section>
 
         {!cookies.get('chatRoomid') ? (
-          <button onClick={handleCreateRoom}>대기 중인 방 찾기</button>
+          <button className="chat__match__btn" onClick={handleCreateRoom}>
+            랜덤 매칭
+          </button>
         ) : (
-          <button onClick={handleExitRoom}>방 나가기</button>
+          <button className="chat__match__btn" onClick={handleExitRoom}>
+            방 나가기
+          </button>
         )}
       </div>
     </>
