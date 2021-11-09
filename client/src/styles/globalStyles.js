@@ -78,6 +78,7 @@ const globalStyles = createGlobalStyle`
       color: #fff;
       font-size: 0.9em;
     }
+
     
 
 `;
