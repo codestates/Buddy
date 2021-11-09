@@ -10,13 +10,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @Service
@@ -28,17 +28,17 @@ public class UserService {
     private final OAuthService oAuthService;
     private final TokenService tokenService;
     private final ResponseEntityHandler responseHandler;
+    private final RedisTemplate redisTemplate;
 
     //기본 로그인 (소셜 로그인 X)
-    public ResponseEntity<?> basicLogin(LoginDto dto, HttpServletResponse response) {
+    public ResponseEntity<?> basicLogin(LoginDto dto) {
         if (findUserByEmail(dto.getEmail()).isPresent()) {
             User user = findUserByEmail(dto.getEmail()).get();
             if (passwordCheck(user, dto.getPassword())) {
                 String accessToken = tokenService.createJwtToken(user, 1L);
                 String refreshToken = tokenService.createJwtToken(user, 2L);
-                Cookie cookie = new Cookie("refreshToken", refreshToken);
-                cookie.setMaxAge(7200);
-                response.addCookie(cookie);
+                redisTemplate.opsForValue()
+                        .set(dto.getEmail(), refreshToken, 2, TimeUnit.HOURS);
 
                 return responseHandler.loginSuccess(
                         new LoginSuccessResponse(user.getId(), user.getEmail(), user.getNickname(),
@@ -181,10 +181,14 @@ public class UserService {
         User user = userRepository.findByEmail(googleUser.getEmail()).orElseThrow();
         String accessToken = tokenService.createJwtToken(user, 1L);
         String refreshToken = tokenService.createJwtToken(user, 2L);
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setMaxAge(7200);
+        redisTemplate.opsForValue()
+                .set(googleUser.getEmail(), refreshToken, 2, TimeUnit.HOURS);
 
-        return new OAuthLoginDto(user, accessToken, refreshToken, cookie);
+        return OAuthLoginDto.builder()
+                .user(user)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     /**
@@ -208,10 +212,14 @@ public class UserService {
         User user = userRepository.findByEmail(kakaoUserInfo.getEmail()).orElseThrow();
         String accessToken = tokenService.createJwtToken(user, 1L);
         String refreshToken = tokenService.createJwtToken(user, 2L);
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setMaxAge(7200);
+        redisTemplate.opsForValue()
+                .set(kakaoUserInfo.getEmail(), refreshToken, 2, TimeUnit.HOURS);
 
-        return new OAuthLoginDto(user, accessToken, refreshToken, cookie);
+        return OAuthLoginDto.builder()
+                .user(user)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     //Google 전용 회원 가입 로직
@@ -240,9 +248,8 @@ public class UserService {
     }
 
     //Google Login 에 대한 return 값 설정
-    public LoginSuccessResponse googleLogin(String code, HttpServletResponse response) {
+    public LoginSuccessResponse googleLogin(String code) {
         OAuthLoginDto googleLoginUser = googleOAuthLogin(code);
-        response.addCookie(googleLoginUser.getCookie());
 
         return new LoginSuccessResponse(
                 googleLoginUser.getUser().getId(),
@@ -254,9 +261,8 @@ public class UserService {
     }
 
     //Kakao Login 에 대한 return 값 설정
-    public LoginSuccessResponse kakaoLogin(String code, HttpServletResponse response) throws ParseException, JsonProcessingException {
+    public LoginSuccessResponse kakaoLogin(String code) throws ParseException, JsonProcessingException {
         OAuthLoginDto kakaoLoginUser = kakaoOAuthLogin(code);
-        response.addCookie(kakaoLoginUser.getCookie());
 
         return new LoginSuccessResponse(
                 kakaoLoginUser.getUser().getId(),
