@@ -31,6 +31,7 @@ public class RedisConfig {
     private RedisStandaloneConfiguration redisStandaloneConfiguration;
     private LettuceConnectionFactory lettuceConnectionFactory;
     private RedisMessageListenerContainer container;
+    RedisTemplate<String, Object> redisTemplate;
 
     //단일 Topic 사용을 위한 설정
     @Bean
@@ -68,7 +69,7 @@ public class RedisConfig {
     //애플리케이션에서 사용할 Redis Template 설정
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
