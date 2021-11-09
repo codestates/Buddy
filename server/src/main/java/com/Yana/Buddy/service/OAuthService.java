@@ -145,12 +145,12 @@ public class OAuthService {
     public KakaoRegisterDto getKakaoUser(KakaoToken kakaoToken) throws JsonProcessingException, ParseException {
         url = "https://kapi.kakao.com/v2/user/me";
 
-        String result = WebClient.create()
+        ResponseEntity<String> result = WebClient.create()
                 .get()
                 .uri(url)
                 .header("Authorization", "Bearer " + kakaoToken.getAccess_token())
                 .retrieve()
-                .bodyToMono(String.class)
+                .toEntity(String.class)
                 .block();
 
         String jsonValue = objectMapper.writeValueAsString(result);
