@@ -1,17 +1,17 @@
 package com.Yana.Buddy.service;
 
 import com.Yana.Buddy.dto.GetEmailFromToken;
+import com.Yana.Buddy.dto.RefreshTokenDto;
 import com.Yana.Buddy.entity.User;
 import com.Yana.Buddy.handler.ResponseEntityHandler;
 import com.Yana.Buddy.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
@@ -22,6 +22,7 @@ public class TokenService {
 
     private final ResponseEntityHandler responseHandler;
     private final UserRepository userRepository;
+    private final RedisTemplate redisTemplate;
 
     @Value("${jwt.secret}")
     private String KEY;
@@ -36,7 +37,6 @@ public class TokenService {
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + Duration.ofHours(time).toMillis()))
                 .claim("email", user.getEmail())
-                .claim("password", user.getPassword())
                 .signWith(SignatureAlgorithm.HS256, KEY)
                 .compact();
     }
@@ -83,31 +83,22 @@ public class TokenService {
     }
 
     /**
-     1. request 의 쿠키들 중 refreshToken 이 담겨 있는 쿠키를 찾아냄
-     2. 만약 refreshToken 쿠키가 없다면 bad request 반환
-     3. refreshToken 쿠키가 있다면 해당 쿠키 안의 JWT 토큰을 파싱해서 유저 정보 찾기
-     4. JWT 토큰을 생성해줌과 동시에 200 OK 반환
+     1. 전달받은 email 값을 key 값으로 하는 기존의 저장된 refresh token 과, 전달받은 refresh token 이 같은지 검증
+     2. 전달받은 email 을 가진 유저가 아직 존재하는지 검증
+     3. 위 두 조건을 모두 충족한다면 access token 발급 및 반환
      */
-    public ResponseEntity renewalToken(HttpServletRequest request) {
-        String cookieResult = "";
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refreshToken")) {
-                cookieResult = cookie.getValue();
-            }
+    public ResponseEntity renewalToken(RefreshTokenDto dto) {
+        User user = null;
+
+        if (!dto.getRefreshToken().equals(redisTemplate.opsForValue().get(dto.getEmail()))) {
+            return responseHandler.badRequest("로그인 시 지정된 Refresh Token 과 값이 일치하지 않습니다.");
         }
 
-        if (cookieResult.equals("")) {
-            return responseHandler.badRequest("Refresh Token 이 존재하지 않습니다.");
-        }
-
-        GetEmailFromToken checkResult = checkJwtToken(cookieResult);
-        if (checkResult.getEmail() != null) {
-            User user = userRepository.findByEmail(checkResult.getEmail()).get();
-            String finalCookiesResult = cookieResult;
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            user = userRepository.findByEmail(dto.getEmail()).get();
             return responseHandler.singleSuccessResponse(createJwtToken(user, 1L));
         } else {
-            return responseHandler.badRequest(checkResult.getMessage());
+            return responseHandler.badRequest("해당 유저 정보는 더이상 존재하지 않습니다.");
         }
     }
 

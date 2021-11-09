@@ -6,12 +6,10 @@ import com.Yana.Buddy.service.TokenService;
 import com.Yana.Buddy.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -25,8 +23,8 @@ public class UserController {
 
     //기본 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto dto, HttpServletResponse response) {
-        return userService.basicLogin(dto, response);
+    public ResponseEntity<?> login(@RequestBody LoginDto dto) {
+        return userService.basicLogin(dto);
     }
 
     //기본 회원가입
@@ -54,9 +52,9 @@ public class UserController {
     }
 
     //Access Token 이 유효하지 않을 경우 호출하는 API -> Token 재발급 용도
-    @GetMapping("/renewal_token")
-    public ResponseEntity<?> renewalToken(HttpServletRequest request) {
-        return tokenService.renewalToken(request);
+    @PostMapping("/renewal_token")
+    public ResponseEntity<?> renewalToken(@RequestBody RefreshTokenDto dto) {
+        return tokenService.renewalToken(dto);
     }
 
     //유저 정보 조회
@@ -79,14 +77,14 @@ public class UserController {
 
     //Google Login API 접속 후 생성되는 code 를 이 API 에 전송
     @GetMapping("/oauth/google/callback")
-    public ResponseEntity<?> googleOAuthLogin(String code, HttpServletResponse response) {
-        return responseHandler.loginSuccess(userService.googleLogin(code, response));
+    public ResponseEntity<?> googleOAuthLogin(String code) {
+        return responseHandler.loginSuccess(userService.googleLogin(code));
     }
 
     //Google 과 똑같은 로직
     @GetMapping("/oauth/kakao/callback")
-    public ResponseEntity<?> kakaoOAuthLogin(String code, HttpServletResponse response) throws JsonProcessingException, ParseException {
-        return responseHandler.loginSuccess(userService.kakaoLogin(code, response));
+    public ResponseEntity<?> kakaoOAuthLogin(String code) throws JsonProcessingException, ParseException {
+        return responseHandler.loginSuccess(userService.kakaoLogin(code));
     }
 
 }
