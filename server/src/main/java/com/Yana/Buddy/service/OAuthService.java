@@ -38,9 +38,11 @@ public class OAuthService {
     @Value("${oauth.kakao.client-id}") private String K_CLIENT_ID;
     @Value("${oauth.kakao.client-secret}") private String K_CLIENT_SECRET;
 
+    private String url = "";
+
     //구글에서 받은 code 를 통해 token 받아오기 (JSON 타입으로 반환되기에, ResponseEntity 로 묶어줌)
     public String createPostRequest(String code) {
-        String url = "https://oauth2.googleapis.com/token";
+        url = "https://oauth2.googleapis.com/token";
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
@@ -48,11 +50,6 @@ public class OAuthService {
         params.add("client_secret", G_CLIENT_SECRET);
         params.add("redirect_uri", REDIRECT_URI);
         params.add("grant_type", GRANT_TYPE);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded");
-
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
         return WebClient.create()
                 .post()
@@ -62,8 +59,6 @@ public class OAuthService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
-        //return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
     }
 
     //JSON 타입의 token 정보를 dto 클래스를 활용하여 매핑 및 반환
@@ -82,12 +77,7 @@ public class OAuthService {
 
     //구글의 access token 을 활용하여 구글 유저 정보 받아오기(JSON 타입을 ResponseEntity로 묶어줌)
     public String createGetRequest(GoogleToken googleToken) {
-        String url = "https://www.googleapis.com/oauth2/v1/userinfo";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + googleToken.getAccess_token());
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
+        url = "https://www.googleapis.com/oauth2/v1/userinfo";
 
         return WebClient.create()
                 .get()
@@ -96,8 +86,6 @@ public class OAuthService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
-        //return restTemplate.exchange(url, HttpMethod.GET, request, String.class);
     }
 
     //JSON 타입으로 전달받은 유저 정보를 dto 클래스를 활용하여 매핑 및 반환
@@ -115,8 +103,8 @@ public class OAuthService {
     }
 
     //카카오에서 받은 code 를 통해 token 받아오기 (JSON 타입으로 반환되기에, ResponseEntity 로 묶어줌)
-    public ResponseEntity<String> getTokenInfo(String code) {
-        String url = "https://kauth.kakao.com/oauth/token";
+    public String getTokenInfo(String code) {
+        url = "https://kauth.kakao.com/oauth/token";
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
@@ -125,19 +113,21 @@ public class OAuthService {
         params.add("code", code);
         params.add("client_secret", K_CLIENT_SECRET);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded");
-
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
-
-        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+        return WebClient.create()
+                .post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(params))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 
     //JSON 타입의 token 정보를 dto 클래스를 활용하여 매핑 및 반환
-    public KakaoToken getKakaoToken(ResponseEntity<String> response) {
+    public KakaoToken getKakaoToken(String response) {
         KakaoToken kakaoToken = null;
         try {
-            kakaoToken = objectMapper.readValue(response.getBody(), KakaoToken.class);
+            kakaoToken = objectMapper.readValue(response, KakaoToken.class);
         } catch (JsonMappingException e) {
             e.printStackTrace();
         } catch (JsonProcessingException e) {
@@ -153,15 +143,15 @@ public class OAuthService {
     카카오 전용 회원가입 dto 를 통해 전달
      */
     public KakaoRegisterDto getKakaoUser(KakaoToken kakaoToken) throws JsonProcessingException, ParseException {
-        String url = "https://kapi.kakao.com/v2/user/me";
+        url = "https://kapi.kakao.com/v2/user/me";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + kakaoToken.getAccess_token());
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
-
-        ResponseEntity<String> result =  restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-
-        String jsonValue = objectMapper.writeValueAsString(result);
+        String jsonValue = WebClient.create()
+                .get()
+                .uri(url)
+                .header("Authorization", "Bearer " + kakaoToken.getAccess_token())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
         JSONParser parser = new JSONParser();
         JSONObject object = (JSONObject) parser.parse(jsonValue);
