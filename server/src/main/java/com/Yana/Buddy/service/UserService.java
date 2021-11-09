@@ -199,8 +199,7 @@ public class UserService {
      유저 정보 반환
      */
     public OAuthLoginDto kakaoOAuthLogin(String code) throws JsonProcessingException, ParseException {
-        log.info("카카오 로그인 로직 호출");
-        ResponseEntity<String> kakaoTokenResponse = oAuthService.getTokenInfo(code);
+        String kakaoTokenResponse = oAuthService.getTokenInfo(code);
         KakaoToken kakaoToken = oAuthService.getKakaoToken(kakaoTokenResponse);
 
         KakaoRegisterDto kakaoUserInfo = oAuthService.getKakaoUser(kakaoToken);
