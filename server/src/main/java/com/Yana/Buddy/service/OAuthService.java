@@ -14,7 +14,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -27,10 +26,9 @@ import javax.transaction.Transactional;
 public class OAuthService {
 
     private final ObjectMapper objectMapper;
-    private final RestTemplate restTemplate;
 
-    private static final String REDIRECT_URI = "https://yana-buddy.com";
-    private static final String GRANT_TYPE = "authorization_code";
+    private final String REDIRECT_URI = "https://yana-buddy.com";
+    private final String GRANT_TYPE = "authorization_code";
 
     @Value("${oauth.google.client-id}") private String G_CLIENT_ID;
     @Value("${oauth.google.client-secret}") private String G_CLIENT_SECRET;
@@ -40,7 +38,7 @@ public class OAuthService {
 
     private String url = "";
 
-    //구글에서 받은 code 를 통해 token 받아오기 (JSON 타입으로 반환되기에, ResponseEntity 로 묶어줌)
+    //구글에서 받은 code 를 통해 token 받아오기
     public String createPostRequest(String code) {
         url = "https://oauth2.googleapis.com/token";
 
@@ -75,7 +73,7 @@ public class OAuthService {
         return googleToken;
     }
 
-    //구글의 access token 을 활용하여 구글 유저 정보 받아오기(JSON 타입을 ResponseEntity로 묶어줌)
+    //구글의 access token 을 활용하여 구글 유저 정보 받아오기
     public String createGetRequest(GoogleToken googleToken) {
         url = "https://www.googleapis.com/oauth2/v1/userinfo";
 
