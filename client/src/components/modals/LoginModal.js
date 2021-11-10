@@ -43,9 +43,9 @@ export function LoginModal(props) {
         method: 'GET',
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           props.setUserInfo(res.data); // res.data userInfo에 저장
-          console.log(cookies.get('refreshToken'));
+          // console.log(cookies.get('refreshToken'));
           cookies.set('refreshToken', res.data.refreshToken);
           props.setLoginOn(true); // 로그인 true
           history.push('/');
@@ -69,9 +69,9 @@ export function LoginModal(props) {
         method: 'GET',
       })
         .then((res) => {
-          console.log(res.data);
-          setUserInfo(res.data); // res.data userInfo에 저장
-          console.log(cookies.get('refreshToken'));
+          // console.log(res.data);
+          // setUserInfo(res.data); // res.data userInfo에 저장
+          // console.log(cookies.get('refreshToken'));
           cookies.set('refreshToken', res.data.refreshToken);
           props.setLoginOn(true); // 로그인 true
           history.push('/');
@@ -94,7 +94,7 @@ export function LoginModal(props) {
     setUserEmail('');
     setUserPassword('');
 
-    console.log(userData);
+    // console.log(userData);
 
     // 로그인 JWT 인증 처리 (API POST : /login)
     await axios(`${process.env.REACT_APP_HTTPS_URL}/login`, {
@@ -103,8 +103,8 @@ export function LoginModal(props) {
       headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
-        console.log(res.data); // accessToken (클라이언트에 따로 저장)
-        console.log(cookies.get('refreshToken'));
+        // console.log(res.data); // accessToken (클라이언트에 따로 저장)
+        // console.log(cookies.get('refreshToken'));
         cookies.set('refreshToken', res.data.refreshToken);
         props.setLoginOn(true);
         props.setModalOn(false);
@@ -112,7 +112,7 @@ export function LoginModal(props) {
         Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
       })
       .catch((err) => {
-        console.log(`email = ${userData.email}, password = ${userData.password}`);
+        // console.log(`email = ${userData.email}, password = ${userData.password}`);
 
         if (userData.email === '' && userData.password === '') {
           setUserLoginError('이메일 또는 비밀번호를 입력해주세요.');
@@ -121,7 +121,7 @@ export function LoginModal(props) {
         }
         if (err.response) {
           // 에러에 response가 있으면 해당 data를 출력
-          console.log(err.response.data);
+          // console.log(err.response.data);
         }
       });
   };
@@ -139,10 +139,10 @@ export function LoginModal(props) {
     })
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
-        console.log(res.data);
+        // console.log(res.data);
         props.setUserInfo(res.data);
         setUserInfo(props.userInfo);
-        console.log(userInfo);
+        // console.log(userInfo);
 
         // useHistory를 사용하여 로그인 성공시 모달창 닫기
         props.setModalOn(false);
@@ -169,13 +169,13 @@ export function LoginModal(props) {
   // 이메일 입력 상태관리
   const handleChangeEmail = (e) => {
     setUserEmail(e.target.value);
-    console.log(userEmail);
+    // console.log(userEmail);
   };
 
   // 비밀번호 입력 상태관리
   const handleChangePassword = (e) => {
     setUserPassword(e.target.value);
-    console.log(userPassword);
+    // console.log(userPassword);
   };
 
   // 로그인 모달창 끄고 회원가입 모달창 열기

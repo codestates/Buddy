@@ -41,7 +41,7 @@ export function MyPage(props) {
 
   // 새로고침해도 로그인 유지
   useEffect(() => {
-    console.log(selectedFile);
+    // console.log(selectedFile);
     // selectedFile 값이 바뀌면 이미지 파일을 S3 이미지 서버에 업로드
     if (selectedFile !== null) {
       uploadFile(selectedFile);
@@ -57,7 +57,7 @@ export function MyPage(props) {
         headers: AXIOS_DEFAULT_HEADER,
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           Swal.fire({ title: '프로필 이미지가 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
             window.location.replace('/mypage'); // mypage 새로고침
           });
@@ -84,7 +84,9 @@ export function MyPage(props) {
         setProgress(Math.round((evt.loaded / evt.total) * 100));
       })
       .send((err) => {
-        if (err) console.log(err);
+        if (err) {
+          // console.log(err);
+        }
       });
   };
   //? 업로드 로직 //
@@ -107,7 +109,7 @@ export function MyPage(props) {
           headers: AXIOS_DEFAULT_HEADER,
         })
           .then((res) => {
-            console.log(res.data); // 회원정보 삭제 완료
+            // console.log(res.data); // 회원정보 삭제 완료
             props.setLoginOn(false); // 로그인 상태 false
             history.push('/'); // 루트 경로로 이동
             Swal.fire({ title: '회원 탈퇴가 완료되었습니다.', confirmButtonText: '확인' });
@@ -121,7 +123,7 @@ export function MyPage(props) {
   const handleChangeNickname = (e) => {
     SetUserNickname(e.target.value);
     setUserNicknameCheck(0);
-    console.log(userNickname);
+    // console.log(userNickname);
   };
 
   // 닉네임 체크 이벤트 함수
@@ -133,13 +135,13 @@ export function MyPage(props) {
         headers: AXIOS_DEFAULT_HEADER,
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setUserNicknameCheck(1);
-          console.log('사용 가능한 닉네임입니다.');
+          // console.log('사용 가능한 닉네임입니다.');
         })
         .catch((err) => {
           setUserNicknameCheck(2);
-          console.log('이미 존재하는 닉네임입니다!');
+          // console.log('이미 존재하는 닉네임입니다!');
         });
     }
   };
@@ -168,7 +170,7 @@ export function MyPage(props) {
             headers: AXIOS_DEFAULT_HEADER,
           })
             .then((res) => {
-              console.log(res.data);
+              // console.log(res.data);
               Swal.fire({ title: '닉네임이 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
                 window.location.replace('/mypage'); // mypage 새로고침
               });
@@ -183,13 +185,13 @@ export function MyPage(props) {
   // 비밀번호 입력 이벤트 함수.
   const handleChangePassword = (e) => {
     setUserPassword(e.target.value);
-    console.log(userPassword);
+    // console.log(userPassword);
   };
 
   // 비밀번호 재입력 이벤트 함수
   const handleChangePasswordValid = (e) => {
     setUserPasswordCheck(e.target.value);
-    console.log(userPasswordCheck);
+    // console.log(userPasswordCheck);
   };
 
   // 비밀번호 변경 이벤트 함수
@@ -216,7 +218,7 @@ export function MyPage(props) {
             headers: AXIOS_DEFAULT_HEADER,
           })
             .then((res) => {
-              console.log(res.data);
+              // console.log(res.data);
               Swal.fire({ title: '비밀번호가 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
                 window.location.replace('/mypage'); // mypage 새로고침
               });

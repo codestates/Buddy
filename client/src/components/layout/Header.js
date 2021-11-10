@@ -19,7 +19,7 @@ export default function Header(props) {
 
   const loginModalOpen = () => {
     props.setModalOn(true);
-    console.log(props.modalOn);
+    // console.log(props.modalOn);
   };
 
   const handleSignOut = () => {
