@@ -29,15 +29,18 @@ export default function Header(props) {
     props.setLoginOn(false);
     props.setUserInfo({});
     cookies.remove('chatRoomid');
+    cookies.remove('enterroom');
   };
 
   const handleOnlyUserError = () => {
     Swal.fire({ title: '로그인 후 사용가능합니다. 로그인 해주세요.', confirmButtonText: '확인' });
     cookies.remove('chatRoomid');
+    cookies.remove('enterroom');
   };
 
   const chatroomidDelete = () => {
     cookies.remove('chatRoomid');
+    cookies.remove('enterroom');
   };
 
   return (
@@ -54,7 +57,7 @@ export default function Header(props) {
                   채팅
                 </Link>
               ) : (
-                <Link className="header__link" to="/chat" onClick={chatroomidDelete}>
+                <Link className="header__link" to="/chat">
                   채팅
                 </Link>
               )}
