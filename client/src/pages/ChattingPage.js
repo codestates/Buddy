@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 // 라이브러리
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import axios from 'axios';
@@ -25,10 +25,14 @@ dotenv.config();
 // 쿠키 생성
 const cookies = new Cookies();
 
+// setTimeout 변수 (다른 페이지로 이동할 때 setTimeout 실행을 막아줌)
+let timeouts;
+
 // 채팅 방 컴포넌트
 export function ChattingPage(props) {
   // 상태관리(ChatDetail)
   const [chattingLog, setChattingLog] = useState([]); // 채팅 로그
+  const [isLoading, setIsLoding] = useState(false); // 로딩 여부
 
   const history = useHistory();
   const cookies = new Cookies();
@@ -41,13 +45,29 @@ export function ChattingPage(props) {
   // 토큰
   const token = cookies.get('refreshToken');
 
+  // 새로고침 시, 웹 소켓 연결 유지
   useEffect(() => {
     if (cookies.get('chatRoomid')) {
-      wsConnectSubscribe(); // 연결 함수
+      if (window.performance) {
+        if (performance.navigation.type === 1) {
+          cookies.set('chatRoomid', '');
+
+          Swal.fire({ title: `채팅을 종료하였습니다.`, confirmButtonText: '확인' }).then(function () {
+            history.push('/');
+            wsDisConnectUnsubscribe();
+          });
+        }
+      }
+
+      // 다른 컴포넌트로 이동할 때 실행되는 함수(마운트가 끝날 때)
+      return () => {
+        console.log(ws.ws.readyState);
+        if (ws.ws.readyState === 1) {
+          wsDisConnectUnsubscribe();
+        }
+        clearTimeout(timeouts);
+      };
     }
-    return () => {
-      wsDisConnectUnsubscribe();
-    };
   }, [cookies.get('chatRoomid')]);
 
   // 새로고침 시, 방 목록 가져오기
@@ -57,37 +77,51 @@ export function ChattingPage(props) {
       Swal.fire({ title: '회원 전용 페이지입니다. 로그인 해주세요.', confirmButtonText: '확인' });
       history.push('/');
     }
+
+    if (cookies.get('chatRoomid')) {
+      console.log(ws.ws.readyState);
+      if (ws.ws.readyState === 0 && !cookies.get('enterroom')) {
+        wsConnectSubscribe(); // 연결 함수
+        cookies.set('enterroom', 'true');
+      }
+    }
   }, []);
 
-  // 채팅로그가 변할 때 스크롤 맨 아래로 이동
   useEffect(() => {
     scrollBottom();
   }, [chattingLog]);
 
+  // 채팅로그가 변할 때 스크롤 맨 아래로 이동
   const scrollBottom = () => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   };
 
   // 방 만들기(대기 중인 방 찾기)
   const handleCreateRoom = () => {
-    axios(`${process.env.REACT_APP_HTTPS_URL}/chat/room`, {
-      method: 'GET',
-      headers: AXIOS_DEFAULT_HEADER,
-    })
-      .then((res) => {
-        console.log(res.data);
-        Swal.fire({ title: `${res.data.message}`, confirmButtonText: '확인' }).then(function () {
-          // 쿠키에 생성된 방 id user count 넣기
-          cookies.set('chatRoomid', res.data.roomId);
-          window.location.replace(`/chat`);
-        });
+    setIsLoding(true);
+
+    timeouts = setTimeout(function () {
+      axios(`${process.env.REACT_APP_HTTPS_URL}/chat/room`, {
+        method: 'GET',
+        headers: AXIOS_DEFAULT_HEADER,
       })
-      .catch((err) => {});
+        .then((res) => {
+          Swal.fire({ title: `${res.data.message}`, confirmButtonText: '확인' }).then(function () {
+            // 쿠키에 생성된 방 id user count 넣기
+            cookies.set('chatRoomid', res.data.roomId);
+
+            console.log(res.data);
+            window.location.replace(`/chat`);
+          });
+        })
+        .catch((err) => {});
+    }, 5000);
   };
 
   // 방 나가기
   const handleExitRoom = () => {
     cookies.set('chatRoomid', '');
+    cookies.remove('enterroom');
     Swal.fire({ title: `채팅을 종료하였습니다.`, confirmButtonText: '확인' }).then(function () {
       history.push('/');
     });
@@ -98,7 +132,7 @@ export function ChattingPage(props) {
     try {
       ws.connect(
         {
-          token: token,
+          token: cookies.get('refreshToken'),
         },
         () => {
           ws.subscribe(
@@ -107,7 +141,7 @@ export function ChattingPage(props) {
               const newMessage = JSON.parse(data.body);
               addMessage(newMessage);
             },
-            { token: token }
+            { token: cookies.get('refreshToken') }
           );
         }
       );
@@ -128,7 +162,7 @@ export function ChattingPage(props) {
         () => {
           ws.unsubscribe('sub-0');
         },
-        { token: token }
+        { token: cookies.get('refreshToken') }
       );
     } catch (error) {
       console.log(error);
@@ -166,7 +200,7 @@ export function ChattingPage(props) {
         };
         waitForConnection(ws, function () {
           if (ws.ws.readyState === WebSocket.OPEN) {
-            ws.send('/pub/chat/message', { token: token }, JSON.stringify(newMessage));
+            ws.send('/pub/chat/message', { token: cookies.get('refreshToken') }, JSON.stringify(newMessage));
             console.log(ws.ws.readyState);
 
             e.target.value = ''; // 입력 창 초기화
@@ -184,91 +218,98 @@ export function ChattingPage(props) {
       <div className="chatting__page">
         <section className="chatting__wrapper">
           {cookies.get('chatRoomid') ? (
-            <div className="chat__detail">
-              <ScrollContainer className="scroll__container" horizontal={false} hideScrollbars>
-                <div className="chat__container">
-                  <div className="chat__contents" ref={scrollRef}>
-                    {chattingLog.map((message) =>
-                      message.type === 'ENTER' ? (
-                        <div className="chat__messages__container__center">
-                          <div className="chat__messages__center__enter">
-                            <span>
-                              {message.sender} {message.message}
-                            </span>
+            <>
+              <div className="chat__detail">
+                <ScrollContainer className="scroll__container" horizontal={false} hideScrollbars>
+                  <div className="chat__container">
+                    <div className="chat__contents" ref={scrollRef}>
+                      {chattingLog.map((message) =>
+                        message.type === 'ENTER' ? (
+                          <div className="chat__messages__container__center">
+                            <div className="chat__messages__center__enter">
+                              <span>
+                                {message.sender} {message.message}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ) : message.type === 'QUIT' ? (
-                        <div className="chat__messages__container__center">
-                          <div className="chat__messages__center__quit">
-                            <span>
-                              {message.sender} {message.message}
-                            </span>
+                        ) : message.type === 'QUIT' ? (
+                          <div className="chat__messages__container__center">
+                            <div className="chat__messages__center__quit">
+                              <span>
+                                {message.sender} {message.message}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ) : message.sender === props.userInfo.nickname ? (
-                        <div className="chat__messages__container__right">
-                          <div className="chat__messages__right">
-                            <div className="chat__messages__right__contents">
-                              <div className="chat__messages__right__image__contents">
-                                <img src={props.userInfo.profileImage} alt="user images right" />
-                              </div>
-                              <div className="chat__messages__right__describe__contents">
-                                <div className="chat__messages__right__describe__message">
-                                  <span>{message.message}</span>
+                        ) : message.sender === props.userInfo.nickname ? (
+                          <div className="chat__messages__container__right">
+                            <div className="chat__messages__right">
+                              <div className="chat__messages__right__contents">
+                                <div className="chat__messages__right__image__contents">
+                                  <img src={props.userInfo.profileImage} alt="user images right" />
                                 </div>
-                                <div className="chat__messages__right__describe__createdat">
-                                  <span>{message.createdAt.slice(11, message.createdAt.length)}</span>
+                                <div className="chat__messages__right__describe__contents">
+                                  <div className="chat__messages__right__describe__message">
+                                    <span>{message.message}</span>
+                                  </div>
+                                  <div className="chat__messages__right__describe__createdat">
+                                    <span>{message.createdAt.slice(11, message.createdAt.length)}</span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ) : (
-                        <div className="chat__messages__container__left">
-                          <div className="chat__messages__left">
-                            <div className="chat__messages__left__contents">
-                              <div className="chat__messages__left__image__contents">
-                                <img src={message.profileImage} alt="user images left" />
-                              </div>
-                              <div className="chat__messages__left__describe__contents">
-                                <div className="chat__messages__left__describe__message">
-                                  <span>{message.message}</span>
+                        ) : (
+                          <div className="chat__messages__container__left">
+                            <div className="chat__messages__left">
+                              <div className="chat__messages__left__contents">
+                                <div className="chat__messages__left__image__contents">
+                                  <img src={message.profileImage} alt="user images left" />
                                 </div>
-                                <div className="chat__messages__left__describe__createdat">
-                                  <span>{message.createdAt.slice(11, message.createdAt.length)}</span>
+                                <div className="chat__messages__left__describe__contents">
+                                  <div className="chat__messages__left__describe__message">
+                                    <span>{message.message}</span>
+                                  </div>
+                                  <div className="chat__messages__left__describe__createdat">
+                                    <span>{message.createdAt.slice(11, message.createdAt.length)}</span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      )
-                    )}
+                        )
+                      )}
+                    </div>
                   </div>
-                </div>
-              </ScrollContainer>
-              <input
-                type="text"
-                onKeyPress={sendMessage}
-                className="chat__input"
-                placeholder="메세지를 입력해주세요"
-              ></input>
-            </div>
+                </ScrollContainer>
+                <input
+                  type="text"
+                  onKeyPress={sendMessage}
+                  className="chat__input"
+                  placeholder="메세지를 입력해주세요"
+                ></input>
+                <button className="chat__exit__btn" onClick={handleExitRoom}>
+                  방 나가기
+                </button>
+              </div>
+            </>
           ) : (
-            <div className="chat__detail">
-              <img src="images/chat_main_image.jpg" alt="채팅방 메인 이미지" />
+            <div className="chat__detail" style={{ 'align-items': 'center' }}>
+              {!cookies.get('chatRoomid') && isLoading === false ? (
+                <>
+                  <img className="chat__main__img" src="images/chat_main_image.jpg" alt="채팅방 메인 이미지" />
+                  <button className="chat__match__btn" onClick={handleCreateRoom}>
+                    랜덤 매칭
+                  </button>
+                </>
+              ) : (
+                <>
+                  <img className="chat__loading__img" src="images/loading.gif" alt="채팅방 로딩 이미지" />
+                  <span className="chat__loading__text">대기 중인 유저를 찾고 있습니다.</span>
+                </>
+              )}
             </div>
           )}
         </section>
-
-        {!cookies.get('chatRoomid') ? (
-          <button className="chat__match__btn" onClick={handleCreateRoom}>
-            랜덤 매칭
-          </button>
-        ) : (
-          <button className="chat__match__btn" onClick={handleExitRoom}>
-            방 나가기
-          </button>
-        )}
       </div>
     </>
   );
