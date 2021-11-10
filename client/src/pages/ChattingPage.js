@@ -61,7 +61,7 @@ export function ChattingPage(props) {
 
       // 다른 컴포넌트로 이동할 때 실행되는 함수(마운트가 끝날 때)
       return () => {
-        console.log(ws.ws.readyState);
+        // console.log(ws.ws.readyState);
         if (ws.ws.readyState === 1) {
           wsDisConnectUnsubscribe();
         }
@@ -79,7 +79,7 @@ export function ChattingPage(props) {
     }
 
     if (cookies.get('chatRoomid')) {
-      console.log(ws.ws.readyState);
+      // console.log(ws.ws.readyState);
       if (ws.ws.readyState === 0 && !cookies.get('enterroom')) {
         wsConnectSubscribe(); // 연결 함수
         cookies.set('enterroom', 'true');
@@ -110,7 +110,7 @@ export function ChattingPage(props) {
             // 쿠키에 생성된 방 id user count 넣기
             cookies.set('chatRoomid', res.data.roomId);
 
-            console.log(res.data);
+            // console.log(res.data);
             window.location.replace(`/chat`);
           });
         })
@@ -146,7 +146,7 @@ export function ChattingPage(props) {
         }
       );
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -165,7 +165,7 @@ export function ChattingPage(props) {
         { token: cookies.get('refreshToken') }
       );
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -201,14 +201,14 @@ export function ChattingPage(props) {
         waitForConnection(ws, function () {
           if (ws.ws.readyState === WebSocket.OPEN) {
             ws.send('/pub/chat/message', { token: cookies.get('refreshToken') }, JSON.stringify(newMessage));
-            console.log(ws.ws.readyState);
+            // console.log(ws.ws.readyState);
 
             e.target.value = ''; // 입력 창 초기화
           }
         });
       } catch (error) {
-        console.log(error);
-        console.log(ws.ws.readyState);
+        // console.log(error);
+        // console.log(ws.ws.readyState);
       }
     }
   }

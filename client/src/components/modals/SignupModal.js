@@ -36,7 +36,7 @@ export function SignupModal(props) {
         headers: AXIOS_DEFAULT_HEADER,
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           props.setSignupModalOn(false);
           resetSignupInput();
           Swal.fire({ title: '회원가입이 완료되었습니다.', confirmButtonText: '확인' });
@@ -78,14 +78,14 @@ export function SignupModal(props) {
   const handleChangeEmail = (e) => {
     setSignupUserEmail(e.target.value);
     setSignupUserEmailCheck(0);
-    console.log(signupUserEmail);
+    // console.log(signupUserEmail);
   };
 
   // 이메일 인증코드 입력 상태관리
   const handleChangeEmailCode = (e) => {
     setSignupUserEmailCode(e.target.value);
     setSignupUserEmailCodeCheck(0);
-    console.log(signupUserEmailCode);
+    // console.log(signupUserEmailCode);
   };
 
   // 이메일 중복 체크
@@ -97,9 +97,9 @@ export function SignupModal(props) {
         headers: AXIOS_DEFAULT_HEADER,
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setSignupUserEmailCheck(1);
-          console.log('사용 가능한 이메일입니다.');
+          // console.log('사용 가능한 이메일입니다.');
 
           // 이메일 인증 코드 보내기
           axios(`${process.env.REACT_APP_HTTPS_URL}/email_confirm`, {
@@ -108,13 +108,13 @@ export function SignupModal(props) {
             headers: AXIOS_DEFAULT_HEADER,
           })
             .then((res) => {
-              console.log(res.data);
+              // console.log(res.data);
             })
             .catch((err) => {});
         })
         .catch((err) => {
           setSignupUserEmailCheck(2);
-          console.log('이미 존재하는 이메일입니다!');
+          // console.log('이미 존재하는 이메일입니다!');
         });
     }
   };
@@ -128,32 +128,32 @@ export function SignupModal(props) {
       headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSignupUserEmailCodeCheck(1);
-        console.log('이메일 코드가 일치합니다.');
+        // console.log('이메일 코드가 일치합니다.');
       })
       .catch((err) => {
         setSignupUserEmailCodeCheck(2);
-        console.log('이메일 코드가 일치하지 않습니다.');
+        // console.log('이메일 코드가 일치하지 않습니다.');
       });
   };
   // 비밀번호 입력 상태관리
   const handleChangePassword = (e) => {
     setSignupUserPassword(e.target.value);
-    console.log(signupUserPassword);
+    // console.log(signupUserPassword);
   };
 
   // 비밀번호 재입력 상태관리
   const handleChangePasswordValid = (e) => {
     setSignupUserPasswordValid(e.target.value);
-    console.log(signupUserPasswordValid);
+    // console.log(signupUserPasswordValid);
   };
 
   // 닉네임 상태관리
   const handleChangeNickname = (e) => {
     setSignupUserNickname(e.target.value);
     setSignupUserNicknameCheck(0);
-    console.log(signupUserNickname);
+    // console.log(signupUserNickname);
   };
 
   // 닉네임 중복 체크
@@ -165,13 +165,13 @@ export function SignupModal(props) {
         headers: AXIOS_DEFAULT_HEADER,
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setSignupUserNicknameCheck(1);
-          console.log('사용 가능한 닉네임입니다.');
+          // console.log('사용 가능한 닉네임입니다.');
         })
         .catch((err) => {
           setSignupUserNicknameCheck(2);
-          console.log('이미 존재하는 닉네임입니다!');
+          // console.log('이미 존재하는 닉네임입니다!');
         });
     }
   };
@@ -179,7 +179,7 @@ export function SignupModal(props) {
   // 성별 상태관리
   const handleChangeGender = (e) => {
     setSignupUserGender(e.target.value);
-    console.log(signupUserGender);
+    // console.log(signupUserGender);
   };
 
   // 회원가입 버튼 이벤트
@@ -199,8 +199,8 @@ export function SignupModal(props) {
       });
     }
 
-    console.log(signupUserEmailCheck);
-    console.log(signupUserNicknameCheck);
+    // console.log(signupUserEmailCheck);
+    // console.log(signupUserNicknameCheck);
   }
 
   return (
