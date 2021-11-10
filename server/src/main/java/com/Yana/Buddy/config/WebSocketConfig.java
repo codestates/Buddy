@@ -27,11 +27,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chatting") //url/chatting 웹 소켓 연결
-                .setAllowedOriginPatterns("*")
+                .setAllowedOrigins("*")
                 .withSockJS(); //낮은 버전의 브라우저에서도 웹 소켓이 작동할 수 있도록 해줌
     }
 
-    /*
+    /**
     StompHandler 인터셉터 설정
     StompHandler 가 웹 소켓 앞단에서 token 및 메시지 TYPE 등을 체크할 수 있도록 설정
      */
