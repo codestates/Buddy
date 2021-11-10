@@ -4,7 +4,7 @@ export function DemoIntro() {
   const history = useHistory();
 
   function moveDemopage() {
-    history.push('/demo');
+    history.push('/tutorial');
   }
 
   return (
