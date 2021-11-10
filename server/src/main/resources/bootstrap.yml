@@ -1,6 +1,0 @@
-aws:
-  paramstore:
-    enabled: true
-    prefix: /secret
-    name: buddy
-    profileSeparator: _
