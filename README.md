@@ -27,8 +27,11 @@
 
 [Buddy Wiki](https://github.com/codestates/Buddy/wiki/) 
 
-## Landing Page
+## Landing Page(PC)
 ![landing](https://user-images.githubusercontent.com/69352020/141191432-2558b24f-9a28-44b7-a816-77fece01c0a3.gif)
+
+## Landing Page(Mobile)
+![landing_mobile](https://user-images.githubusercontent.com/69352020/141193759-568a4168-c738-44dc-9f22-fa38562d1939.gif)
 
 ## Tutorial
 ### 1. 회원가입을 진행해주세요
