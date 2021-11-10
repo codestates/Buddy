@@ -1,0 +1,54 @@
+/* 채팅 소개 관련 CSS */
+
+#tutorial__container {
+  width: 100%;
+  height: 857px;
+  background-image: url('../../backgrounds/chatintro_back.jpg');
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#tutorial__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 60%;
+}
+
+#tutorial__image {
+  display: flex;
+  justify-content: center;
+}
+
+#tutorial__image > img {
+  width: 800px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  box-shadow: 1px 3px 10px;
+}
+
+#tutorial__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Noto Sans KR';
+  width: 80%;
+  color: black;
+}
+
+#tutorial__text > h1 {
+  font-size: 40px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-align: center;
+}
+
+#tutorial__text > span {
+  font-size: 18px;
+  margin-top: 10px;
+  text-align: center;
+}
