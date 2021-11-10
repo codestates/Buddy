@@ -147,23 +147,35 @@ export function MyPage(props) {
   // 닉네임 변경 이벤트 함수
   const handleModifyNickname = () => {
     if (userNickname !== '' && userNicknameCheck === 1) {
-      axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${props.userInfo.id}`, {
-        method: 'PUT',
-        data: {
-          nickname: userNickname,
-          password: props.userInfo.password,
-          profile_image: props.userInfo.profileImage,
-          stateMessage: props.userInfo.stateMessage,
-        },
-        headers: AXIOS_DEFAULT_HEADER,
-      })
-        .then((res) => {
-          console.log(res.data);
-          Swal.fire({ title: '닉네임이 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
-            window.location.replace('/mypage'); // mypage 새로고침
-          });
-        })
-        .catch((err) => {});
+      Swal.fire({
+        title: '닉네임을 변경하시겠습니까?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: '네',
+        cancelButtonText: '아니오',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${props.userInfo.id}`, {
+            method: 'PUT',
+            data: {
+              nickname: userNickname,
+              password: props.userInfo.password,
+              profile_image: props.userInfo.profileImage,
+              stateMessage: props.userInfo.stateMessage,
+            },
+            headers: AXIOS_DEFAULT_HEADER,
+          })
+            .then((res) => {
+              console.log(res.data);
+              Swal.fire({ title: '닉네임이 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
+                window.location.replace('/mypage'); // mypage 새로고침
+              });
+            })
+            .catch((err) => {});
+        }
+      });
     } else {
     }
   };
@@ -183,23 +195,35 @@ export function MyPage(props) {
   // 비밀번호 변경 이벤트 함수
   const handleModifyPassword = () => {
     if (userPassword === userPasswordCheck && userPassword !== '') {
-      axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${props.userInfo.id}`, {
-        method: 'PUT',
-        data: {
-          password: userPassword,
-          profile_image: props.userInfo.profileImage,
-          stateMessage: props.userInfo.stateMessage,
-          nickname: props.userInfo.nickname,
-        },
-        headers: AXIOS_DEFAULT_HEADER,
-      })
-        .then((res) => {
-          console.log(res.data);
-          Swal.fire({ title: '비밀번호가 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
-            window.location.replace('/mypage'); // mypage 새로고침
-          });
-        })
-        .catch((err) => {});
+      Swal.fire({
+        title: '비밀번호를 변경하시겠습니까?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: '네',
+        cancelButtonText: '아니오',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${props.userInfo.id}`, {
+            method: 'PUT',
+            data: {
+              password: userPassword,
+              profile_image: props.userInfo.profileImage,
+              stateMessage: props.userInfo.stateMessage,
+              nickname: props.userInfo.nickname,
+            },
+            headers: AXIOS_DEFAULT_HEADER,
+          })
+            .then((res) => {
+              console.log(res.data);
+              Swal.fire({ title: '비밀번호가 변경되었습니다.', confirmButtonText: '확인' }).then(function () {
+                window.location.replace('/mypage'); // mypage 새로고침
+              });
+            })
+            .catch((err) => {});
+        }
+      });
     } else {
     }
   };
@@ -237,7 +261,7 @@ export function MyPage(props) {
                 type="text"
                 onChange={handleChangeNickname}
                 placeholder="변경할 닉네임을 입력해주세요"
-                maxLength="15"
+                maxLength="8"
               ></input>
               <button onClick={handleCheckNickname}>중복체크</button>
               <button onClick={handleModifyNickname}>변경</button>
