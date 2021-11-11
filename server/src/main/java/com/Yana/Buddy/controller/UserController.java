@@ -33,6 +33,12 @@ public class UserController {
         return userService.basicSignup(dto);
     }
 
+    //로그아웃 → redis 에서 refresh token 을 제거하기 위한 목적
+    @PostMapping("/logout")
+    public ResponseEntity logout(@RequestBody EmailDto dto) {
+        return userService.logout(dto);
+    }
+
     //Email 중복 체크
     @PostMapping("/email_check")
     public ResponseEntity emailCheck(@RequestBody EmailDto dto) {
