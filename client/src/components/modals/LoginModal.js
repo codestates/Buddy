@@ -60,7 +60,7 @@ export function LoginModal(props) {
                   LAST_NICKNAME[getRandomIndex(LAST_NICKNAME.length)]
                 }`,
                 password: null,
-                profile_image: userInfo.profileImage,
+                profile_image: `${process.env.REACT_APP_S3_IMAGE_URL}/mypage_img.png`,
                 stateMessage: userInfo.stateMessage,
               },
               headers: AXIOS_DEFAULT_HEADER,
@@ -116,7 +116,7 @@ export function LoginModal(props) {
                   LAST_NICKNAME[getRandomIndex(LAST_NICKNAME.length)]
                 }`,
                 password: null,
-                profile_image: userInfo.profileImage,
+                profile_image: `${process.env.REACT_APP_S3_IMAGE_URL}/mypage_img.png`,
                 stateMessage: userInfo.stateMessage,
               },
               headers: AXIOS_DEFAULT_HEADER,
