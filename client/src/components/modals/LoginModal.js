@@ -4,7 +4,7 @@ import { Cookies } from 'react-cookie';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { SignupModal } from './SignupModal';
-import { AXIOS_DEFAULT_HEADER } from '../../constants/constants';
+import { AXIOS_DEFAULT_HEADER, FIRST_NICKNAME, LAST_NICKNAME } from '../../constants/constants';
 import '../../styles/modal/LoginModal.css';
 
 import Swal from 'sweetalert2/dist/sweetalert2.js';
@@ -31,6 +31,11 @@ export function LoginModal(props) {
     kakaoCodeOauth(); // 카카오 소셜 로그인 데이터 저장 함수
   }, []);
 
+  // 랜덤 함수
+  const getRandomIndex = (length) => {
+    return parseInt(Math.random() * length);
+  };
+
   // google oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
   const googleCodeOauth = () => {
     const googleUrl = new URL(window.location.href); // 주소창 값 가져오기
@@ -43,15 +48,34 @@ export function LoginModal(props) {
         method: 'GET',
       })
         .then((res) => {
-          console.log(res.data);
-          props.setUserInfo(res.data); // res.data userInfo에 저장
-          // console.log(cookies.get('refreshToken'));
-          cookies.set('refreshToken', res.data.refreshToken);
-          props.setLoginOn(true); // 로그인 true
-          history.push('/');
-          accessTokenCheck(); // 새로고침 시 로그인 유지
-          props.accessTokenCheck();
-          Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+          // console.log(res.data);
+
+          if (res.data.existingUser === false) {
+            axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${res.data.id}`, {
+              method: 'PUT',
+              data: {
+                nickname: `${FIRST_NICKNAME[getRandomIndex(FIRST_NICKNAME.length)]} ${
+                  LAST_NICKNAME[getRandomIndex(LAST_NICKNAME.length)]
+                }`,
+                password: null,
+                profile_image: props.userInfo.profileImage,
+                stateMessage: props.userInfo.stateMessage,
+              },
+              headers: AXIOS_DEFAULT_HEADER,
+            })
+              .then((res) => {
+                props.setUserInfo(res.data); // res.data userInfo에 저장
+                // console.log(cookies.get('refreshToken'));
+                cookies.set('refreshToken', res.data.refreshToken);
+                props.setLoginOn(true); // 로그인 true
+                history.push('/');
+                accessTokenCheck(); // 새로고침 시 로그인 유지
+                props.accessTokenCheck();
+                Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+              })
+              .catch((err) => {});
+          } else {
+          }
         })
         .catch((err) => {});
     }
@@ -69,15 +93,34 @@ export function LoginModal(props) {
         method: 'GET',
       })
         .then((res) => {
-          console.log(res.data);
-          // setUserInfo(res.data); // res.data userInfo에 저장
-          // console.log(cookies.get('refreshToken'));
-          cookies.set('refreshToken', res.data.refreshToken);
-          props.setLoginOn(true); // 로그인 true
-          history.push('/');
-          accessTokenCheck(); // 새로고침 시 로그인 유지
-          props.accessTokenCheck();
-          Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+          //console.log(res.data);
+
+          if (res.data.existingUser === false) {
+            axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${res.data.id}`, {
+              method: 'PUT',
+              data: {
+                nickname: `${FIRST_NICKNAME[getRandomIndex(FIRST_NICKNAME.length)]} ${
+                  LAST_NICKNAME[getRandomIndex(LAST_NICKNAME.length)]
+                }`,
+                password: null,
+                profile_image: props.userInfo.profileImage,
+                stateMessage: props.userInfo.stateMessage,
+              },
+              headers: AXIOS_DEFAULT_HEADER,
+            })
+              .then((res) => {
+                props.setUserInfo(res.data); // res.data userInfo에 저장
+                // console.log(cookies.get('refreshToken'));
+                cookies.set('refreshToken', res.data.refreshToken);
+                props.setLoginOn(true); // 로그인 true
+                history.push('/');
+                accessTokenCheck(); // 새로고침 시 로그인 유지
+                props.accessTokenCheck();
+                Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+              })
+              .catch((err) => {});
+          } else {
+          }
         })
         .catch((err) => {});
     }
