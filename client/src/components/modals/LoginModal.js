@@ -17,7 +17,7 @@ export function LoginModal(props) {
   const [userEmail, setUserEmail] = useState(''); // 이메일
   const [userPassword, setUserPassword] = useState(''); // 비밀번호
   const [userLoginError, setUserLoginError] = useState(''); // 로그인 에러 메세지
-  const [userInfo, setUserInfo] = useState({ email: '', nickname: '', authority: '', gender: '' }); // 로그인 성공 시 저장되는 유저 정보
+  const [userInfo, setUserInfo] = useState({}); // 로그인 성공 시 저장되는 유저 정보
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
 
   const history = useHistory();
@@ -49,9 +49,7 @@ export function LoginModal(props) {
       })
         .then((res) => {
           console.log(res.data);
-          props.setUserInfo(res.data); // res.data userInfo에 저장
           cookies.set('refreshToken', res.data.refreshToken);
-          accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
 
           if (res.data.existingUser === false) {
@@ -118,8 +116,8 @@ export function LoginModal(props) {
                   LAST_NICKNAME[getRandomIndex(LAST_NICKNAME.length)]
                 }`,
                 password: null,
-                profile_image: props.userInfo.profileImage,
-                stateMessage: props.userInfo.stateMessage,
+                profile_image: userInfo.profileImage,
+                stateMessage: userInfo.stateMessage,
               },
               headers: AXIOS_DEFAULT_HEADER,
             })
@@ -204,10 +202,10 @@ export function LoginModal(props) {
     })
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
-        // console.log(res.data);
+        console.log(res.data);
         props.setUserInfo(res.data);
         setUserInfo(props.userInfo);
-        // console.log(userInfo);
+        console.log(userInfo);
 
         // useHistory를 사용하여 로그인 성공시 모달창 닫기
         props.setModalOn(false);
