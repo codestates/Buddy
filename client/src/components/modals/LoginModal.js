@@ -60,8 +60,8 @@ export function LoginModal(props) {
                   LAST_NICKNAME[getRandomIndex(LAST_NICKNAME.length)]
                 }`,
                 password: null,
-                profile_image: props.userInfo.profileImage,
-                stateMessage: props.userInfo.stateMessage,
+                profile_image: userInfo.profileImage,
+                stateMessage: userInfo.stateMessage,
               },
               headers: AXIOS_DEFAULT_HEADER,
             })
