@@ -52,8 +52,7 @@ function App() {
     })
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
-        // console.log(res.data);
-        // console.log(userInfo);
+        console.log(res.data);
         setUserInfo(res.data);
 
         // useHistory를 사용하여 로그인 성공시 모달창을 끄고 mypage로 이동
@@ -82,6 +81,7 @@ function App() {
           setUserInfo={setUserInfo}
           loginOn={loginOn}
           setLoginOn={setLoginOn}
+          userInfo={userInfo}
         />
         <Switch>
           <Route exact path="/">
