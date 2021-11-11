@@ -43,7 +43,7 @@ export function LoginModal(props) {
         method: 'GET',
       })
         .then((res) => {
-          // console.log(res.data);
+          console.log(res.data);
           props.setUserInfo(res.data); // res.data userInfo에 저장
           // console.log(cookies.get('refreshToken'));
           cookies.set('refreshToken', res.data.refreshToken);
@@ -69,7 +69,7 @@ export function LoginModal(props) {
         method: 'GET',
       })
         .then((res) => {
-          // console.log(res.data);
+          console.log(res.data);
           // setUserInfo(res.data); // res.data userInfo에 저장
           // console.log(cookies.get('refreshToken'));
           cookies.set('refreshToken', res.data.refreshToken);
