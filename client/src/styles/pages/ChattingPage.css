@@ -272,10 +272,23 @@
   border-radius: 10px;
 }
 
-.chat__detail > img {
-  width: 100%;
-  height: 100%;
+.chat__detail > .chat__main__img {
+  width: 80%;
+  height: 80%;
   object-fit: cover;
+}
+
+.chat__detail > .chat__loading__img {
+  margin-top: 250px;
+  width: 20%;
+  height: auto;
+  object-fit: cover;
+}
+
+.chat__detail > .chat__loading__text {
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .chat__container {
@@ -302,6 +315,7 @@
   margin-right: 17px;
   margin-bottom: 10px;
   margin-top: 50px;
+  width: 95%;
 }
 
 .chat__input::placeholder {
@@ -326,16 +340,57 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  width: 230px;
+  height: 70px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.chat__match__btn:hover {
+  animation-name: gradient;
+  -webkit-animation-name: gradient;
+  animation-duration: 2s;
+  -webkit-animation-duration: s;
+  animation-iteration-count: 1;
+  -webkit-animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.chat__exit__btn {
+  -webkit-appearance: none;
+  background: -webkit-gradient(to right, #23b353 0%, #fceeb5 50%, #c275f5 100%);
+  background: linear-gradient(to right, #23b353 0%, #fceeb5 50%, #c275f5 100%);
+  background-size: 500%;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  color: #fff;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.05em;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   width: 130px;
   height: 40px;
   margin-top: 10px;
   margin-bottom: 20px;
   border-radius: 30px;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
 
-.chat__match__btn:hover {
+.chat__exit__btn:hover {
   animation-name: gradient;
   -webkit-animation-name: gradient;
   animation-duration: 2s;
