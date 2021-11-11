@@ -68,6 +68,9 @@ export function LoginModal(props) {
               headers: AXIOS_DEFAULT_HEADER,
             })
               .then((res) => {
+                props.setUserInfo(res.data); // res.data userInfo에 저장
+                accessTokenCheck(); // 새로고침 시 로그인 유지
+                props.accessTokenCheck();
                 // console.log(cookies.get('refreshToken'));
                 props.setLoginOn(true); // 로그인 true
                 history.push('/');
@@ -121,6 +124,9 @@ export function LoginModal(props) {
               headers: AXIOS_DEFAULT_HEADER,
             })
               .then((res) => {
+                props.setUserInfo(res.data); // res.data userInfo에 저장
+                accessTokenCheck(); // 새로고침 시 로그인 유지
+                props.accessTokenCheck();
                 // console.log(cookies.get('refreshToken'));
                 props.setLoginOn(true); // 로그인 true
                 history.push('/');
