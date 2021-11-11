@@ -51,6 +51,7 @@ export function LoginModal(props) {
           // console.log(res.data);
           cookies.set('refreshToken', res.data.refreshToken);
           accessTokenCheck(); // 새로고침 시 로그인 유지
+          props.accessTokenCheck();
 
           if (res.data.existingUser === false) {
             axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${res.data.id}`, {
@@ -106,6 +107,7 @@ export function LoginModal(props) {
           //console.log(res.data);
           cookies.set('refreshToken', res.data.refreshToken);
           accessTokenCheck(); // 새로고침 시 로그인 유지
+          props.accessTokenCheck();
 
           if (res.data.existingUser === false) {
             axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${res.data.id}`, {
