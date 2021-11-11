@@ -59,7 +59,6 @@ public class UserService {
                 .nickname(dto.getNickname())
                 .password(dto.getPassword())
                 .profileImage("https://buddy-image-server.s3.ap-northeast-2.amazonaws.com/mypage_img.png")
-                .gender(Gender.valueOf(dto.getGender()))
                 .authority(Role.GENERAL)
                 .build();
 
@@ -69,7 +68,6 @@ public class UserService {
                 .id(user.getId())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
-                .gender(user.getGender().getValue())
                 .stateMessage(user.getStateMessage())
                 .profileImage(user.getProfileImage())
                 .message("회원 가입에 성공했습니다.")
@@ -109,7 +107,6 @@ public class UserService {
                     .id(user.getId())
                     .email(user.getEmail())
                     .nickname(user.getNickname())
-                    .gender(user.getGender().getValue())
                     .stateMessage(user.getStateMessage())
                     .profileImage(user.getProfileImage())
                     .message("유저 정보가 성공적으로 조회되었습니다.")
@@ -128,23 +125,16 @@ public class UserService {
                     .nickname(dto.getNickname())
                     .password(dto.getPassword())
                     .email(user.getEmail())
-                    .gender(user.getGender())
                     .authority(Role.GENERAL)
                     .stateMessage(dto.getState_message())
                     .profileImage(dto.getProfile_image())
                     .build();
             userRepository.save(updatedUser);
 
-            String gender = null;
-            if (updatedUser.getGender() != null) {
-                gender = updatedUser.getGender().getValue();
-            }
-
             return responseHandler.userBasicInfo(UserBasicInfoResponse.builder()
                     .id(id)
                     .email(updatedUser.getEmail())
                     .nickname(updatedUser.getNickname())
-                    .gender(gender)
                     .stateMessage(updatedUser.getStateMessage())
                     .profileImage(updatedUser.getProfileImage())
                     .message("유저 정보가 수정되었습니다.")
