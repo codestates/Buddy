@@ -249,11 +249,6 @@ export function MyPage(props) {
               ) : props.userInfo.authority === 'ADMIN' ? (
                 <span className="mypage__role">관리자</span>
               ) : null}
-              {props.userInfo.gender === 'MALE' ? (
-                <span className="mypage__gender">남자</span>
-              ) : props.userInfo.gender === 'FEMALE' ? (
-                <span className="mypage__gender">여자</span>
-              ) : null}
             </div>
           </div>
           <div className="mypage__modifyinfo">
