@@ -49,6 +49,7 @@ export function LoginModal(props) {
       })
         .then((res) => {
           // console.log(res.data);
+          props.setUserInfo(res.data); // res.data userInfo에 저장
           cookies.set('refreshToken', res.data.refreshToken);
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
@@ -67,13 +68,9 @@ export function LoginModal(props) {
               headers: AXIOS_DEFAULT_HEADER,
             })
               .then((res) => {
-                props.setUserInfo(res.data); // res.data userInfo에 저장
                 // console.log(cookies.get('refreshToken'));
-                cookies.set('refreshToken', res.data.refreshToken);
                 props.setLoginOn(true); // 로그인 true
                 history.push('/');
-                accessTokenCheck(); // 새로고침 시 로그인 유지
-                props.accessTokenCheck();
                 Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
               })
               .catch((err) => {});
@@ -105,6 +102,7 @@ export function LoginModal(props) {
       })
         .then((res) => {
           //console.log(res.data);
+          props.setUserInfo(res.data); // res.data userInfo에 저장
           cookies.set('refreshToken', res.data.refreshToken);
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
@@ -123,13 +121,9 @@ export function LoginModal(props) {
               headers: AXIOS_DEFAULT_HEADER,
             })
               .then((res) => {
-                props.setUserInfo(res.data); // res.data userInfo에 저장
                 // console.log(cookies.get('refreshToken'));
-                cookies.set('refreshToken', res.data.refreshToken);
                 props.setLoginOn(true); // 로그인 true
                 history.push('/');
-                accessTokenCheck(); // 새로고침 시 로그인 유지
-                props.accessTokenCheck();
                 Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
               })
               .catch((err) => {});
