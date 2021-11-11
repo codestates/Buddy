@@ -15,5 +15,6 @@ public class OAuthLoginDto {
     private User user;
     private String accessToken;
     private String refreshToken;
+    private boolean existingUser;
 
 }
