@@ -11,9 +11,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 500px;
+  width: 700px;
+  height: 500px;
   background-color: rgb(247, 247, 247);
   margin: 30px;
+  border-radius: 10px;
 }
 
 .mypage__container {
@@ -114,22 +116,29 @@
 
 .mypage__modifyinfo__container > input {
   width: 210px;
-  height: 40px;
-  border-radius: 20px;
-  border: 1px solid gray;
+  height: 20px;
+  border: none;
+  border-bottom: 1px solid rgb(206, 206, 206);
+  background-color: transparent;
+}
+
+.mypage__modifyinfo__container > input::placeholder {
+  font-size: 11px;
 }
 
 .mypage__modifyinfo__container > button {
-  width: 100px;
-  height: 40px;
+  width: 90px;
+  height: 30px;
   border: none;
   border-radius: 30px;
   color: white;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: bold;
   background-color: #22cc88;
   cursor: pointer;
   margin-left: 30px;
+  margin-bottom: 12px;
+  margin-top: 10px;
 }
 
 .mypage__modifyinfo__container > button:hover {
@@ -144,6 +153,10 @@
   width: 60%;
   height: 200px;
   /* background-color: rgb(223, 95, 235); */
+}
+
+.mypage__unregister__container {
+  margin-top: -100px;
 }
 
 .mypage__unregister__container > button {
@@ -163,4 +176,12 @@
 }
 
 .mypage__state__message {
+  margin-left: 10px;
+  margin-top: -7px;
+  font-size: 13px;
+}
+
+.mypage__error__message {
+  margin-left: 10px;
+  font-size: 13px;
 }
