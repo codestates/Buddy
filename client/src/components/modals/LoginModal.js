@@ -49,6 +49,7 @@ export function LoginModal(props) {
       })
         .then((res) => {
           // console.log(res.data);
+          cookies.set('refreshToken', res.data.refreshToken);
           accessTokenCheck(); // 새로고침 시 로그인 유지
 
           if (res.data.existingUser === false) {
@@ -103,6 +104,7 @@ export function LoginModal(props) {
       })
         .then((res) => {
           //console.log(res.data);
+          cookies.set('refreshToken', res.data.refreshToken);
           accessTokenCheck(); // 새로고침 시 로그인 유지
 
           if (res.data.existingUser === false) {
