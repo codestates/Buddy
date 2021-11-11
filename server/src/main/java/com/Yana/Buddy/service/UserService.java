@@ -1,7 +1,6 @@
 package com.Yana.Buddy.service;
 
 import com.Yana.Buddy.dto.*;
-import com.Yana.Buddy.entity.Gender;
 import com.Yana.Buddy.entity.Role;
 import com.Yana.Buddy.entity.User;
 import com.Yana.Buddy.handler.ResponseEntityHandler;
@@ -40,10 +39,13 @@ public class UserService {
                 redisTemplate.opsForValue()
                         .set(dto.getEmail(), refreshToken, 2, TimeUnit.HOURS);
 
-                return responseHandler.loginSuccess(
-                        new LoginSuccessResponse(user.getId(), user.getEmail(), user.getNickname(),
-                                accessToken, refreshToken, "기본 로그인에 성공했습니다.")
-                );
+                return responseHandler.loginSuccess(LoginSuccessResponse.builder()
+                                .id(user.getId())
+                                .email(user.getEmail())
+                                .nickname(user.getNickname())
+                                .accessToken(accessToken)
+                                .refreshToken(refreshToken)
+                                .build());
             } else {
                 return responseHandler.badRequest("비밀번호가 일치하지 않습니다.");
             }
@@ -78,6 +80,12 @@ public class UserService {
     public boolean passwordCheck(User user, String password) {
         if (user.getPassword().equals(password)) return true;
         else return false;
+    }
+
+    //로그아웃 요청 시, redis 에서 refresh token 삭제
+    public ResponseEntity logout(EmailDto dto) {
+        redisTemplate.delete(dto.getEmail());
+        return responseHandler.singleSuccessResponse("로그아웃되었습니다.");
     }
 
     //Email 검증 결과에 따라 Response Entity 값 설정
@@ -164,8 +172,11 @@ public class UserService {
         String userInfoResponse = oAuthService.createGetRequest(googleToken);
         GoogleUser googleUser = oAuthService.getUserInfo(userInfoResponse);
 
+        boolean existingUser = true;
+
         if (userRepository.findByEmail(googleUser.getEmail()).isEmpty()) {
             googleSignUp(googleUser);
+            existingUser = false;
         }
 
         User user = userRepository.findByEmail(googleUser.getEmail()).orElseThrow();
@@ -178,6 +189,7 @@ public class UserService {
                 .user(user)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .existingUser(existingUser)
                 .build();
     }
 
@@ -194,8 +206,11 @@ public class UserService {
 
         KakaoRegisterDto kakaoUserInfo = oAuthService.getKakaoUser(kakaoToken);
 
+        boolean existingUser = true;
+
         if (userRepository.findByEmail(kakaoUserInfo.getEmail()).isEmpty()) {
             kakaoSignUp(kakaoUserInfo);
+            existingUser = false;
         }
 
         User user = userRepository.findByEmail(kakaoUserInfo.getEmail()).orElseThrow();
@@ -208,6 +223,7 @@ public class UserService {
                 .user(user)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .existingUser(existingUser)
                 .build();
     }
 
@@ -240,26 +256,30 @@ public class UserService {
     public LoginSuccessResponse googleLogin(String code) {
         OAuthLoginDto googleLoginUser = googleOAuthLogin(code);
 
-        return new LoginSuccessResponse(
-                googleLoginUser.getUser().getId(),
-                googleLoginUser.getUser().getEmail(),
-                googleLoginUser.getUser().getNickname(),
-                googleLoginUser.getAccessToken(),
-                googleLoginUser.getRefreshToken(),
-                "Google Login 에 성공했습니다.");
+        return LoginSuccessResponse.builder()
+                .id(googleLoginUser.getUser().getId())
+                .email(googleLoginUser.getUser().getEmail())
+                .nickname(googleLoginUser.getUser().getNickname())
+                .accessToken(googleLoginUser.getAccessToken())
+                .refreshToken(googleLoginUser.getRefreshToken())
+                .existingUser(googleLoginUser.isExistingUser())
+                .message("Google Login 에 성공했습니다.")
+                .build();
     }
 
     //Kakao Login 에 대한 return 값 설정
     public LoginSuccessResponse kakaoLogin(String code) throws ParseException, JsonProcessingException {
         OAuthLoginDto kakaoLoginUser = kakaoOAuthLogin(code);
 
-        return new LoginSuccessResponse(
-                kakaoLoginUser.getUser().getId(),
-                kakaoLoginUser.getUser().getEmail(),
-                kakaoLoginUser.getUser().getNickname(),
-                kakaoLoginUser.getAccessToken(),
-                kakaoLoginUser.getRefreshToken(),
-                "Kakao Login 에 성공했습니다.");
+        return LoginSuccessResponse.builder()
+                .id(kakaoLoginUser.getUser().getId())
+                .email(kakaoLoginUser.getUser().getEmail())
+                .nickname(kakaoLoginUser.getUser().getNickname())
+                .accessToken(kakaoLoginUser.getAccessToken())
+                .refreshToken(kakaoLoginUser.getRefreshToken())
+                .existingUser(kakaoLoginUser.isExistingUser())
+                .message("Kakao Login 에 성공했습니다.")
+                .build();
     }
 
     public Optional<User> findUserByEmail(String email) {
