@@ -15,7 +15,6 @@ export function SignupModal(props) {
   const [signupUserPasswordValid, setSignupUserPasswordValid] = useState(''); // 비밀번호 재입력
   const [signupUserNickname, setSignupUserNickname] = useState(''); // 닉네임
   const [signupUserNicknameCheck, setSignupUserNicknameCheck] = useState(0); // 닉네임 중복 체크
-  const [signupUserGender, setSignupUserGender] = useState('MALE'); // 성별
   const [signupUserinfo, setSignupUserinfo] = useState({}); // 유저 정보 객체
 
   const history = useHistory();
@@ -70,7 +69,6 @@ export function SignupModal(props) {
     } else {
       props.setSignupModalOn(false);
       resetSignupInput();
-      setSignupUserGender('MALE');
     }
   };
 
@@ -176,12 +174,6 @@ export function SignupModal(props) {
     }
   };
 
-  // 성별 상태관리
-  const handleChangeGender = (e) => {
-    setSignupUserGender(e.target.value);
-    // console.log(signupUserGender);
-  };
-
   // 회원가입 버튼 이벤트
   function handleSignup() {
     if (signupUserEmailCodeCheck === 0) {
@@ -195,7 +187,6 @@ export function SignupModal(props) {
         email: signupUserEmail,
         password: signupUserPassword,
         nickname: signupUserNickname,
-        gender: signupUserGender,
       });
     }
 
@@ -340,26 +331,6 @@ export function SignupModal(props) {
                 ) : (
                   <span className="signup__error__message"></span>
                 )}
-              </div>
-              <div className="signup__input__wrappers__gender">
-                <fieldset className="signup__input__container">
-                  <input
-                    type="radio"
-                    name="gender_info"
-                    onChange={handleChangeGender}
-                    value="MALE"
-                    checked={signupUserGender === 'MALE'}
-                  />
-                  남자
-                  <input
-                    type="radio"
-                    name="gender_info"
-                    onChange={handleChangeGender}
-                    value="FEMALE"
-                    checked={signupUserGender === 'FEMALE'}
-                  />
-                  여자
-                </fieldset>
               </div>
               <div id="signup__term__agree">
                 <span>
