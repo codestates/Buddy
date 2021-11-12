@@ -1,10 +1,12 @@
 package com.Yana.Buddy.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class LoginSuccessResponse {
 
     private Long id;
@@ -13,5 +15,6 @@ public class LoginSuccessResponse {
     private String accessToken;
     private String refreshToken;
     private String message;
+    private boolean existingUser;
 
 }
