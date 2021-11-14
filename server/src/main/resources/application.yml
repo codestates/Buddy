@@ -12,24 +12,24 @@ spring:
         format_sql: true
 
   datasource:
-    #url: jdbc:mysql://buddy-db.cy5zk59ytuuj.ap-northeast-2.rds.amazonaws.com:13306/buddy?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
-    #username: admin
-    #password: buddy1357
+    url: jdbc:mysql://buddy-db.cy5zk59ytuuj.ap-northeast-2.rds.amazonaws.com:13306/buddy?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    username: admin
+    password: buddy1357
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   config:
     domain: https://yana-buddy.com/
 
 jwt:
-  #secret: buddykey
+  secret: buddykey
 
 oauth:
   google:
-    #client-id: 861359541268-gsb56afmds3tjge9jldk8h4i3a3j2drh.apps.googleusercontent.com
-    #client-secret: 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
+    client-id: 861359541268-gsb56afmds3tjge9jldk8h4i3a3j2drh.apps.googleusercontent.com
+    client-secret: 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
   kakao:
-    #client-id: 575ac15539fc8a948809726d8022d095
-    #client-secret: WRuZAyVhUCB09iErDsWjXTY1yJxDl0QV
+    client-id: 575ac15539fc8a948809726d8022d095
+    client-secret: WRuZAyVhUCB09iErDsWjXTY1yJxDl0QV
 
 mail:
   smtp:
@@ -44,5 +44,5 @@ mail:
     port: 465
 
 AdminMail:
-  #id: namtndus@gmail.com
-  #password: namtndus%160752
+  id: namtndus@gmail.com
+  password: namtndus%160752
