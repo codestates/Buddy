@@ -31,7 +31,6 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	implementation 'org.apache.commons:commons-text:1.6'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config'
 	runtimeOnly 'mysql:mysql-connector-java'
 	compileOnly 'org.projectlombok:lombok:1.18.8'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -47,16 +46,6 @@ dependencies {
 	implementation 'org.webjars:stomp-websocket:2.3.3-1'
 	implementation 'com.google.code.gson:gson:2.8.0'
 	implementation 'javax.xml.bind:jaxb-api'
-}
-
-ext {
-	set('springCloudVersion', "2020.0.4")
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
 }
 
 test {
