@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
 import axios from 'axios';
-import '../../styles/modal/LoginModal.css';
 import dotenv from 'dotenv';
 import { SignupModal } from './SignupModal';
-import { Cookies } from 'react-cookie';
+import { AXIOS_DEFAULT_HEADER, FIRST_NICKNAME, LAST_NICKNAME } from '../../constants/constants';
+import '../../styles/modal/LoginModal.css';
 
-axios.defaults.withCredentials = true;
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import 'sweetalert2/dist/sweetalert2.css';
 
 // .env 환경변수 사용
 dotenv.config();
@@ -15,7 +17,7 @@ export function LoginModal(props) {
   const [userEmail, setUserEmail] = useState(''); // 이메일
   const [userPassword, setUserPassword] = useState(''); // 비밀번호
   const [userLoginError, setUserLoginError] = useState(''); // 로그인 에러 메세지
-  const [userInfo, setUserInfo] = useState({ email: '', nickname: '', authority: '', gender: '' }); // 로그인 성공 시 저장되는 유저 정보
+  const [userInfo, setUserInfo] = useState({}); // 로그인 성공 시 저장되는 유저 정보
   const [signupModalOn, setSignupModalOn] = useState(false); // 모달 오픈 여부
 
   const history = useHistory();
@@ -29,6 +31,11 @@ export function LoginModal(props) {
     kakaoCodeOauth(); // 카카오 소셜 로그인 데이터 저장 함수
   }, []);
 
+  // 랜덤 함수
+  const getRandomIndex = (length) => {
+    return parseInt(Math.random() * length);
+  };
+
   // google oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
   const googleCodeOauth = () => {
     const googleUrl = new URL(window.location.href); // 주소창 값 가져오기
@@ -37,24 +44,53 @@ export function LoginModal(props) {
     if (googleSearch) {
       const googleCode = googleSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
-      axios(`${process.env.REACT_APP_API_URL}/oauth/google/callback?code=${googleCode}`, {
+      axios(`${process.env.REACT_APP_HTTPS_URL}/oauth/google/callback?code=${googleCode}`, {
         method: 'GET',
       })
         .then((res) => {
           console.log(res.data);
-          props.setUserInfo(res.data); // res.data userInfo에 저장
-          console.log(cookies.get('refreshToken'));
           cookies.set('refreshToken', res.data.refreshToken);
-          props.setLoginOn(true); // 로그인 true
-          history.push('/');
-          accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
+
+          if (res.data.existingUser === false) {
+            axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${res.data.id}`, {
+              method: 'PUT',
+              data: {
+                nickname: `${FIRST_NICKNAME[getRandomIndex(FIRST_NICKNAME.length)]} ${
+                  LAST_NICKNAME[getRandomIndex(LAST_NICKNAME.length)]
+                }`,
+                password: null,
+                profile_image: `${process.env.REACT_APP_S3_IMAGEHTTPS_URL}/mypage_img.png`,
+                stateMessage: userInfo.stateMessage,
+              },
+              headers: AXIOS_DEFAULT_HEADER,
+            })
+              .then((res) => {
+                props.setUserInfo(res.data); // res.data userInfo에 저장
+                accessTokenCheck(); // 새로고침 시 로그인 유지
+                props.accessTokenCheck();
+                // console.log(cookies.get('refreshToken'));
+                props.setLoginOn(true); // 로그인 true
+                history.push('/');
+                Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+              })
+              .catch((err) => {});
+          } else {
+            props.setUserInfo(res.data); // res.data userInfo에 저장
+            // console.log(cookies.get('refreshToken'));
+            cookies.set('refreshToken', res.data.refreshToken);
+            props.setLoginOn(true); // 로그인 true
+            history.push('/');
+            accessTokenCheck(); // 새로고침 시 로그인 유지
+            props.accessTokenCheck();
+            Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+          }
         })
         .catch((err) => {});
     }
   };
 
-  // kakao oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기
+  // kakao oAuth 인가코드 백엔드 서버에 쿼리 스크링으로 보내기 //
   const kakaoCodeOauth = () => {
     const kakaoUrl = new URL(window.location.href); // 주소창 값 가져오기
     const kakaoSearch = kakaoUrl.search; // 쿼리 스크링 가져오기
@@ -62,18 +98,49 @@ export function LoginModal(props) {
     if (kakaoSearch) {
       const kakaoCode = kakaoSearch.split('=')[1].split('&')[0]; // google code 값만 추출
 
-      axios(`${process.env.REACT_APP_API_URL}/oauth/kakao/callback?code=${kakaoCode}`, {
+      axios(`${process.env.REACT_APP_HTTPS_URL}/oauth/kakao/callback?code=${kakaoCode}`, {
         method: 'GET',
       })
         .then((res) => {
-          console.log(res.data);
-          setUserInfo(res.data); // res.data userInfo에 저장
-          console.log(cookies.get('refreshToken'));
+          // console.log(res.data);
+          props.setUserInfo(res.data); // res.data userInfo에 저장
           cookies.set('refreshToken', res.data.refreshToken);
-          props.setLoginOn(true); // 로그인 true
-          history.push('/');
           accessTokenCheck(); // 새로고침 시 로그인 유지
           props.accessTokenCheck();
+
+          if (res.data.existingUser === false) {
+            axios(`${process.env.REACT_APP_HTTPS_URL}/profile/${res.data.id}`, {
+              method: 'PUT',
+              data: {
+                nickname: `${FIRST_NICKNAME[getRandomIndex(FIRST_NICKNAME.length)]} ${
+                  LAST_NICKNAME[getRandomIndex(LAST_NICKNAME.length)]
+                }`,
+                password: null,
+                profile_image: `${process.env.REACT_APP_S3_IMAGEHTTPS_URL}/mypage_img.png`,
+                stateMessage: userInfo.stateMessage,
+              },
+              headers: AXIOS_DEFAULT_HEADER,
+            })
+              .then((res) => {
+                props.setUserInfo(res.data); // res.data userInfo에 저장
+                accessTokenCheck(); // 새로고침 시 로그인 유지
+                props.accessTokenCheck();
+                // console.log(cookies.get('refreshToken'));
+                props.setLoginOn(true); // 로그인 true
+                history.push('/');
+                Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+              })
+              .catch((err) => {});
+          } else {
+            props.setUserInfo(res.data); // res.data userInfo에 저장
+            // console.log(cookies.get('refreshToken'));
+            cookies.set('refreshToken', res.data.refreshToken);
+            props.setLoginOn(true); // 로그인 true
+            history.push('/');
+            accessTokenCheck(); // 새로고침 시 로그인 유지
+            props.accessTokenCheck();
+            Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
+          }
         })
         .catch((err) => {});
     }
@@ -90,31 +157,25 @@ export function LoginModal(props) {
     setUserEmail('');
     setUserPassword('');
 
-    console.log(userData);
+    // console.log(userData);
 
     // 로그인 JWT 인증 처리 (API POST : /login)
-    await axios(`${process.env.REACT_APP_API_URL}/login`, {
+    await axios(`${process.env.REACT_APP_HTTPS_URL}/login`, {
       method: 'POST',
       data: userData,
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
+      headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
-        console.log(res.data); // accessToken (클라이언트에 따로 저장)
-        console.log(cookies.get('refreshToken'));
+        // console.log(res.data); // accessToken (클라이언트에 따로 저장)
+        // console.log(cookies.get('refreshToken'));
         cookies.set('refreshToken', res.data.refreshToken);
         props.setLoginOn(true);
         props.setModalOn(false);
         props.accessTokenCheck();
+        Swal.fire({ title: '로그인에 성공했습니다.', confirmButtonText: '확인' });
       })
       .catch((err) => {
-        console.error(err);
-        console.log(`email = ${userData.email}, password = ${userData.password}`);
+        // console.log(`email = ${userData.email}, password = ${userData.password}`);
 
         if (userData.email === '' && userData.password === '') {
           setUserLoginError('이메일 또는 비밀번호를 입력해주세요.');
@@ -123,7 +184,7 @@ export function LoginModal(props) {
         }
         if (err.response) {
           // 에러에 response가 있으면 해당 data를 출력
-          console.log(err.response.data);
+          // console.log(err.response.data);
         }
       });
   };
@@ -135,22 +196,16 @@ export function LoginModal(props) {
 
     // 윗 줄에 기본 헤더로 `Bearer ${accessToken}`를 넣었기 때문에
     // 해당 accesstoken이 유효하면 GET 요청으로 로그인 회원 정보를 받아옴
-    axios(`${process.env.REACT_APP_API_URL}/token_check`, {
+    axios(`${process.env.REACT_APP_HTTPS_URL}/token_check`, {
       method: 'GET',
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Credentials': 'true',
-      },
-      withCredentials: true,
+      headers: AXIOS_DEFAULT_HEADER,
     })
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
-        console.log(res.data);
+        // console.log(res.data);
         props.setUserInfo(res.data);
         setUserInfo(props.userInfo);
-        console.log(userInfo);
+        // console.log(userInfo);
 
         // useHistory를 사용하여 로그인 성공시 모달창 닫기
         props.setModalOn(false);
@@ -159,9 +214,7 @@ export function LoginModal(props) {
         setUserLoginError('');
         props.setLoginOn(true);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch((err) => {});
   };
 
   // 모달 관련 팝업 이벤트
@@ -179,13 +232,13 @@ export function LoginModal(props) {
   // 이메일 입력 상태관리
   const handleChangeEmail = (e) => {
     setUserEmail(e.target.value);
-    console.log(userEmail);
+    // console.log(userEmail);
   };
 
   // 비밀번호 입력 상태관리
   const handleChangePassword = (e) => {
     setUserPassword(e.target.value);
-    console.log(userPassword);
+    // console.log(userPassword);
   };
 
   // 로그인 모달창 끄고 회원가입 모달창 열기
@@ -202,12 +255,12 @@ export function LoginModal(props) {
       <SignupModal signupModalOn={signupModalOn} setSignupModalOn={setSignupModalOn} />
       {props.modalOn ? (
         <div className="popup">
+          <div id="signin__close__btn">
+            <button className="close" onClick={togglePopup}>
+              안녕하세요
+            </button>
+          </div>
           <div className="popup__inner">
-            <div id="signin__close__btn">
-              <button className="close" onClick={togglePopup}>
-                <img src="images/close_btn.png" alt="닫기 버튼" />
-              </button>
-            </div>
             <div id="signin__contents">
               <img src="images/logo.png" alt="buddy_logo" />
               <span id="signin__title">로그인</span>
@@ -245,10 +298,10 @@ export function LoginModal(props) {
                   </button>
                 </span>
                 <div id="social__login">
-                  <a id="google__link" href={`${process.env.REACT_APP_API_URL}/login_google`}>
+                  <a id="google__link" href={`${process.env.REACT_APP_HTTPS_URL}/login_google`}>
                     <img src="images/google_login.png" alt="구글 로그인" />
                   </a>
-                  <a id="kakao__link" href={`${process.env.REACT_APP_API_URL}/login_kakao`}>
+                  <a id="kakao__link" href={`${process.env.REACT_APP_HTTPS_URL}/login_kakao`}>
                     <img src="images/kakao_login.png" alt="카카오 로그인" />
                   </a>
                 </div>
