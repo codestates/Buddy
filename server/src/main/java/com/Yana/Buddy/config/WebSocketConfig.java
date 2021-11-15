@@ -27,7 +27,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chatting") //url/chatting 웹 소켓 연결
-                .setAllowedOrigins("*")
+                .setAllowedOriginPatterns("*")
                 .withSockJS(); //낮은 버전의 브라우저에서도 웹 소켓이 작동할 수 있도록 해줌
     }
 
