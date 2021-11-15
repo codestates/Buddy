@@ -102,7 +102,7 @@ export function LoginModal(props) {
         method: 'GET',
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           props.setUserInfo(res.data); // res.data userInfo에 저장
           cookies.set('refreshToken', res.data.refreshToken);
           accessTokenCheck(); // 새로고침 시 로그인 유지
@@ -202,10 +202,10 @@ export function LoginModal(props) {
     })
       .then((res) => {
         // id, pw가 맞고 토큰이 유효하면 받아온 데이터를 userInfo에 저장
-        console.log(res.data);
+        // console.log(res.data);
         props.setUserInfo(res.data);
         setUserInfo(props.userInfo);
-        console.log(userInfo);
+        // console.log(userInfo);
 
         // useHistory를 사용하여 로그인 성공시 모달창 닫기
         props.setModalOn(false);
