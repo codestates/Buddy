@@ -1,0 +1,402 @@
+.chatting__page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Noto Sans KR';
+  background-color: #33344a;
+  background-image: url('../../backgrounds/chat_patt.png');
+  background-size: 20%;
+}
+
+.chatting__wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 60%;
+  margin: 10px;
+  box-shadow: -5px -5px 10px 10px rgb(37, 37, 37);
+}
+
+/* 메세지 레이아웃 */
+
+.chat__messages__container__left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.chat__messages__container__center {
+  display: flex;
+  justify-content: center;
+}
+
+.chat__messages__left {
+  color: rgb(32, 109, 25);
+}
+
+.chat__messages__center__enter {
+  color: white;
+  width: 400px;
+  height: 30px;
+  background-color: #27e99b;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.chat__messages__center__quit {
+  color: white;
+  width: 400px;
+  height: 30px;
+  background-color: rgb(218, 146, 51);
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* 메세지 오른쪽 내용 */
+
+.chat__messages__container__right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.chat__messages__right {
+  color: rgb(241, 75, 228);
+}
+
+.chat__messages__right__contents {
+  margin-right: 20px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.chat__messages__right__image__contents {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.chat__messages__right__image__contents > img {
+  width: 40px;
+  border: 2px solid rgb(179, 179, 179);
+  border-radius: 100px;
+}
+
+.chat__messages__right__describe__message {
+  margin-top: 20px;
+  margin-left: 10px;
+  background-color: rgb(107, 241, 107);
+  width: 200px;
+  height: 10%;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  border-radius: 0px 20px 20px 20px;
+  color: black;
+}
+
+.chat__messages__right__describe__message > span {
+  margin-left: 5px;
+  line-height: 18px;
+  padding: 10px;
+  word-break: break-all;
+}
+
+.chat__messages__right__describe__createdat > span {
+  font-size: 12px;
+  color: rgb(117, 117, 117);
+}
+
+/* 메세지 왼쪽 내용 */
+
+.chat__messages__container__left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.chat__messages__left {
+  color: rgb(241, 75, 228);
+}
+
+.chat__messages__left__contents {
+  margin-left: 20px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.chat__messages__left__image__contents {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.chat__messages__left__image__contents > img {
+  width: 40px;
+  border: 2px solid rgb(179, 179, 179);
+  border-radius: 100px;
+}
+
+.chat__messages__left__describe__message {
+  margin-top: 20px;
+  margin-left: 10px;
+  background-color: rgb(241, 228, 107);
+  width: 200px;
+  height: 10%;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  border-radius: 0px 20px 20px 20px;
+  color: black;
+}
+
+.chat__messages__left__describe__message > span {
+  margin-left: 5px;
+  line-height: 18px;
+  padding: 10px;
+  word-break: break-all;
+}
+
+.chat__messages__left__describe__createdat > span {
+  font-size: 12px;
+  color: rgb(117, 117, 117);
+}
+
+/*끝 */
+
+.chat__list {
+  width: 99%;
+  padding-right: 1px;
+  height: 613px;
+  font-family: 'Noto Sans KR';
+}
+
+.chat__list > ul > li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  background-color: gray;
+}
+
+.chat__list > ul > li {
+  border: 1px solid black;
+  height: 50px;
+}
+
+.chat__list__maintitle {
+  font-weight: 500;
+  margin-top: 10px;
+  height: 25px;
+  text-indent: 10px;
+  border-bottom: 3px dotted rgb(224, 224, 224);
+  border-right: 3px dotted rgb(224, 224, 224);
+  font-size: 15px;
+}
+
+.chattingroomlist__link {
+  display: flex;
+  flex-direction: row;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  color: inherit;
+  font-size: 15px;
+  background-color: rgb(247, 247, 247);
+  width: 92.2%;
+  margin: 10px;
+  padding: 5px;
+  border-left: 5px solid seagreen;
+}
+
+.chattingroomlist__link:hover {
+  filter: brightness(94%);
+}
+
+.chat__list__btnlist {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat__list__btnlist > button {
+  margin-top: 10px;
+}
+
+.chattingroomlist__image > img {
+  width: 35px;
+  margin-left: 10px;
+}
+
+.chattingroomlist__description {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 10px;
+  width: 300px;
+}
+
+.chattingroomlist__name {
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.chattingroomlist__subject {
+  font-size: 12px;
+}
+
+.chattingroomlist__nickname {
+  font-size: 12px;
+  color: rgb(90, 90, 90);
+  margin-top: 4px;
+}
+
+/* 채팅 박스 */
+
+.chat__detail {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 100%;
+  height: 700px;
+  border-radius: 10px;
+}
+
+.chat__detail > .chat__main__img {
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+}
+
+.chat__detail > .chat__loading__img {
+  margin-top: 250px;
+  width: 20%;
+  height: auto;
+  object-fit: cover;
+}
+
+.chat__detail > .chat__loading__text {
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.chat__container {
+  width: 100%;
+  height: 600px;
+}
+
+.chat__log {
+  border: 1px solid black;
+}
+
+.chat__contents {
+  width: 100%;
+}
+
+.chat__input {
+  border: none;
+  border-radius: 20px;
+  height: 5%;
+  box-shadow: -3px -6px 6px -8px #333;
+  background-color: rgb(247, 247, 247);
+  text-indent: 10px;
+  margin-left: 17px;
+  margin-right: 17px;
+  margin-bottom: 10px;
+  margin-top: 50px;
+  width: 95%;
+}
+
+.chat__input::placeholder {
+  color: rgb(131, 130, 130);
+}
+
+.chat__match__btn {
+  -webkit-appearance: none;
+  background: -webkit-gradient(to right, #23b353 0%, #fceeb5 50%, #c275f5 100%);
+  background: linear-gradient(to right, #23b353 0%, #fceeb5 50%, #c275f5 100%);
+  background-size: 500%;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  color: #fff;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.05em;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 230px;
+  height: 70px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.chat__match__btn:hover {
+  animation-name: gradient;
+  -webkit-animation-name: gradient;
+  animation-duration: 2s;
+  -webkit-animation-duration: s;
+  animation-iteration-count: 1;
+  -webkit-animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.chat__exit__btn {
+  -webkit-appearance: none;
+  background: -webkit-gradient(to right, #23b353 0%, #fceeb5 50%, #c275f5 100%);
+  background: linear-gradient(to right, #23b353 0%, #fceeb5 50%, #c275f5 100%);
+  background-size: 500%;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  color: #fff;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.05em;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 130px;
+  height: 40px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 30px;
+  font-weight: 500;
+  font-size: 15px;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.chat__exit__btn:hover {
+  animation-name: gradient;
+  -webkit-animation-name: gradient;
+  animation-duration: 2s;
+  -webkit-animation-duration: s;
+  animation-iteration-count: 1;
+  -webkit-animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
