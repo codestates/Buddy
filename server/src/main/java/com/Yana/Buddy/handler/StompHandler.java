@@ -3,8 +3,6 @@ package com.Yana.Buddy.handler;
 import com.Yana.Buddy.entity.ChatMessage;
 import com.Yana.Buddy.entity.ChatRoom;
 import com.Yana.Buddy.entity.EnterInfo;
-import com.Yana.Buddy.repository.ChatRoomRepository;
-import com.Yana.Buddy.repository.EnterInfoRepository;
 import com.Yana.Buddy.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,7 +13,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import java.security.Principal;
 import java.util.Optional;
 
 @Log4j2
