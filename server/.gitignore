@@ -38,3 +38,6 @@ out/
 
 ### for Dummy Data ###
 InitDb.java
+
+### for protect private informatin
+*.yml
